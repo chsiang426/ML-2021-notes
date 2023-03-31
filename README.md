@@ -8,5 +8,4 @@
 **提醒 2：Notion 不像 HackMD 有 outline 在左邊可以快速跳轉，想要在 Notion 秀出 outline 可以下載此 extension：
 [Notion Boost](https://chrome.google.com/webstore/detail/notion-boost/eciepnnimnjaojlkcpdpcgbfkpcagahd)**  
 **提醒 3：筆記內容皆照著老師的上課內容消化理解製作，我如果有理解錯誤，請不吝指正**  
-
-行有餘力的話，可以幫我點個星星，我會很感激你的 🙂
+**提醒 4：行有餘力的話，可以幫我點個星星，我會很感激你的 🙂** 
