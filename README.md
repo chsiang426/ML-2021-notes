@@ -13,4 +13,6 @@
 
 **提醒 5：** 行有餘力的話，可以幫我點個星星，我會很感激你的 🙂 
 
+*4/2:因近期應該會頻繁修改筆記內容，故暫時關閉 Notion duplicate，日後穩定會再開啟*  
+
 [筆記連結](https://chsiang.notion.site/647db86ee9c04d899f1bd7643e4d94cd?v=87bcbe3e176e422aa85cfb86900c5fd6v=87bcbe3e176e422aa85cfb86900c5fd6)
