@@ -16,7 +16,7 @@
 
 ## Notes
 
-📘[完整筆記](https://chsiang.notion.site/647db86ee9c04d899f1bd7643e4d94cd?v=87bcbe3e176e422aa85cfb86900c5fd6v=87bcbe3e176e422aa85cfb86900c5fd6)  
+📘 [完整筆記](https://chsiang.notion.site/647db86ee9c04d899f1bd7643e4d94cd?v=87bcbe3e176e422aa85cfb86900c5fd6v=87bcbe3e176e422aa85cfb86900c5fd6)  
 
 | #  | Topic  | Video  |
 | :------------: | :------------: | :------------: |
