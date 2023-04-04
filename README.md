@@ -12,7 +12,7 @@
 
 **3.** 筆記內容皆照著老師的上課內容消化理解製作，我如果有理解錯誤，請不吝指正   
 
-**4.** 後續筆記內容若有較大的修改更動，會在 [Updates](https://github.com/chsiang426/ML-2021-notes/edit/main/README.md#updates) 更新   
+**4.** 後續筆記內容若有較大的修改更動，會在 [Updates](https://github.com/chsiang426/ML-2021-notes#updates) 更新   
 
 ## Notes
 
