@@ -14,6 +14,10 @@
 
 **4.** 後續筆記內容若有較大的修改更動，會在 [Updates](https://github.com/chsiang426/ML-2021-notes#updates) 更新   
 
+## Updates
+
+*2023/4/2* 因近期應該會頻繁修改筆記內容，故暫時關閉 Notion duplicate，日後穩定會再開啟
+
 ## Notes
 
 📘 [完整筆記](https://chsiang.notion.site/647db86ee9c04d899f1bd7643e4d94cd?v=87bcbe3e176e422aa85cfb86900c5fd6v=87bcbe3e176e422aa85cfb86900c5fd6)  
@@ -35,7 +39,3 @@
 | 13  | [Life Long Learning（終身學習）](https://chsiang.notion.site/13-Life-Long-Learning-51582d9bb84f430fb8ebe5b3dae7c7b2)  | [video 1](https://youtu.be/rWF9sg5w6Zk), [video 2](https://youtu.be/Y9Jay_vxOsM)  |
 | 14  | [Nerwork Compression](https://chsiang.notion.site/14-Nerwork-Compression-4bae9dc82e1c4e06938d3637e6e966f9)  | [video 1](https://youtu.be/utk3EnAUh-g), [video 2](https://youtu.be/xrlbLPaq_Og)  |
 | 15  | [Meta Learning（元學習）](https://chsiang.notion.site/15-Meta-Learning-d31c228801f648a88ced9d064b347d1a)  | [video 1](https://youtu.be/xoastiYx9JU), [video 2](https://youtu.be/Q68Eh-wm1Ts)  |
-
-## Updates
-
-**4/2：** 因近期應該會頻繁修改筆記內容，故暫時關閉 Notion duplicate，日後穩定會再開啟
