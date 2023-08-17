@@ -12,11 +12,15 @@
 
 **3.** 筆記內容皆照著老師的上課內容消化理解製作，我如果有理解錯誤，請不吝指正   
 
-**4.** 後續筆記內容若有較大的修改更動，會在 [Updates](https://github.com/chsiang426/ML-2021-notes#updates) 更新   
+**4.** 筆記有幾個小部分不完整（老師有講但我沒有寫下來），還請見諒  
+
+**5.** 後續筆記內容若有較大的修改更動，會在 [Updates](https://github.com/chsiang426/ML-2021-notes#updates) 更新   
 
 ## Updates
 
 *2023/4/2* 因近期應該會頻繁修改筆記內容，故暫時關閉 Notion duplicate，日後穩定會再開啟
+
+*2023/8/17* 開啟 Notion duplicate，以及新增 [PDF 版](https://github.com/chsiang426/ML-2021-notes/tree/main/PDF)
 
 ## Notes
 
