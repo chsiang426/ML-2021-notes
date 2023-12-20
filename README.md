@@ -3,7 +3,7 @@
 筆記內容為李宏毅老師 [2021 年的機器學習課程](https://www.youtube.com/playlist?list=PLJV_el3uVTsMhtt7_Y6sgTHGHp1Vb2P2J)，筆記中的圖片皆擷取自老師的上課簡報，來自於[老師的課程網站](https://speech.ee.ntu.edu.tw/~hylee/ml/2021-spring.php)  
 行有餘力的話，可以幫我點個星星，我會很感激你的 🙂  
   
-（Dcard [研究所版分享文](https://www.dcard.tw/f/graduate_school/p/241639442)、[軟體工程師分享文](https://www.dcard.tw/f/softwareengineer/p/241639712)）
+（Dcard [研究所版分享文](https://www.dcard.tw/f/graduate_school/p/241639442)、[軟體工程師版分享文](https://www.dcard.tw/f/softwareengineer/p/241639712)）
 
 ## Reminds
 
