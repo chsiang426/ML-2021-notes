@@ -9,14 +9,11 @@
 
 **1.** 若你的電腦是深色模式，Notion 預設也會是深色模式（個人認為較難閱讀），要調回淺色模式可以使用 ```Ctrl``` + ```Shift L```  
 
-**2.** Notion 不像 HackMD 有 outline 在左邊可以快速跳轉（有 ouline 我覺得會比較全觀可以幫助閱讀），想要在 Notion 秀出 outline 可以下載此 extension：
-[Notion Boost](https://chrome.google.com/webstore/detail/notion-boost/eciepnnimnjaojlkcpdpcgbfkpcagahd)  
+**2.** 筆記內容皆照著老師的上課內容消化理解製作，我如果有理解錯誤，請不吝指正   
 
-**3.** 筆記內容皆照著老師的上課內容消化理解製作，我如果有理解錯誤，請不吝指正   
+**3.** 筆記有幾個小部分不完整（老師有講但我沒有寫下來），還請見諒  
 
-**4.** 筆記有幾個小部分不完整（老師有講但我沒有寫下來），還請見諒  
-
-**5.** 後續筆記內容若有較大的修改更動，會在 [Updates](https://github.com/chsiang426/ML-2021-notes#updates) 更新   
+**4.** 後續筆記內容若有較大的修改更動，會在 [Updates](https://github.com/chsiang426/ML-2021-notes#updates) 更新   
 
 ## Updates
 
