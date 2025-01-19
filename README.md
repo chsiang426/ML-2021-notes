@@ -1,39 +1,37 @@
 # 李宏毅 2021 機器學習課程筆記
 
-筆記內容為李宏毅老師 [2021 年的機器學習課程](https://www.youtube.com/playlist?list=PLJV_el3uVTsMhtt7_Y6sgTHGHp1Vb2P2J)，筆記中的圖片皆擷取自老師的上課簡報，來自於[老師的課程網站](https://speech.ee.ntu.edu.tw/~hylee/ml/2021-spring.php)  
-行有餘力的話，可以幫我點個星星，我會很感激你的 🙂  
-  
-（Dcard [研究所版分享文](https://www.dcard.tw/f/graduate_school/p/241639442)、[軟體工程師版分享文](https://www.dcard.tw/f/softwareengineer/p/241639712)）
+此筆記內容為臺灣大學李宏毅老師 [2021 年的機器學習課程](https://www.youtube.com/playlist?list=PLJV_el3uVTsMhtt7_Y6sgTHGHp1Vb2P2J)，筆記中的圖片皆擷取自老師的上課簡報，來自於[老師的課程網站](https://speech.ee.ntu.edu.tw/~hylee/ml/2021-spring.php)  
+行有餘力的話，可以幫我點個星星 ⭐，我會很感激你的 🙂  
 
-## Reminds
+* Dcard [研究所版 分享文](https://www.dcard.tw/f/graduate_school/p/241639442)
+* Dcard [軟體工程師版 分享文](https://www.dcard.tw/f/softwareengineer/p/241639712)
+
+---
+
+## 💡 Reminds
 
 **1.** 若你的電腦是深色模式，Notion 預設也會是深色模式（個人認為較難閱讀），要調回淺色模式可以使用 ```Ctrl``` + ```Shift L```  
 
-**2.** 筆記內容皆照著老師的上課內容消化理解製作，我如果有理解錯誤，請不吝指正   
+**2.** 筆記內容皆照著老師的上課內容消化理解製作，若有理解錯誤，請不吝指正   
 
 **3.** 筆記有幾個小部分不完整（老師有講但我沒有寫下來），還請見諒  
 
-**4.** 後續筆記內容若有較大的修改更動，會在 [Updates](https://github.com/chsiang426/ML-2021-notes#updates) 更新   
+---
 
-## Updates
-
-*2023/4/2* 因近期應該會頻繁修改筆記內容，故暫時關閉 Notion duplicate，日後穩定會再開啟
-
-*2023/8/17* 開啟 Notion duplicate，以及新增 [PDF 版](https://github.com/chsiang426/ML-2021-notes/tree/main/PDF)
-
-## Notes
+## 📖 Notes
 
 <table>
   <thead>
     <tr>
-      <th colspan="3" align="center">📘<a href="https://chsiang.notion.site/647db86ee9c04d899f1bd7643e4d94cd?v=87bcbe3e176e422aa85cfb86900c5fd6v=87bcbe3e176e422aa85cfb86900c5fd6">完整筆記</a></th>
+      <th colspan="3" align="center">📘完整筆記：<a href="https://chsiang.notion.site/647db86ee9c04d899f1bd7643e4d94cd?v=87bcbe3e176e422aa85cfb86900c5fd6">Notion</a>、<a href="https://github.com/chsiang426/ML-2021-notes/tree/main/PDF">PDF</a></th>
     </tr>
     <tr>
       <th align="center">#</th>
       <th align="center">Topic</th>
       <th align="center">Video</th>
     </tr>
-  </thead>
+</thead>
+
   <tbody>
     <tr>
       <td align="center">01</td>
