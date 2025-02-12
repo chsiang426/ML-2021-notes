@@ -5,7 +5,7 @@
 * Dcard [研究所版 分享文](https://www.dcard.tw/f/graduate_school/p/241639442)
 * Dcard [軟體工程師版 分享文](https://www.dcard.tw/f/softwareengineer/p/241639712)  
 
-行有餘力的話，可以幫我點個星星 ⭐，我會很感激你的 🙂  
+行有餘力的話，可以幫我點個星星 ⭐，非常感謝 🙂  
 
 ---
 
