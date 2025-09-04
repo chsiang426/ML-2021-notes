@@ -1,6 +1,6 @@
-# 台灣大學李宏毅教授 2021 機器學習課程筆記
+# 臺灣大學李宏毅教授「機器學習 2021 Spring」課程筆記
 
-此筆記內容為台灣大學李宏毅老師 [2021 年的機器學習課程](https://www.youtube.com/playlist?list=PLJV_el3uVTsMhtt7_Y6sgTHGHp1Vb2P2J)，筆記中的圖片皆擷取自老師的上課簡報，來自於[老師的課程網站](https://speech.ee.ntu.edu.tw/~hylee/ml/2021-spring.php)  
+此筆記內容為臺灣大學李宏毅教授 [2021 Spring 的機器學習課程](https://www.youtube.com/playlist?list=PLJV_el3uVTsMhtt7_Y6sgTHGHp1Vb2P2J)，筆記中的圖片皆擷取自老師的上課簡報，來自於[老師的課程網站](https://speech.ee.ntu.edu.tw/~hylee/ml/2021-spring.php)  
 
 * Dcard [研究所版 分享文](https://www.dcard.tw/f/graduate_school/p/241639442)
 * Dcard [軟體工程師版 分享文](https://www.dcard.tw/f/softwareengineer/p/241639712)  
@@ -11,7 +11,7 @@
 
 ## 💡 Reminds
 
-**1.** 若你的電腦是深色模式，Notion 預設也會是深色模式（個人認為較難閱讀），要調回淺色模式可以使用 ```Ctrl``` + ```Shift L```  
+**1.** 若你的電腦是深色模式，Notion 預設也會是深色模式（個人認為較難閱讀），要調回淺色模式可以使用 ```Ctrl```(```Command```) + ```Shift L```  
 
 **2.** 筆記內容皆照著老師的上課內容消化理解製作，若有理解錯誤，請不吝指正   
 
