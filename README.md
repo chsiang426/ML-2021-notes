@@ -24,7 +24,7 @@
 <table>
   <thead>
     <tr>
-      <th colspan="3" align="center">📘完整筆記：<a href="https://chsiang.notion.site/647db86ee9c04d899f1bd7643e4d94cd?v=87bcbe3e176e422aa85cfb86900c5fd6">Notion</a>、<a href="https://github.com/chsiang426/ML-2021-notes/tree/main/PDF">PDF</a></th>
+      <th colspan="3" align="center">📘 完整筆記：<a href="https://chsiang.notion.site/647db86ee9c04d899f1bd7643e4d94cd?v=87bcbe3e176e422aa85cfb86900c5fd6">Notion</a>、<a href="https://github.com/chsiang426/ML-2021-notes/tree/main/PDF">PDF</a></th>
     </tr>
     <tr>
       <th align="center">#</th>
