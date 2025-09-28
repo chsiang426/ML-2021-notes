@@ -54,7 +54,7 @@
     </tr>
     <tr>
       <td align="center">03</td>
-      <td align="center">CNN（卷積神經網路）</td>
+      <td align="center">CNN<br>（卷積神經網路）</td>
       <td align="center"><a href="https://chsiang.notion.site/03-CNN-86e7f137fdd0494fb08f236d34c67b6e">Notion</a> / <a href="https://chsiang426.github.io/ML-2021-notes/03-CNN（卷積神經網路）/03-CNN（卷積神經網路）.html">Website</a> / <a href="https://github.com/chsiang426/ML-2021-notes/blob/main/PDF/03-CNN%EF%BC%88%E5%8D%B7%E7%A9%8D%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%EF%BC%89.pdf">PDF</a></td>
       <td align="center"><a href="https://youtu.be/OP5HcXJg2Aw">video</a></td>
     </tr>
@@ -72,13 +72,13 @@
     </tr>
     <tr>
       <td align="center">06</td>
-      <td align="center">Generative Adversarial Network（GAN）</td>
+      <td align="center">Generative Adversarial Network<br>（GAN）</td>
       <td align="center"><a href="https://chsiang.notion.site/06-Generative-Adversarial-Network-GAN-3eef1d4d34384ea596d6be37eb429a25">Notion</a> / <a href="https://chsiang426.github.io/ML-2021-notes/06-Generative%20Adversarial%20Network（GAN）/06-Generative%20Adversarial%20Network（GAN）.html">Website</a> / <a href="https://github.com/chsiang426/ML-2021-notes/blob/main/PDF/06-Generative_Adversarial_Network%EF%BC%88GAN%EF%BC%89.pdf">PDF</a></td>
       <td align="center"><a href="https://youtu.be/4OWp0wDu6Xw">video 1</a>, <a href="https://youtu.be/jNY1WBb8l4U">video 2</a>, <a href="https://youtu.be/MP0BnVH2yOo">video 3</a>, <a href="https://youtu.be/wulqhgnDr7E">video 4</a></td>
     </tr>
     <tr>
       <td align="center">07</td>
-      <td align="center">Self-Supervised Learning（BERT）</td>
+      <td align="center">Self-Supervised Learning<br>（BERT）</td>
       <td align="center"><a href="https://chsiang.notion.site/07-Self-Supervised-Learning-BERT-2cb6d4c62aa44f9386708f3be787fba5">Notion</a> / <a href="https://chsiang426.github.io/ML-2021-notes/07-Self-Supervised%20Learning（BERT）/07-Self-Supervised%20Learning（BERT）.html">Website</a> / <a href="https://github.com/chsiang426/ML-2021-notes/blob/main/PDF/07-Self-Supervised_Learning%EF%BC%88BERT%EF%BC%89.pdf">PDF</a></td>
       <td align="center"><a href="https://youtu.be/e422eloJ0W4">video 1</a>, <a href="https://youtu.be/gh0hewYkjgo">video 2</a>, <a href="https://youtu.be/ExXA05i8DEQ">video 3</a>, <a href="https://youtu.be/WY_E0Sd4K80">video 4</a></td>
     </tr>
@@ -108,13 +108,13 @@
     </tr>
     <tr>
       <td align="center">12</td>
-      <td align="center">Reinforcement Learning（強化學習）</td>
+      <td align="center">Reinforcement Learning<br>（強化學習）</td>
       <td align="center"><a href="https://chsiang.notion.site/12-Reinforcement-Learning-b136944b862d43c68341c0dfa8cc9c4a">Notion</a> / <a href="https://chsiang426.github.io/ML-2021-notes/12-Reinforcement%20Learning%EF%BC%88%E5%BC%B7%E5%8C%96%E5%AD%B8%E7%BF%92%EF%BC%89/12-Reinforcement%20Learning%EF%BC%88%E5%BC%B7%E5%8C%96%E5%AD%B8%E7%BF%92%EF%BC%89.html">Website</a> / <a href="https://github.com/chsiang426/ML-2021-notes/blob/main/PDF/12-Reinforcement_Learning%EF%BC%88%E5%BC%B7%E5%8C%96%E5%AD%B8%E7%BF%92%EF%BC%89.pdf">PDF</a></td>
       <td align="center"><a href="https://youtu.be/XWukX-ayIrs">video 1</a>, <a href="https://youtu.be/US8DFaAZcp4">video 2</a>, <a href="https://youtu.be/kk6DqWreLeU">video 3</a>, <a href="https://youtu.be/73YyF1gmIus">video 4</a>, <a href="https://youtu.be/75rZwxKBAf0">video 5</a></td>
     </tr>
     <tr>
       <td align="center">13</td>
-      <td align="center">Life Long Learning（終身學習）</td>
+      <td align="center">Life Long Learning<br>（終身學習）</td>
       <td align="center"><a href="https://chsiang.notion.site/13-Life-Long-Learning-51582d9bb84f430fb8ebe5b3dae7c7b2">Notion</a> / <a href="https://chsiang426.github.io/ML-2021-notes/13-Life%20Long%20Learning%EF%BC%88%E7%B5%82%E8%BA%AB%E5%AD%B8%E7%BF%92%EF%BC%89/13-Life%20Long%20Learning%EF%BC%88%E7%B5%82%E8%BA%AB%E5%AD%B8%E7%BF%92%EF%BC%89.html">Website</a> / <a href="https://github.com/chsiang426/ML-2021-notes/blob/main/PDF/13-Life_Long_Learning%EF%BC%88%E7%B5%82%E8%BA%AB%E5%AD%B8%E7%BF%92%EF%BC%89.pdf">PDF</a></td>
       <td align="center"><a href="https://youtu.be/rWF9sg5w6Zk">video 1</a>, <a href="https://youtu.be/Y9Jay_vxOsM">video 2</a></td>
     </tr>
@@ -126,7 +126,7 @@
     </tr>
     <tr>
       <td align="center">15</td>
-      <td align="center">Meta Learning（元學習）</td>
+      <td align="center">Meta Learning<br>（元學習）</td>
       <td align="center"><a href="https://chsiang.notion.site/15-Meta-Learning-d31c228801f648a88ced9d064b347d1a">Notion</a> / <a href="https://chsiang426.github.io/ML-2021-notes/15-Meta%20Learning%EF%BC%88%E5%85%83%E5%AD%B8%E7%BF%92%EF%BC%89/15-Meta%20Learning%EF%BC%88%E5%85%83%E5%AD%B8%E7%BF%92%EF%BC%89.html">Website</a> / <a href="https://github.com/chsiang426/ML-2021-notes/blob/main/PDF/15-Meta_Learning%EF%BC%88%E5%85%83%E5%AD%B8%E7%BF%92%EF%BC%89.pdf">PDF</a></td>
       <td align="center"><a href="https://youtu.be/xoastiYx9JU">video 1</a>, <a href="https://youtu.be/Q68Eh-wm1Ts">video 2</a></td>
     </tr>
