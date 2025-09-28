@@ -1,0 +1,772 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>08-Auto-encoder</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 10px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.collection-content td {
+	white-space: pre-wrap;
+	word-break: break-word;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+	margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.callout img.notion-static-icon {
+	width: 1em;
+	height: 1em;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+blockquote.quote-large {
+	font-size: 1.25em;
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray {
+	color: rgba(128, 125, 120, 1);
+	fill: rgba(128, 125, 120, 1);
+}
+.highlight-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.highlight-orange {
+	color: rgba(204, 121, 47, 1);
+	fill: rgba(204, 121, 47, 1);
+}
+.highlight-yellow {
+	color: rgba(195, 148, 67, 1);
+	fill: rgba(195, 148, 67, 1);
+}
+.highlight-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.highlight-blue {
+	color: rgba(63, 126, 190, 1);
+	fill: rgba(63, 126, 190, 1);
+}
+.highlight-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.highlight-pink {
+	color: rgba(179, 84, 136, 1);
+	fill: rgba(179, 84, 136, 1);
+}
+.highlight-red {
+	color: rgba(201, 85, 73, 1);
+	fill: rgba(201, 85, 73, 1);
+}
+.highlight-default_background {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray_background {
+	background: rgba(42, 28, 0, 0.07);
+}
+.highlight-brown_background {
+	background: rgba(139, 46, 0, 0.086);
+}
+.highlight-orange_background {
+	background: rgba(224, 101, 1, 0.129);
+}
+.highlight-yellow_background {
+	background: rgba(211, 168, 0, 0.137);
+}
+.highlight-teal_background {
+	background: rgba(0, 100, 45, 0.09);
+}
+.highlight-blue_background {
+	background: rgba(0, 111, 200, 0.09);
+}
+.highlight-purple_background {
+	background: rgba(102, 0, 178, 0.078);
+}
+.highlight-pink_background {
+	background: rgba(197, 0, 93, 0.086);
+}
+.highlight-red_background {
+	background: rgba(223, 22, 0, 0.094);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(128, 125, 120, 1);
+	fill: rgba(128, 125, 120, 1);
+}
+.block-color-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.block-color-orange {
+	color: rgba(204, 121, 47, 1);
+	fill: rgba(204, 121, 47, 1);
+}
+.block-color-yellow {
+	color: rgba(195, 148, 67, 1);
+	fill: rgba(195, 148, 67, 1);
+}
+.block-color-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.block-color-blue {
+	color: rgba(63, 126, 190, 1);
+	fill: rgba(63, 126, 190, 1);
+}
+.block-color-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.block-color-pink {
+	color: rgba(179, 84, 136, 1);
+	fill: rgba(179, 84, 136, 1);
+}
+.block-color-red {
+	color: rgba(201, 85, 73, 1);
+	fill: rgba(201, 85, 73, 1);
+}
+.block-color-default_background {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray_background {
+	background: rgba(240, 239, 237, 1);
+}
+.block-color-brown_background {
+	background: rgba(245, 237, 233, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 235, 222, 1);
+}
+.block-color-yellow_background {
+	background: rgba(249, 243, 220, 1);
+}
+.block-color-teal_background {
+	background: rgba(232, 241, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(232, 242, 250, 1);
+}
+.block-color-purple_background {
+	background: rgba(243, 235, 249, 1);
+}
+.block-color-pink_background {
+	background: rgba(250, 233, 241, 1);
+}
+.block-color-red_background {
+	background: rgba(252, 233, 231, 1);
+}
+.select-value-color-default { background-color: rgba(42, 28, 0, 0.07); }
+.select-value-color-gray { background-color: rgba(28, 19, 1, 0.11); }
+.select-value-color-brown { background-color: rgba(127, 51, 0, 0.156); }
+.select-value-color-orange { background-color: rgba(196, 88, 0, 0.203); }
+.select-value-color-yellow { background-color: rgba(209, 156, 0, 0.282); }
+.select-value-color-green { background-color: rgba(0, 96, 38, 0.156); }
+.select-value-color-blue { background-color: rgba(0, 99, 174, 0.172); }
+.select-value-color-purple { background-color: rgba(92, 0, 163, 0.141); }
+.select-value-color-pink { background-color: rgba(183, 0, 78, 0.152); }
+.select-value-color-red { background-color: rgba(206, 24, 0, 0.164); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+
+
+/* Back-to-index button */
+.floating-button {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.4em;
+	padding: 0.55em 1.15em;
+	border-radius: 999px;
+	background: rgba(255, 255, 255, 0.92);
+	color: #1f2933;
+	font-size: 0.9rem;
+	font-weight: 500;
+	text-decoration: none;
+	border: 1px solid rgba(15, 23, 42, 0.12);
+	box-shadow: 0 8px 24px rgba(15, 23, 42, 0.12);
+	backdrop-filter: blur(12px);
+	transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+.floating-button:hover {
+	background: #1f2933;
+	color: #ffffff;
+	box-shadow: 0 12px 32px rgba(15, 23, 42, 0.18);
+	transform: translateY(-1px);
+}
+.floating-button:active {
+	transform: translateY(0);
+	box-shadow: 0 6px 18px rgba(15, 23, 42, 0.14);
+}
+.back-to-index {
+	position: fixed;
+	top: 20px;
+	left: 20px;
+	z-index: 1000;
+}
+.nav-controls {
+	position: fixed;
+	top: 20px;
+	right: 20px;
+	z-index: 1000;
+	display: inline-flex;
+	gap: 0.6em;
+	flex-wrap: wrap;
+	justify-content: flex-end;
+}
+@media (max-width: 600px) {
+	.back-to-index {
+		top: 16px;
+		left: 16px;
+	}
+	.nav-controls {
+		top: 16px;
+		right: 16px;
+		gap: 0.5em;
+	}
+	.floating-button {
+		padding: 0.45em 1em;
+		font-size: 0.85rem;
+	}
+}
+@media print {
+	.back-to-index,
+	.nav-controls {
+		display: none;
+	}
+}
+
+</style></head><body>
+<a class="floating-button back-to-index" href="../index.html">回到目錄</a>
+<div class="nav-controls">
+	<a class="floating-button nav-button" href="../07-Self-Supervised Learning（BERT）/07-Self-Supervised Learning（BERT）.html" title="上一節：07-Self-Supervised Learning（BERT）">上一節</a>
+	<a class="floating-button nav-button" href="../09-Adversarial Attack/09-Adversarial Attack.html" title="下一節：09-Adversarial Attack">下一節</a>
+</div>
+<article id="df28a523-e127-4b8d-b444-89440685dd97" class="page sans"><header><div class="page-header-icon undefined"><img class="icon notion-static-icon" src="https://www.notion.so/icons/document_blue.svg"/></div><h1 class="page-title">08-Auto-encoder</h1><p class="page-description"></p><table class="properties"><tbody></tbody></table></header><div class="page-body"><nav id="0e1310a4-42c5-4c12-9431-1d3a003fb85b" class="block-color-gray table_of_contents"><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#f9612ab7-5756-45d5-961d-92bd2bc2e9e2">1. Basic Idea</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#e484d54b-684c-4445-a2e8-2f86584177d5">1.1 基本認識</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#a317d896-a4ce-4149-842a-dccec5427d15">1.2 主要架構</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#a22173c6-fcc3-4c06-9a30-d4ae46458070">1.3 還原為何能成功？</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#d5d5f0c6-ee76-460e-a876-484117c95f7d">1.4 De-noising Auto-encoder</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#ed849f8b-654c-430f-9281-a3e79409945c">2. Feature Disentanglement</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#60412c1a-6437-4738-a476-4afab02a2229">2.1 應用：Voice Conversion</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#cf2c8c3a-db7f-4e32-9861-af0b61a5845e">3. Discrete Latent Representation</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#e235ccbc-35cc-4fd7-88ca-53ed1e3a2d09">3.1 Vector Quantized Variational Aauto-Encoder（VQVAE）</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#46dfe956-32a4-49ce-9d13-e5f408e7558d">3.2 Text as Representation</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#6424bad2-4f91-4edc-8e9e-facf4535b56a">3.3 Tree as Embedding</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#ea86f000-14e9-414c-894d-c89c1e15f9d3">4. More Applications</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#4daab126-b4cf-401b-b812-89fb49b0871f">4.1 Generator</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#eb3afbf7-0fee-47ab-a803-f43fa5afbe37">4.2 Compression</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#09a27d1c-0f56-4121-9ec4-c5aa6a265945">4.3 <strong>Anomaly Detection（異常檢測）</strong></a></div><div class="table_of_contents-item table_of_contents-indent-2"><a class="table_of_contents-link" href="#2182e96b-9a78-45f8-b224-621c4d745bcc">4.3.1 應用</a></div><div class="table_of_contents-item table_of_contents-indent-2"><a class="table_of_contents-link" href="#3d280d24-99e7-466e-8686-d7b8bf66aa76">4.3.2 More about <strong>Anomaly Detection</strong></a></div></nav><h1 id="f9612ab7-5756-45d5-961d-92bd2bc2e9e2" class="">1. Basic Idea</h1><h2 id="e484d54b-684c-4445-a2e8-2f86584177d5" class="">1.1 基本認識</h2><p id="c55c3da2-fd1b-4d43-9781-6e331e4b1bbb" class="">self-supervised learning 是利用不需要標註資料的任務來訓練模型，如填空題、預測下一個 token，又稱為 pre-train</p><figure id="2badffab-e969-4fd3-a49e-084a5bf64737" class="image"><a href="08-Auto-encoder/0.png"><img style="width:384px" src="08-Auto-encoder/0.png"/></a></figure><p id="88ab3db6-912f-447f-a9d7-08825df1859d" class="">auto-encoder 可以看作是 <strong>self-supervised learning 的一種的方法</strong></p><h2 id="a317d896-a4ce-4149-842a-dccec5427d15" class="">1.2 主要架構</h2><ul id="ecab26e5-9233-4ab0-9fcd-d28038c7ca67" class="bulleted-list"><li style="list-style-type:disc">encoder 讀進一張高維圖片，把這張圖片變成一個低維（bottleneck）向量（稱 <strong>embedding</strong>、<strong>representation </strong>或 <strong>code</strong>）作為 decoder 的輸入。架構類似 CNN</li></ul><ul id="1ae6bfbc-89ce-4a92-b81f-a63cb2b08187" class="bulleted-list"><li style="list-style-type:disc">decoder 輸入<strong>向量</strong>，產生一張圖片。架構類似 GAN 的 generator</li></ul><figure id="600327eb-cd4a-4d8c-aa49-951ed5413dec" class="image"><a href="08-Auto-encoder/1.png"><img style="width:480px" src="08-Auto-encoder/1.png"/></a></figure><p id="badf046b-86fa-4507-b9aa-23379145f0fc" class="">訓練的目標希望 <strong>encoder 的輸入跟 decoder 的輸出越接近越好</strong>（reconstruction<strong>）<br/></strong>與 <strong><a href="https://www.notion.so/06-Generative-Adversarial-Network-GAN-3eef1d4d34384ea596d6be37eb429a25?pvs=21">Cycle GAN</a></strong><strong> </strong>做的事情其實一模一樣</p><p id="306e4a11-0de8-41da-9f1b-a8d4aeb52ea4" class=""><strong>動機：</strong></p><p id="02223c40-4d00-428c-815f-98fdab4fc0f8" class=""><strong>降維（dimension reduction）</strong>，圖片可以看作是一個很長的向量，但這個向量太長不好處理，所以丟給 <strong>encoder</strong> 來壓縮輸出一個較短的向量。學習更多：<a href="https://youtu.be/iwh5o_M4BNU">PCA</a>、<a href="https://youtu.be/GBUEjkpoxXc">t-SNE</a></p><h2 id="a22173c6-fcc3-4c06-9a30-d4ae46458070" class="">1.3 還原為何能成功？</h2><p id="c9d61d0d-3f6a-4e30-bb45-653a929c0f28" class="">就算有一個高維度的向量圖片，但可能他的<strong>變化有限</strong>，所以只需很少的維度就能夠表示高維圖片的各種變化情況</p><div id="09513cfa-038b-4e0d-827b-295680f4e71b" class="column-list"><div id="7bc4078b-ea58-452c-a34b-44a783cbf6d1" style="width:56.25%" class="column"><figure id="2d181891-f97c-40a2-b5cf-5aad42475ecb" class="image"><a href="08-Auto-encoder/2.png"><img style="width:371.2916564941406px" src="08-Auto-encoder/2.png"/></a></figure></div><div id="ccde8d3c-db17-4eab-a4a0-2abfa1ad55aa" style="width:43.75%" class="column"><figure id="2a2cfd65-71ed-458c-b5e8-2a22ff0d8fa3" class="image"><a href="08-Auto-encoder/3.png"><img style="width:144px" src="08-Auto-encoder/3.png"/></a></figure></div></div><p id="a09722b3-791e-4f6a-9470-6e98e21265f9" class="">如上圖，<style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>3</mn><mo>×</mo><mn>3</mn></mrow><annotation encoding="application/x-tex">3\times3</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">3</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">3</span></span></span></span></span><span>﻿</span></span> 的矩陣應當有 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mn>2</mn><mn>9</mn></msup></mrow><annotation encoding="application/x-tex">2^9</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8141em;"></span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">9</span></span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span> 種變化情況，但可能只有 2 種情況會出現，因此可以只用 2 維的向量進行表示。encoder 就能夠實現這種轉換，把複雜的訊息用簡單的方法表示，實現 <strong>dimension reduction</strong></p><h2 id="d5d5f0c6-ee76-460e-a876-484117c95f7d" class="">1.4 De-noising Auto-encoder</h2><p id="0a2aa253-5866-4ac8-a298-78689f74bf72" class=""><strong>De-noising auto-encoder</strong> 是將圖片送入 encoder 之前加一些雜訊，要 decoder 把向量<strong>還原成加入雜訊前的結果</strong></p><figure id="7fd8d1f5-3c4a-4a37-b90e-93715643b275" class="image"><a href="08-Auto-encoder/4.png"><img style="width:432px" src="08-Auto-encoder/4.png"/></a></figure><p id="2f8c6119-6073-445c-80d9-813d8a7f2d6b" class="">與 <a href="https://www.notion.so/07-Self-Supervised-Learning-BERT-2cb6d4c62aa44f9386708f3be787fba5?pvs=21">BERT</a> 做的事很像，可以說 <strong>BERT 就是一個 De-noising Auto-encoder</strong></p><figure id="1680744d-aa57-4b9e-9a77-feabb871ef57" class="image"><a href="08-Auto-encoder/5.png"><img style="width:432px" src="08-Auto-encoder/5.png"/></a></figure><p id="9299efe4-887a-415d-ba5b-691c713d4531" class="">
+</p><h1 id="ed849f8b-654c-430f-9281-a3e79409945c" class="">2. Feature Disentanglement</h1><p id="8e876bd4-855f-4cd7-bd5d-c7c4c416353c" class="">由於 embedding 向量能夠還原回原來的數據，這說明 <strong>auto-encoder 能夠讓 embedding 中包含原數據中的所有訊息</strong>。例如把一段聲音丟到 encoder 變成向量，這個向量包含了語音裡所有重要的資訊，包括這句話的內容是什麽、這句話是誰說的等等</p><figure id="f22a883f-8148-4284-a965-89d732225c0b" class="image"><a href="08-Auto-encoder/6.png"><img style="width:506.97918701171875px" src="08-Auto-encoder/6.png"/></a></figure><p id="36bfd06e-3429-41cb-8e05-35583f5c2609" class="">Feature Disentangle 就是希望在訓練一個 auto-encoder 時，同時有辦法知道這個 embedding 的<strong>哪些維度代表了哪些資訊</strong>，詳細可參考：<br/>1. <em><a href="https://arxiv.org/abs/1904.05742">One-shot Voice Conversion by Separating Speaker and Content Representations with Instance Normalization</a></em><em><br/>2. </em><em><a href="https://arxiv.org/abs/1804.02812">Multi-target Voice Conversion without Parallel Data by Adversarially Learning Disentangled Audio Representations</a></em><em><br/>3. </em><em><a href="https://arxiv.org/abs/1905.05879">AUTOVC: Zero-Shot Voice Style Transfer with Only Autoencoder Loss</a></em></p><h2 id="60412c1a-6437-4738-a476-4afab02a2229" class="">2.1 應用：Voice Conversion</h2><figure id="80c67a6c-abc0-4bbf-886e-5ddbd5204ac3" class="image"><a href="08-Auto-encoder/7.png"><img style="width:480px" src="08-Auto-encoder/7.png"/></a></figure><p id="36a6cb20-6b49-475a-aa82-08bdeb67dca6" class="">利用 <strong>Feature Disentangle</strong> 可以知道向量中哪些維度代表語音的內容、哪些維度代表語音的聲音，只要把其中一人說話的內容的部分取出來，把另一人說話的聲音特徵的部分取出來，將二者併起來丟到 decoder 裡面就可以實現變聲</p><p id="89403cac-1210-4f24-94c4-b9a3a8129a17" class="">
+</p><h1 id="cf2c8c3a-db7f-4e32-9861-af0b61a5845e" class="">3. Discrete Latent Representation</h1><p id="087cead3-739e-4a1d-a34e-3892cf0a551e" class="">embedding 的一些不同形式</p><figure id="b39c488a-8fe5-49e4-afb7-4d5211511706" class="image"><a href="08-Auto-encoder/8.png"><img style="width:532.96875px" src="08-Auto-encoder/8.png"/></a></figure><ul id="415ea01a-d330-4a53-9e0e-323ae96119eb" class="bulleted-list"><li style="list-style-type:disc">embedding 是一連串的<strong>實數數字</strong></li></ul><ul id="e9d98f47-a22a-4524-b703-8b1939064845" class="bulleted-list"><li style="list-style-type:disc">embedding 只有 <strong>0 跟 1</strong>，每一個維度它就代表了<strong>某種特徵的有或者是沒有<br/></strong>如第一維 0 代表男生、1 代表女生；第三維 0 代表有戴眼鏡、1 代表沒戴眼鏡</li></ul><ul id="f451cdce-84ba-48f3-b217-4143c3c6cc54" class="bulleted-list"><li style="list-style-type:disc">embedding 是 <strong>one-hot vector</strong>，可以在完全沒有 label data 的情況下讓<strong>機器自動學會分類<br/>如</strong>手寫數字辨識，embedding 就設十維</li></ul><h2 id="e235ccbc-35cc-4fd7-88ca-53ed1e3a2d09" class="">3.1 Vector Quantized Variational Aauto-Encoder（VQVAE）</h2><p id="df59dcdf-67c1-4277-81a9-6c872b7cf719" class="">encoder 輸出一個向量，與 codebook 的每個向量計算相似度，挑選相似度最高的向量再輸入進 decoder</p><figure id="a71956c1-950d-42b2-b62b-303dea380836" class="image"><a href="08-Auto-encoder/9.png"><img style="width:480px" src="08-Auto-encoder/9.png"/></a></figure><p id="5361f367-7828-4e9d-bd51-a94377b83d4d" class=""><strong>好處：</strong></p><p id="7a80a955-ebe1-4b56-aba7-7b6c1437da32" class=""><strong>Discrete Latent Representation，</strong>假設 codebook 裡面有 32 個向量，那 decoder 的輸入就只有 32 種可能，等於是讓 <strong>embedding 是離散的</strong>，<strong>沒有無窮無盡的可能</strong></p><h2 id="46dfe956-32a4-49ce-9d13-e5f408e7558d" class="">3.2 Text as Representation</h2><p id="4f06ce64-c2b5-4330-8023-6eeb65cfc8e2" class="">讓 <strong>representation（embedding）是文字</strong>，比如做摘要，給一段文章輸入到 encoder 輸出摘要，再輸入到 decoder 還原，但會發現單純這樣<strong>訓練不起來</strong></p><figure id="e036b959-5849-4ce8-972a-6c6c9c73e961" class="image"><a href="08-Auto-encoder/10.png"><img style="width:432px" src="08-Auto-encoder/10.png"/></a></figure><p id="66825f08-cd2b-4a2a-84a0-e24046970949" class="">再用上 <strong>GAN 的 discriminator</strong>，discriminator 看過人寫的句子，所以知道人寫的句子長什麽樣子</p><figure id="faa783d8-c4e7-48f6-ae87-9380a1284fa5" class="image"><a href="08-Auto-encoder/11.png"><img style="width:432px" src="08-Auto-encoder/11.png"/></a><figcaption>另一角度看 CycleGAN</figcaption></figure><p id="47198f8c-f497-44a2-8594-acbdb26ddf44" class="">encoder 要想辦法產生一段句子，這段句子不只可以<strong>透過 decoder 還原回原來的文章</strong>，還要是 <strong>discriminator 覺得像是人寫的句子</strong></p><h2 id="6424bad2-4f91-4edc-8e9e-facf4535b56a" class="">3.3 Tree as Embedding</h2><p id="7bd1c47b-7610-495b-9ee9-398ae88d71a0" class="">給一段文字轉為 tree strcture，再把 tree strcture 轉回為原文字</p><figure id="74dc7c4f-e40d-48d1-a087-4629cb822756" class="image"><a href="08-Auto-encoder/12.png"><img style="width:432px" src="08-Auto-encoder/12.png"/></a><figcaption><a href="https://arxiv.org/abs/1806.07832">https://arxiv.org/abs/1806.07832</a>、<a href="https://arxiv.org/abs/1904.03746">https://arxiv.org/abs/1904.03746</a></figcaption></figure><h1 id="ea86f000-14e9-414c-894d-c89c1e15f9d3" class="">4. More Applications</h1><h2 id="4daab126-b4cf-401b-b812-89fb49b0871f" class="">4.1 Generator</h2><figure id="e4b18f56-fd24-4e78-8b37-8ecca4b12c55" class="image"><a href="08-Auto-encoder/13.png"><img style="width:432px" src="08-Auto-encoder/13.png"/></a></figure><p id="57d60599-13af-4e98-b2a3-14c5eee815fa" class="">decoder 正好是輸入一個向量，產生一張圖片，所以可以把它當做一個 generator 來使用</p><h2 id="eb3afbf7-0fee-47ab-a803-f43fa5afbe37" class="">4.2 Compression</h2><figure id="c190c7d4-3705-47cb-adf5-1a120773749b" class="image"><a href="08-Auto-encoder/14.png"><img style="width:432px" src="08-Auto-encoder/14.png"/></a></figure><p id="4a3fba22-26fe-4b6b-b524-97296ad0326a" class="">
+</p><p id="f534db7b-cdfe-4b90-b45e-2e03971eb998" class="">encoder 的輸出會把高維向量變為低維向量，encoder 做壓縮，而 decoder 做解壓縮</p><h2 id="09a27d1c-0f56-4121-9ec4-c5aa6a265945" class="">4.3 <strong>Anomaly Detection（異常檢測）</strong></h2><p id="330e17a2-0260-4da0-9afa-89c9165df6e9" class="">判斷一筆新的資料跟之前在訓練資料裡面<strong>看過的資料相不相似</strong></p><figure id="6f7307c4-2c8d-45df-905a-54c015e9f3db" class="image"><a href="08-Auto-encoder/15.png"><img style="width:432px" src="08-Auto-encoder/15.png"/></a></figure><h3 id="2182e96b-9a78-45f8-b224-621c4d745bcc" class="">4.3.1 應用</h3><figure id="5b4ec6a3-661b-46b7-9786-7f1286a0d5bd" class="image"><a href="08-Auto-encoder/16.png"><img style="width:480px" src="08-Auto-encoder/16.png"/></a></figure><ul id="061826f0-c5f2-4694-ba59-c138c842c85a" class="bulleted-list"><li style="list-style-type:disc"><strong>詐欺偵測<br/></strong>假設訓練資料有許多信用卡的交易紀錄，訓練一個異常檢測的模型，有一筆新的交易紀錄進來，可以讓機器判斷這筆紀錄算是正常的還是異常的</li></ul><ul id="15b90244-ed07-475d-964b-af67940a0af6" class="bulleted-list"><li style="list-style-type:disc"><strong>網路侵入偵測<br/></strong>收集許多正常的連線的紀錄，訓練出一個異常檢測的模型，看看新的連線是正常的連線還是異常的連線</li></ul><ul id="9c562bd0-f41a-448e-ba76-e03ac7063571" class="bulleted-list"><li style="list-style-type:disc"><strong>癌細胞檢測<br/></strong>收集許多正常細胞的資料，訓練一個異常檢測的模型，看到一個新的細胞可以知道這個細胞有沒有突變，是不是一個癌細胞</li></ul><p id="a142bcd5-4946-4a61-aa28-f29097c46d22" class=""><strong>難點：</strong></p><p id="6465c192-4810-4e8b-a93c-1cd33338359f" class="">與分類問題很相像，但<strong>並沒有分類問題簡單</strong>，通常收集到的<strong>只有某個類別的資料</strong>，另外一類別的資料極少或根本沒有，這種分類的問題又叫做 <strong>one class</strong> 分類問題</p><figure id="04f90225-0431-4e4c-a2d9-19978abb793e" class="image"><a href="08-Auto-encoder/17.png"><img style="width:480px" src="08-Auto-encoder/17.png"/></a></figure><figure id="ce1970ac-b8fa-4bd2-8522-a6f96f0ba49e" class="image"><a href="08-Auto-encoder/18.png"><img style="width:480px" src="08-Auto-encoder/18.png"/></a></figure><p id="14129083-7f60-46d1-a3e1-c7fbc4e15a8d" class="">根據 <strong>reconstruction 的好壞來判斷是否異常</strong></p><h3 id="3d280d24-99e7-466e-8686-d7b8bf66aa76" class="">4.3.2 More about <strong>Anomaly Detection</strong></h3><ul id="a2fabe7a-0fb3-4080-b044-3650e23c75b1" class="bulleted-list"><li style="list-style-type:disc">Part 1: <a href="https://youtu.be/gDp2LXGnVLQ">https://youtu.be/gDp2LXGnVLQ</a></li></ul><ul id="a7fc863e-a999-43d3-a9fa-14b905c31c13" class="bulleted-list"><li style="list-style-type:disc">Part 2: <a href="https://youtu.be/cYrNjLxkoXs">https://youtu.be/cYrNjLxkoXs</a></li></ul><ul id="93919c20-db9d-4e31-8942-6608fd98001d" class="bulleted-list"><li style="list-style-type:disc">Part 3: <a href="https://youtu.be/ueDlm2FkCnw">https://youtu.be/ueDlm2FkCnw</a></li></ul><ul id="6ff79cac-a581-4edf-8ff3-91b85e76a855" class="bulleted-list"><li style="list-style-type:disc">Part 4: <a href="https://youtu.be/XwkHOUPbc0Q">https://youtu.be/XwkHOUPbc0Q</a></li></ul><ul id="5142fe88-bfcf-4f6e-8851-89b506b54eeb" class="bulleted-list"><li style="list-style-type:disc">Part 5: <a href="https://youtu.be/Fh1xFBktRLQ">https://youtu.be/Fh1xFBktRLQ</a></li></ul><ul id="421fb7f7-1376-4b6e-a049-c8177ebd33e7" class="bulleted-list"><li style="list-style-type:disc">Part 6: <a href="https://youtu.be/LmFWzmn2rFY">https://youtu.be/LmFWzmn2rFY</a></li></ul><ul id="37e9a671-d534-4a6b-9030-3e7f24ee3945" class="bulleted-list"><li style="list-style-type:disc">Part 7: <a href="https://youtu.be/6W8FqUGYyDo">https://youtu.be/6W8FqUGYyDo</a></li></ul></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>

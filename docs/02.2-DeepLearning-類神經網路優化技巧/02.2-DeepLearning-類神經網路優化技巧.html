@@ -1,0 +1,776 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>02.2-DeepLearning-類神經網路優化技巧</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 10px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.collection-content td {
+	white-space: pre-wrap;
+	word-break: break-word;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+	margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.callout img.notion-static-icon {
+	width: 1em;
+	height: 1em;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+blockquote.quote-large {
+	font-size: 1.25em;
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray {
+	color: rgba(128, 125, 120, 1);
+	fill: rgba(128, 125, 120, 1);
+}
+.highlight-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.highlight-orange {
+	color: rgba(204, 121, 47, 1);
+	fill: rgba(204, 121, 47, 1);
+}
+.highlight-yellow {
+	color: rgba(195, 148, 67, 1);
+	fill: rgba(195, 148, 67, 1);
+}
+.highlight-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.highlight-blue {
+	color: rgba(63, 126, 190, 1);
+	fill: rgba(63, 126, 190, 1);
+}
+.highlight-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.highlight-pink {
+	color: rgba(179, 84, 136, 1);
+	fill: rgba(179, 84, 136, 1);
+}
+.highlight-red {
+	color: rgba(201, 85, 73, 1);
+	fill: rgba(201, 85, 73, 1);
+}
+.highlight-default_background {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray_background {
+	background: rgba(42, 28, 0, 0.07);
+}
+.highlight-brown_background {
+	background: rgba(139, 46, 0, 0.086);
+}
+.highlight-orange_background {
+	background: rgba(224, 101, 1, 0.129);
+}
+.highlight-yellow_background {
+	background: rgba(211, 168, 0, 0.137);
+}
+.highlight-teal_background {
+	background: rgba(0, 100, 45, 0.09);
+}
+.highlight-blue_background {
+	background: rgba(0, 111, 200, 0.09);
+}
+.highlight-purple_background {
+	background: rgba(102, 0, 178, 0.078);
+}
+.highlight-pink_background {
+	background: rgba(197, 0, 93, 0.086);
+}
+.highlight-red_background {
+	background: rgba(223, 22, 0, 0.094);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(128, 125, 120, 1);
+	fill: rgba(128, 125, 120, 1);
+}
+.block-color-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.block-color-orange {
+	color: rgba(204, 121, 47, 1);
+	fill: rgba(204, 121, 47, 1);
+}
+.block-color-yellow {
+	color: rgba(195, 148, 67, 1);
+	fill: rgba(195, 148, 67, 1);
+}
+.block-color-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.block-color-blue {
+	color: rgba(63, 126, 190, 1);
+	fill: rgba(63, 126, 190, 1);
+}
+.block-color-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.block-color-pink {
+	color: rgba(179, 84, 136, 1);
+	fill: rgba(179, 84, 136, 1);
+}
+.block-color-red {
+	color: rgba(201, 85, 73, 1);
+	fill: rgba(201, 85, 73, 1);
+}
+.block-color-default_background {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray_background {
+	background: rgba(240, 239, 237, 1);
+}
+.block-color-brown_background {
+	background: rgba(245, 237, 233, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 235, 222, 1);
+}
+.block-color-yellow_background {
+	background: rgba(249, 243, 220, 1);
+}
+.block-color-teal_background {
+	background: rgba(232, 241, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(232, 242, 250, 1);
+}
+.block-color-purple_background {
+	background: rgba(243, 235, 249, 1);
+}
+.block-color-pink_background {
+	background: rgba(250, 233, 241, 1);
+}
+.block-color-red_background {
+	background: rgba(252, 233, 231, 1);
+}
+.select-value-color-default { background-color: rgba(42, 28, 0, 0.07); }
+.select-value-color-gray { background-color: rgba(28, 19, 1, 0.11); }
+.select-value-color-brown { background-color: rgba(127, 51, 0, 0.156); }
+.select-value-color-orange { background-color: rgba(196, 88, 0, 0.203); }
+.select-value-color-yellow { background-color: rgba(209, 156, 0, 0.282); }
+.select-value-color-green { background-color: rgba(0, 96, 38, 0.156); }
+.select-value-color-blue { background-color: rgba(0, 99, 174, 0.172); }
+.select-value-color-purple { background-color: rgba(92, 0, 163, 0.141); }
+.select-value-color-pink { background-color: rgba(183, 0, 78, 0.152); }
+.select-value-color-red { background-color: rgba(206, 24, 0, 0.164); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+
+
+/* Back-to-index button */
+.floating-button {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.4em;
+	padding: 0.55em 1.15em;
+	border-radius: 999px;
+	background: rgba(255, 255, 255, 0.92);
+	color: #1f2933;
+	font-size: 0.9rem;
+	font-weight: 500;
+	text-decoration: none;
+	border: 1px solid rgba(15, 23, 42, 0.12);
+	box-shadow: 0 8px 24px rgba(15, 23, 42, 0.12);
+	backdrop-filter: blur(12px);
+	transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+.floating-button:hover {
+	background: #1f2933;
+	color: #ffffff;
+	box-shadow: 0 12px 32px rgba(15, 23, 42, 0.18);
+	transform: translateY(-1px);
+}
+.floating-button:active {
+	transform: translateY(0);
+	box-shadow: 0 6px 18px rgba(15, 23, 42, 0.14);
+}
+.back-to-index {
+	position: fixed;
+	top: 20px;
+	left: 20px;
+	z-index: 1000;
+}
+.nav-controls {
+	position: fixed;
+	top: 20px;
+	right: 20px;
+	z-index: 1000;
+	display: inline-flex;
+	gap: 0.6em;
+	flex-wrap: wrap;
+	justify-content: flex-end;
+}
+@media (max-width: 600px) {
+	.back-to-index {
+		top: 16px;
+		left: 16px;
+	}
+	.nav-controls {
+		top: 16px;
+		right: 16px;
+		gap: 0.5em;
+	}
+	.floating-button {
+		padding: 0.45em 1em;
+		font-size: 0.85rem;
+	}
+}
+@media print {
+	.back-to-index,
+	.nav-controls {
+		display: none;
+	}
+}
+
+</style></head><body>
+<a class="floating-button back-to-index" href="../index.html">回到目錄</a>
+<div class="nav-controls">
+	<a class="floating-button nav-button" href="../02.1-DeepLearning-General Guidance/02.1-DeepLearning-General Guidance.html" title="上一節：02.1-DeepLearning-General Guidance">上一節</a>
+	<a class="floating-button nav-button" href="../02.3-DeepLearning-Loss of Classification/02.3-DeepLearning-Loss of Classification.html" title="下一節：02.3-DeepLearning-Loss of Classification">下一節</a>
+</div>
+<article id="00258523-1c2f-413b-bc62-6e00e464694d" class="page sans"><header><div class="page-header-icon undefined"><img class="icon notion-static-icon" src="https://www.notion.so/icons/document_blue.svg"/></div><h1 class="page-title">02.2-DeepLearning-類神經網路優化技巧</h1><p class="page-description"></p><table class="properties"><tbody></tbody></table></header><div class="page-body"><nav id="639a7a40-9e70-483e-a660-9608a9481862" class="block-color-gray table_of_contents"><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#a13661af-585d-4193-9f4e-44a877797d7b">1. Critical Point</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#2c0e94fa-0445-4e3a-a721-4f4222d6f9b2">1.1 如何判斷？</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#4c83eaf8-edbe-4a6b-aacf-3af84c071dab">1.2 Local Minima 比 Saddle Point 少的多</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#ffea5b43-c85e-4e16-9af1-0af3f3cf492e">2. Batch and Momentum</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#b14c8b64-3ccd-4614-9b66-9e0677b0cbb8">2.1 Review：<a href="https://www.notion.so/01-b6979cc5ba9b4e2887d2b5e86c174897?pvs=21">Optimization with Batch</a></a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#a00cc57b-1166-4531-b395-1994185267c6">2.2 Small Batch v.s. Large Batch</a></div><div class="table_of_contents-item table_of_contents-indent-2"><a class="table_of_contents-link" href="#659a3be1-e0db-4fda-9f22-fb477a8e580c">2.2.1 基本現象</a></div><div class="table_of_contents-item table_of_contents-indent-2"><a class="table_of_contents-link" href="#5c788bd2-c282-4497-86fe-f3cc2c3b8b38">2.2.2 時間性能</a></div><div class="table_of_contents-item table_of_contents-indent-2"><a class="table_of_contents-link" href="#38619e2d-6671-4aaa-bf6b-f1dabb6a859d">結論 1：使用較小的 Batch Size，在更新參數時會有 Noisy ⇒ 有利於訓練</a></div><div class="table_of_contents-item table_of_contents-indent-2"><a class="table_of_contents-link" href="#da709f33-66f9-47a7-b3de-fe61eced14fd">結論 2：使用較小的 Batch Size 可以避免 Overfitting（有利於測試）</a></div><div class="table_of_contents-item table_of_contents-indent-2"><a class="table_of_contents-link" href="#bbdf6ea0-1127-4f9c-b61b-d920ee3b9033">總結：Batch Size 是一個需要調整的參數，它會影響訓練速度與優化效果</a></div><div class="table_of_contents-item table_of_contents-indent-2"><a class="table_of_contents-link" href="#503afea7-1359-423b-a01c-8ed62f051d9c">2.2.3 魚與熊掌兼得：結合大、小 Batch 的優點</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#9cd3b055-09be-4453-bc90-51d32a761472">2.3 Momentum</a></div><div class="table_of_contents-item table_of_contents-indent-2"><a class="table_of_contents-link" href="#8c28e0cb-a7e2-4fb0-8a30-63fee298059d">2.3.1 Vanilla Gradient Descent（一般的梯度下降）</a></div><div class="table_of_contents-item table_of_contents-indent-2"><a class="table_of_contents-link" href="#44250a63-11bf-4b73-86b3-63a9f04c988a">2.3.2 Gradient Descent + Momentum（考慮動量）</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#ee9c2259-a3a1-432d-b231-6fa1146d9cb7">2.4 總結</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#077ad3a9-00b4-4151-a154-6f1d0b89bd37">3. Adaptive Learning Rate</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#80edbd7c-3759-46ac-be17-40bac87bc95b">3.1 客制化梯度</a></div><div class="table_of_contents-item table_of_contents-indent-2"><a class="table_of_contents-link" href="#3c73c260-acf1-4980-9c89-9746eed1531f">方法一：<strong>Adagrad</strong></a></div><div class="table_of_contents-item table_of_contents-indent-2"><a class="table_of_contents-link" href="#dc0ea5d9-5e87-4720-8149-54884eaaf44f">方法二：RMSProp</a></div><div class="table_of_contents-item table_of_contents-indent-2"><a class="table_of_contents-link" href="#9aa3050b-efe2-4420-ae64-95edc7b0b9cd">方法三：Adam = RMSProp + Momentum（最常用的策略）</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#9b708e8c-0938-4c9c-8fc6-b37607194217">3.2 Learning Rate Scheduling</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#2f5804cd-4494-419d-94ac-d15d62f02c41">3.3 總結</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#b017f239-15d1-4a94-8285-9eb75e97702c">3.4 Learn More</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#754a4abe-63ad-4239-81c7-69258e2894f2">4. Batch Normalization</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#4627876a-a03a-4b9e-bbf3-e5c09f718c91">4.1 <strong>Feature Normalization</strong>（歸一化）</a></div><div class="table_of_contents-item table_of_contents-indent-2"><a class="table_of_contents-link" href="#8fc66d2b-a4d8-4b9b-b058-d1b06d794f9b">4.1.1 一種 <strong>Normalization </strong>方法</a></div><div class="table_of_contents-item table_of_contents-indent-2"><a class="table_of_contents-link" href="#c7aca3a6-92cb-4919-bdac-57ba59b78c53">4.1.2 每一層都需要一次 Normalization</a></div><div class="table_of_contents-item table_of_contents-indent-2"><a class="table_of_contents-link" href="#fac54d77-ca6e-4f7e-84b3-e29a672ae33c">4.1.3 注意：對一批 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>z</mi></mrow><annotation encoding="application/x-tex">z</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.04398em;">z</span></span></span></span></span><span>﻿</span></span> 數據進行歸一化</a></div><div class="table_of_contents-item table_of_contents-indent-2"><a class="table_of_contents-link" href="#2c75d5cf-57e3-480d-871a-5353ceb64948">4.1.4 Batch Normalization</a></div><div class="table_of_contents-item table_of_contents-indent-2"><a class="table_of_contents-link" href="#05abeffb-1a4b-41a4-92d5-15fe651debc9">4.1.5 Testing 時會遇到的問題</a></div><div class="table_of_contents-item table_of_contents-indent-2"><a class="table_of_contents-link" href="#e71bb4e3-0f01-4887-b1a7-3d6326f307f4">4.1.6 結果比較</a></div><div class="table_of_contents-item table_of_contents-indent-2"><a class="table_of_contents-link" href="#7fc154b3-437c-49a6-8c2c-fa2f6a2a21fb">4.1.7 其他 Normalization 方法</a></div></nav><h1 id="a13661af-585d-4193-9f4e-44a877797d7b" class="">1. Critical Point</h1><p id="e12d5cce-988a-498e-ace3-2273b01b88e0" class="">Critical Point 是梯度（ gradient）為 0 的點</p><figure id="a4ad140a-b5e9-4f48-958d-b56f0efd520a" class="image"><a href="02.2-DeepLearning-%E9%A1%9E%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%E5%84%AA%E5%8C%96%E6%8A%80%E5%B7%A7/0.png"><img style="width:480px" src="02.2-DeepLearning-%E9%A1%9E%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%E5%84%AA%E5%8C%96%E6%8A%80%E5%B7%A7/0.png"/></a></figure><p id="a8496393-8586-402f-8669-267f7b738d85" class="">如果 loss 沒有辦法再下降，也許是因為卡在 <strong>critical point</strong> ⇒ <strong>local minima</strong> OR <strong>saddle point</strong></p><ul id="4d112d07-72a7-49c7-9e32-c2dbfc3e9856" class="bulleted-list"><li style="list-style-type:disc"><strong>local minima：局部極小值</strong><p id="1986dcc0-3962-4e16-9891-88e315500ed1" class="">卡在 local minima，那可能就無路可走</p></li></ul><ul id="235bd015-30f7-40a2-b47c-aecaa25e0c78" class="bulleted-list"><li style="list-style-type:disc"><strong>saddle point：鞍點</strong><p id="86b8c4f6-d84d-4b0f-872a-35a887e78207" class="">卡在 saddle point，旁邊還是有路可以走</p></li></ul><h2 id="2c0e94fa-0445-4e3a-a721-4f4222d6f9b2" class="">1.1 如何判斷？</h2><p id="5d97c9f0-1c24-409d-99c4-42653f949327" class="">無法完整知道整個損失函數的樣子，但是如果給定某一組參數，比如 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>θ</mi><mo mathvariant="normal" lspace="0em" rspace="0em">′</mo></msup></mrow><annotation encoding="application/x-tex">θ&#x27;</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7519em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02778em;">θ</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7519em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">′</span></span></span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span>，在 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>θ</mi><mo mathvariant="normal" lspace="0em" rspace="0em">′</mo></msup></mrow><annotation encoding="application/x-tex">θ&#x27;</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7519em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02778em;">θ</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7519em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">′</span></span></span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span> 附近的損失函數是有辦法寫出來的，雖然 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>L</mi><mo stretchy="false">(</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">L(θ)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">L</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.02778em;">θ</span><span class="mclose">)</span></span></span></span></span><span>﻿</span></span> 完整的樣子寫不出來 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>θ</mi><mo mathvariant="normal" lspace="0em" rspace="0em">′</mo></msup></mrow><annotation encoding="application/x-tex">θ&#x27;</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7519em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02778em;">θ</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7519em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">′</span></span></span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span> 附近的 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>L</mi><mo stretchy="false">(</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">L(θ)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">L</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.02778em;">θ</span><span class="mclose">)</span></span></span></span></span><span>﻿</span></span> 可近似為（泰勒級數展開）：</p><figure id="e64d164e-aff2-430f-a6b0-d4455e75d4bc" class="image"><a href="02.2-DeepLearning-%E9%A1%9E%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%E5%84%AA%E5%8C%96%E6%8A%80%E5%B7%A7/1.png"><img style="width:432px" src="02.2-DeepLearning-%E9%A1%9E%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%E5%84%AA%E5%8C%96%E6%8A%80%E5%B7%A7/1.png"/></a></figure><ul id="d4f55f7c-cc83-408e-b9e5-82ecf811f032" class="bulleted-list"><li style="list-style-type:disc">第一項中，<style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>L</mi><mo stretchy="false">(</mo><msup><mi>θ</mi><mo mathvariant="normal" lspace="0em" rspace="0em">′</mo></msup><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">L(\theta&#x27;)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.0019em;vertical-align:-0.25em;"></span><span class="mord mathnormal">L</span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02778em;">θ</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7519em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">′</span></span></span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span></span><span>﻿</span></span>，當 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>θ</mi></mrow><annotation encoding="application/x-tex">\theta</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">θ</span></span></span></span></span><span>﻿</span></span> 跟 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>θ</mi><mo mathvariant="normal" lspace="0em" rspace="0em">′</mo></msup></mrow><annotation encoding="application/x-tex">\theta&#x27;</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7519em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02778em;">θ</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7519em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">′</span></span></span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span> 很近的时候，<style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>L</mi></mrow><annotation encoding="application/x-tex">L</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal">L</span></span></span></span></span><span>﻿</span></span> 很靠近</li></ul><ul id="9709ae4e-a896-4ddf-8ed0-8f10730f2087" class="bulleted-list"><li style="list-style-type:disc">第二項中，<style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>g</mi></mrow><annotation encoding="application/x-tex">g</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">g</span></span></span></span></span><span>﻿</span></span> 代表梯度，彌補 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>L</mi><mo stretchy="false">(</mo><msup><mi>θ</mi><mo mathvariant="normal" lspace="0em" rspace="0em">′</mo></msup><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">L(\theta&#x27;)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.0019em;vertical-align:-0.25em;"></span><span class="mord mathnormal">L</span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02778em;">θ</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7519em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">′</span></span></span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span></span><span>﻿</span></span> 與 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>L</mi><mo stretchy="false">(</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">L(\theta)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">L</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.02778em;">θ</span><span class="mclose">)</span></span></span></span></span><span>﻿</span></span> 之間的差距；<style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>g</mi></mrow><annotation encoding="application/x-tex">g</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">g</span></span></span></span></span><span>﻿</span></span> 的第 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi></mrow><annotation encoding="application/x-tex">i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6595em;"></span><span class="mord mathnormal">i</span></span></span></span></span><span>﻿</span></span> 個 component 就是 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>θ</mi></mrow><annotation encoding="application/x-tex">θ</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">θ</span></span></span></span></span><span>﻿</span></span> 的第 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi></mrow><annotation encoding="application/x-tex">i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6595em;"></span><span class="mord mathnormal">i</span></span></span></span></span><span>﻿</span></span> 個 component 對 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>L</mi></mrow><annotation encoding="application/x-tex">L</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal">L</span></span></span></span></span><span>﻿</span></span> 的偏微分</li></ul><ul id="035158b2-903e-4273-9808-6d793acabc15" class="bulleted-list"><li style="list-style-type:disc">第三項中，<style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>H</mi></mrow><annotation encoding="application/x-tex">H</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.08125em;">H</span></span></span></span></span><span>﻿</span></span> 表示海森矩陣，是 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>L</mi></mrow><annotation encoding="application/x-tex">L</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal">L</span></span></span></span></span><span>﻿</span></span> 的二階微分</li></ul><figure id="24346902-ad14-4d49-a799-d72d6167120f" class="image"><a href="02.2-DeepLearning-%E9%A1%9E%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%E5%84%AA%E5%8C%96%E6%8A%80%E5%B7%A7/2.png"><img style="width:432px" src="02.2-DeepLearning-%E9%A1%9E%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%E5%84%AA%E5%8C%96%E6%8A%80%E5%B7%A7/2.png"/></a></figure><p id="e9a60649-8059-4fab-8b6c-e69c6d6755c7" class=""><strong>在 critical point 附近時：第二項為 0，根據第三項來判斷 → 只需考察 H 的特徵值</strong></p><figure id="2f18029b-e536-48c5-b9e8-959d99414246" class="image"><a href="02.2-DeepLearning-%E9%A1%9E%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%E5%84%AA%E5%8C%96%E6%8A%80%E5%B7%A7/3.png"><img style="width:432px" src="02.2-DeepLearning-%E9%A1%9E%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%E5%84%AA%E5%8C%96%E6%8A%80%E5%B7%A7/3.png"/></a><figcaption>算出 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>v</mi><mi>T</mi></msup><mi>H</mi><mi>v</mi></mrow><annotation encoding="application/x-tex">v^THv</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8413em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">v</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8413em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.13889em;">T</span></span></span></span></span></span></span></span><span class="mord mathnormal" style="margin-right:0.08125em;">H</span><span class="mord mathnormal" style="margin-right:0.03588em;">v</span></span></span></span></span><span>﻿</span></span> 是正、負或有正有負，來判斷是哪種 critical point<br/><strong>也可只算 </strong><strong><style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>H</mi></mrow><annotation encoding="application/x-tex">H</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.08125em;">H</span></span></span></span></span><span>﻿</span></span></strong><strong> 就可</strong></figcaption></figure><ul id="9fb8e077-1ab0-42ad-8324-d832f4d33b67" class="bulleted-list"><li style="list-style-type:disc"><strong>所有 eigen value 都是正的</strong>，H 是 positive definite（正定矩陣），此時是 <strong>local minima</strong></li></ul><ul id="8f01919f-f35e-41d8-94aa-683a2dac13d9" class="bulleted-list"><li style="list-style-type:disc"><strong>所有 eigen value 都是負的</strong>，H 是 negative definite，此時是 <strong>local maxima</strong></li></ul><ul id="dd91d6a7-5a02-4dbb-895a-807c3984b18f" class="bulleted-list"><li style="list-style-type:disc"><strong>如果 eigen value 有正有負</strong>，代表是 <strong>saddle point</strong></li></ul><p id="405a752f-773f-4f0d-893b-d6c43c729b5f" class=""><strong>實例：</strong></p><figure id="e15b1229-5311-4165-93aa-d98c4a7608a4" class="image"><a href="02.2-DeepLearning-%E9%A1%9E%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%E5%84%AA%E5%8C%96%E6%8A%80%E5%B7%A7/4.png"><img style="width:432px" src="02.2-DeepLearning-%E9%A1%9E%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%E5%84%AA%E5%8C%96%E6%8A%80%E5%B7%A7/4.png"/></a></figure><p id="4ff2c482-d7f6-41bb-bab8-4813e124f16e" class="">
+</p><p id="e39c126f-0529-4ebe-a103-bbcc8835dda3" class=""><strong>如果走到 saddle point，可以利用 </strong><style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>H</mi></mrow><annotation encoding="application/x-tex">H</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.08125em;">H</span></span></span></span></span><span>﻿</span></span><strong> 的特徵向量確定參數的更新方向</strong></p><figure id="33be9359-d2ed-4e25-9164-5ce624ca5e02" class="image"><a href="02.2-DeepLearning-%E9%A1%9E%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%E5%84%AA%E5%8C%96%E6%8A%80%E5%B7%A7/5.png"><img style="width:432px" src="02.2-DeepLearning-%E9%A1%9E%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%E5%84%AA%E5%8C%96%E6%8A%80%E5%B7%A7/5.png"/></a></figure><p id="86537f45-444b-4fa3-9a78-aa50bd54137e" class="">假設特徵值小於 0，得到對應的特徵向量 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>u</mi></mrow><annotation encoding="application/x-tex">u</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">u</span></span></span></span></span><span>﻿</span></span>，在 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>θ</mi><mo mathvariant="normal" lspace="0em" rspace="0em">′</mo></msup></mrow><annotation encoding="application/x-tex">\theta&#x27;</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7519em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02778em;">θ</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7519em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">′</span></span></span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span> 的位置加上 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>u</mi></mrow><annotation encoding="application/x-tex">u</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">u</span></span></span></span></span><span>﻿</span></span>，沿著 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>u</mi></mrow><annotation encoding="application/x-tex">u</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">u</span></span></span></span></span><span>﻿</span></span> 的方向做 update 得到 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>θ</mi></mrow><annotation encoding="application/x-tex">\theta</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">θ</span></span></span></span></span><span>﻿</span></span>，就可以讓 loss 變小</p><p id="13fbdc7d-e793-439f-bbe3-30d08aac3f65" class=""><strong>實例：</strong></p><figure id="7af076e6-f146-4fa6-a2f2-ea7fda47c69d" class="image"><a href="02.2-DeepLearning-%E9%A1%9E%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%E5%84%AA%E5%8C%96%E6%8A%80%E5%B7%A7/6.png"><img style="width:432px" src="02.2-DeepLearning-%E9%A1%9E%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%E5%84%AA%E5%8C%96%E6%8A%80%E5%B7%A7/6.png"/></a><figcaption><mark class="highlight-red"><strong>實作上很少運用此方法逃離 saddle point</strong></mark></figcaption></figure><h2 id="4c83eaf8-edbe-4a6b-aacf-3af84c071dab" class="">1.2 Local Minima 比 Saddle Point 少的多</h2><figure id="fa2ac962-5821-4b27-befd-d96c26140541" class="image"><a href="02.2-DeepLearning-%E9%A1%9E%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%E5%84%AA%E5%8C%96%E6%8A%80%E5%B7%A7/7.png"><img style="width:432px" src="02.2-DeepLearning-%E9%A1%9E%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%E5%84%AA%E5%8C%96%E6%8A%80%E5%B7%A7/7.png"/></a></figure><p id="e1866490-4015-4bb3-97dd-9bdb78b16a18" class="">Loss 在一個<strong>維度很高的空間中</strong>，<strong>往往只會遇到鞍點而幾乎不會遇到局部極小值點<br/></strong>從上圖可以看出，正特徵值的數目最多只佔所有特徵值的 60%，這就說明剩餘 40%-50% 的維度都仍然“有路可走”（是 <strong>saddle point</strong>）</p><p id="f3a18cc3-1e79-4322-b736-51cb627677d7" class="">
+</p><h1 id="ffea5b43-c85e-4e16-9af1-0af3f3cf492e" class="">2. Batch and Momentum</h1><h2 id="b14c8b64-3ccd-4614-9b66-9e0677b0cbb8" class="">2.1 Review：<a href="https://www.notion.so/01-b6979cc5ba9b4e2887d2b5e86c174897?pvs=21">Optimization with Batch</a></h2><figure id="1afb92e5-9ad6-4d2d-b46d-c6301c8c6de9" class="image"><a href="02.2-DeepLearning-%E9%A1%9E%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%E5%84%AA%E5%8C%96%E6%8A%80%E5%B7%A7/8.png"><img style="width:432px" src="02.2-DeepLearning-%E9%A1%9E%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%E5%84%AA%E5%8C%96%E6%8A%80%E5%B7%A7/8.png"/></a></figure><ul id="95fcaa2f-6367-4550-8357-11bb0246f4b8" class="bulleted-list"><li style="list-style-type:disc">在 update 參數的時候，我們是拿<strong> B 個樣本</strong>出來，算 loss、算 gradient</li></ul><ul id="57d03bb0-f098-4cb2-a370-2f1599f58e3a" class="bulleted-list"><li style="list-style-type:disc"><strong>所有的 batch 看過一遍，叫做一個 epoch</strong></li></ul><p id="aebe68fe-d19c-4aa3-b5a1-e2e5b1339b03" class=""><strong>Shuffle：</strong></p><p id="2d599899-23ce-4420-9f92-f42bedb72c25" class="">每個 Epoch 開始前往往會重新分一次 Batch，每一個 Epoch 的 Batch 都不一樣</p><h2 id="a00cc57b-1166-4531-b395-1994185267c6" class="">2.2 Small Batch v.s. Large Batch</h2><h3 id="659a3be1-e0db-4fda-9f22-fb477a8e580c" class="">2.2.1 基本現象</h3><figure id="fb39efc7-851f-4481-b705-9a75040bc6d6" class="image"><a href="02.2-DeepLearning-%E9%A1%9E%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%E5%84%AA%E5%8C%96%E6%8A%80%E5%B7%A7/9.png"><img style="width:528px" src="02.2-DeepLearning-%E9%A1%9E%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%E5%84%AA%E5%8C%96%E6%8A%80%E5%B7%A7/9.png"/></a></figure><ul id="d06f5a14-a523-4fb9-8b01-f60b051b1815" class="bulleted-list"><li style="list-style-type:disc">左邊的 Case 必須要把所有 20 筆 examples 都看完以後，參數才能夠 update 一次<ul id="8a45c959-47f9-4d7e-a139-701c839a285e" class="bulleted-list"><li style="list-style-type:circle">左邊蓄力時間長，但是威力比較大</li></ul></li></ul><ul id="b37e2e2e-e642-43f3-9a6d-05ede00da13a" class="bulleted-list"><li style="list-style-type:disc">右邊的 Case 只需要 1 筆樣本數據就 update 一次參數。用 1 筆資料算出來的 loss 顯然是比較 <strong>noisy</strong>，所以 update 的方向曲曲折折<ul id="e71b24c9-c125-4cdf-988a-653dc4262406" class="bulleted-list"><li style="list-style-type:circle">右邊技能<strong>冷卻時間短，但是比較”不準”</strong></li></ul><ul id="a2b1c2a9-14f3-4ae8-a9d3-76d4d3445334" class="bulleted-list"><li style="list-style-type:circle"><strong>noisy 的 gradient，反而可以幫助訓練</strong><figure id="7414e3ff-9226-4407-8eab-af43900bf16c" class="image"><a href="02.2-DeepLearning-%E9%A1%9E%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%E5%84%AA%E5%8C%96%E6%8A%80%E5%B7%A7/10.png"><img style="width:480px" src="02.2-DeepLearning-%E9%A1%9E%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%E5%84%AA%E5%8C%96%E6%8A%80%E5%B7%A7/10.png"/></a></figure></li></ul></li></ul><h3 id="5c788bd2-c282-4497-86fe-f3cc2c3b8b38" class="">2.2.2 時間性能</h3><p id="fa5eab4f-dfd7-4f21-8341-d212005c1bca" class="">考慮<strong>並行運算</strong>，左邊（大的 batch size）並不一定時間比較長</p><figure id="fbb4f525-2d4f-4a5b-9102-c0b32e7d134d" class="image"><a href="02.2-DeepLearning-%E9%A1%9E%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%E5%84%AA%E5%8C%96%E6%8A%80%E5%B7%A7/11.png"><img style="width:432px" src="02.2-DeepLearning-%E9%A1%9E%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%E5%84%AA%E5%8C%96%E6%8A%80%E5%B7%A7/11.png"/></a></figure><p id="46ce7787-414e-4c5c-a918-1c5a25eeb112" class=""><strong>現象：</strong></p><ul id="3cbdc721-5194-4668-aa69-a3327174a3fa" class="bulleted-list"><li style="list-style-type:disc">batch size 是從 1 到 1000 所需要的時間幾乎是一樣的</li></ul><ul id="bde22a62-151e-4498-b745-a9e3b5afa175" class="bulleted-list"><li style="list-style-type:disc">增加到 10000 乃至增加到 60000 的時候，一個 batch 所要耗費的時間確實有隨著 batch size 的增加而逐漸增長，但影響不大</li></ul><p id="75d5446d-1c0f-4f0d-b15b-8000bfe68a6e" class=""><strong>原因：</strong></p><ul id="f7a3fe1c-97de-4839-aae0-564e23521f62" class="bulleted-list"><li style="list-style-type:disc">有 GPU，可以做並行運算，所以 1000 筆資料所花的時間，<strong>並不是 1 筆資料的 1000 倍</strong></li></ul><ul id="e1640350-3735-42b4-bf22-a3843259dcdb" class="bulleted-list"><li style="list-style-type:disc">GPU 平行運算的能力還是有極限，當 batch size 非常非常巨大的時，<strong>GPU 在跑完一個 Batch 並計算出 Gradient 所花費的時間，還是會隨著 batch size 的增加而逐漸增長</strong></li></ul><p id="8235fdfb-9bdf-4297-91a7-cadea07593c1" class=""><strong>對總時間（1 epoch）的影響：</strong></p><figure id="bf14aae2-f300-4402-a1b9-2780a9adfd93" class="image"><a href="02.2-DeepLearning-%E9%A1%9E%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%E5%84%AA%E5%8C%96%E6%8A%80%E5%B7%A7/12.png"><img style="width:480px" src="02.2-DeepLearning-%E9%A1%9E%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%E5%84%AA%E5%8C%96%E6%8A%80%E5%B7%A7/12.png"/></a></figure><p id="60ee8ad3-f653-4162-81e7-99d9e423e69c" class="">因為有平行運算的能力，因此實際上當 <strong>batch size 小</strong>的時候，要<strong>跑完一個 Epoch 花的時間比大的 batch size 還要多</strong>；反之，<strong>大的 batch size 下</strong>，<strong>跑完一個 Epoch 花的時間反而是比較少的</strong></p><p id="a182ef9b-f309-47a7-b1c7-e5445670b8e5" class=""><strong>⇒ batch size 小時，Update 的次數大大增加</strong></p><h3 id="38619e2d-6671-4aaa-bf6b-f1dabb6a859d" class="">結論 1：使用較小的 Batch Size，在更新參數時會有 Noisy ⇒ 有利於訓練</h3><blockquote id="1647b8d7-c7f2-4fbf-8bfd-6292d97eebd7" class="">不同的 batch 所用的 loss function 略有差異，可以避免局部極小值“卡住”<figure id="1f2240d5-eeab-44b3-837e-f8e9614c4cfc" class="image"><a href="02.2-DeepLearning-%E9%A1%9E%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%E5%84%AA%E5%8C%96%E6%8A%80%E5%B7%A7/13.png"><img style="width:432px" src="02.2-DeepLearning-%E9%A1%9E%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%E5%84%AA%E5%8C%96%E6%8A%80%E5%B7%A7/13.png"/></a></figure></blockquote><h3 id="da709f33-66f9-47a7-b3de-fe61eced14fd" class="">結論 2：使用較小的 Batch Size 可以避免 Overfitting（有利於測試）</h3><blockquote id="c3e54ce5-607c-48dc-baf1-9afaca25ca4c" class="">根據 <em><a href="https://arxiv.org/abs/1609.04836">On Large-Batch Training For Deep Learning: Generalization Gap And Sharp Minima</a></em> 這篇 paper 的實驗結果：<figure id="41ab77a7-9104-4bcf-b30c-1309c385d56f" class="image" style="text-align:center"><a href="02.2-DeepLearning-%E9%A1%9E%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%E5%84%AA%E5%8C%96%E6%8A%80%E5%B7%A7/14.png"><img style="width:432px" src="02.2-DeepLearning-%E9%A1%9E%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%E5%84%AA%E5%8C%96%E6%8A%80%E5%B7%A7/14.png"/></a></figure><p id="6c95cd10-db56-43dd-9b8a-e1efe9cf9b4c" class="">可觀察出 training 的時候都很好，<strong>testing 時大的 batch 較小的 batch 結果差，代表 overfitting</strong></p></blockquote><p id="bcda68d9-5ee6-4445-8feb-041166e698bb" class=""><strong>一種解釋（尚待可以研究）：</strong></p><figure id="1c4c77cf-4a1e-4e47-96ae-80c2a23e5829" class="image" style="text-align:left"><a href="02.2-DeepLearning-%E9%A1%9E%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%E5%84%AA%E5%8C%96%E6%8A%80%E5%B7%A7/15.png"><img style="width:432px" src="02.2-DeepLearning-%E9%A1%9E%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%E5%84%AA%E5%8C%96%E6%8A%80%E5%B7%A7/15.png"/></a></figure><p id="310a6efb-c0ac-4447-bab7-ac83665d703c" class="">在一個峽谷裡面的 local minima 是壞的 minima；若在一個平原上的 local minima 是好的 minima</p><p id="1f293d05-2471-4ae5-8e56-3beff94a500b" class="">假設 testing 的 loss function 是把 training 的 loss function 往右平移<br/>⇒ 對於在一個盆地裡面的 minima 來說，它的在 training 跟 testing 上面的結果不會差太多；但對於在峽谷裡面的 minima 來說，一差就可以天差地遠</p><p id="afe77582-b156-42f4-b40a-f49a91874a80" class=""><strong>大的 batch size，會傾向於走到峽谷裡面；而小的 batch size，傾向於走到盆地裡面</strong></p><ul id="3a97a650-db51-4d4b-8f52-d444cce1a9b7" class="bulleted-list"><li style="list-style-type:disc">小的 batch 有很多的 loss，每次 update 的方向都不太一樣，如果這個峽谷非常地窄，有可能一個不小心就跳出去</li></ul><ul id="a54389b9-2e06-4974-abb8-e0324740e4e1" class="bulleted-list"><li style="list-style-type:disc">大的 batch 是順著規定 update，它就很有可能走到一個比較小的峽谷裡面出不去</li></ul><h3 id="bbdf6ea0-1127-4f9c-b61b-d920ee3b9033" class="">總結：Batch Size 是一個需要調整的參數，它會影響訓練速度與優化效果</h3><figure id="3f722115-7aeb-46b6-854d-9d91c0f9a5f5" class="image"><a href="02.2-DeepLearning-%E9%A1%9E%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%E5%84%AA%E5%8C%96%E6%8A%80%E5%B7%A7/16.png"><img style="width:480px" src="02.2-DeepLearning-%E9%A1%9E%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%E5%84%AA%E5%8C%96%E6%8A%80%E5%B7%A7/16.png"/></a></figure><h3 id="503afea7-1359-423b-a01c-8ed62f051d9c" class="">2.2.3 魚與熊掌兼得：結合大、小 Batch 的優點</h3><ul id="6e6f3635-0bb7-4cfc-92dc-137d0d8be2f8" class="bulleted-list"><li style="list-style-type:disc"><a href="https://arxiv.org/abs/1904.00962">Large Batch Optimization for Deep Learning: Training BERT in 76 minutes</a></li></ul><ul id="221ff866-4670-4943-92c2-3587e0685816" class="bulleted-list"><li style="list-style-type:disc"><a href="https://arxiv.org/abs/1711.04325">Extremely Large Minibatch SGD: Training ResNet-50 on ImageNet in 15 Minutes</a></li></ul><ul id="bb6edcbc-d084-41c3-969a-5df7972c6bf6" class="bulleted-list"><li style="list-style-type:disc"><a href="https://arxiv.org/abs/2001.02312">Stochastic Weight Averaging in Parallel: Large-Batch Training That Generalizes Well</a></li></ul><ul id="4e7c10cb-85b5-4a47-9049-85e71056ce5c" class="bulleted-list"><li style="list-style-type:disc"><a href="https://arxiv.org/abs/1708.03888">Large Batch Training of Convolutional Networks</a></li></ul><ul id="ca8ce176-cc5a-4497-8b7f-5fe911d916d4" class="bulleted-list"><li style="list-style-type:disc"><a href="https://arxiv.org/abs/1706.02677">Accurate, large minibatch sgd: Training imagenet in 1 hour</a></li></ul><p id="2d856dfc-b31a-46f2-8098-40deaa299bbb" class="">
+</p><h2 id="9cd3b055-09be-4453-bc90-51d32a761472" class="">2.3 Momentum</h2><h3 id="8c28e0cb-a7e2-4fb0-8a30-63fee298059d" class="">2.3.1 Vanilla Gradient Descent（一般的梯度下降）</h3><p id="e23bf6b3-6059-4e16-a859-8ea7a12469f6" class="">只考慮梯度的方向，往反方向移動</p><figure id="83976a63-e971-4255-8981-2dd713b5fd1d" class="image"><a href="02.2-DeepLearning-%E9%A1%9E%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%E5%84%AA%E5%8C%96%E6%8A%80%E5%B7%A7/17.png"><img style="width:480px" src="02.2-DeepLearning-%E9%A1%9E%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%E5%84%AA%E5%8C%96%E6%8A%80%E5%B7%A7/17.png"/></a></figure><h3 id="44250a63-11bf-4b73-86b3-63a9f04c988a" class="">2.3.2 Gradient Descent + Momentum（考慮動量）</h3><p id="199044a6-6337-411c-a844-57674a0177d9" class="">綜合梯度 + 前一步的方向</p><div id="7d40a57f-7897-4399-8b21-f0de1e6da72b" class="column-list"><div id="785f1ada-7864-416c-a526-933474ece020" style="width:68.75%" class="column"><figure id="7b74e2fb-e287-416f-bd0e-9e0058cf0eaf" class="image" style="text-align:center"><a href="02.2-DeepLearning-%E9%A1%9E%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%E5%84%AA%E5%8C%96%E6%8A%80%E5%B7%A7/18.png"><img style="width:336px" src="02.2-DeepLearning-%E9%A1%9E%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%E5%84%AA%E5%8C%96%E6%8A%80%E5%B7%A7/18.png"/></a></figure></div><div id="96085016-4f68-467f-883c-ef70537db411" style="width:31.250000000000007%" class="column"><figure id="de9ebf3c-d5d8-4043-a1f2-bb531dafaebf" class="image"><a href="02.2-DeepLearning-%E9%A1%9E%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%E5%84%AA%E5%8C%96%E6%8A%80%E5%B7%A7/19.png"><img style="width:240px" src="02.2-DeepLearning-%E9%A1%9E%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%E5%84%AA%E5%8C%96%E6%8A%80%E5%B7%A7/19.png"/></a></figure><p id="a490bf4d-885a-4fe9-abe3-abf821bbd6a8" class="">
+</p></div></div><p id="ac3e92d2-fdf6-4897-9c86-73901a6deb52" class="">所謂的 momentum 就是 update 的方向不是只考慮現在的 gradient，而是<strong>考慮過去所有 gradient 的總合</strong></p><figure id="90cfadc6-af8b-4fef-8162-3be7e0056b30" class="image"><a href="02.2-DeepLearning-%E9%A1%9E%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%E5%84%AA%E5%8C%96%E6%8A%80%E5%B7%A7/20.png"><img style="width:432px" src="02.2-DeepLearning-%E9%A1%9E%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%E5%84%AA%E5%8C%96%E6%8A%80%E5%B7%A7/20.png"/></a></figure><h2 id="ee9c2259-a3a1-432d-b231-6fa1146d9cb7" class="">2.4 總結</h2><ul id="99da5bef-2e1b-440b-938d-8fd7be0ff536" class="bulleted-list"><li style="list-style-type:disc">critical points 梯度為 0</li></ul><ul id="334e605f-6ed2-4771-b58d-5c616497308d" class="bulleted-list"><li style="list-style-type:disc">saddle point 和 local minima 都屬於 critical point<ul id="14278582-d682-45ea-a4d5-adab30e711fa" class="bulleted-list"><li style="list-style-type:circle">可由 Hessian matrix 區分</li></ul><ul id="35e9dc85-6bed-477b-8180-e98515af6571" class="bulleted-list"><li style="list-style-type:circle">local minima 比較少遇到</li></ul><ul id="336b3de1-c958-4904-ad51-b751a63d788d" class="bulleted-list"><li style="list-style-type:circle">可藉由沿 Hessian 矩陣的特徵向量方向離開 saddle point</li></ul></li></ul><ul id="372e91b9-682a-4954-8df1-d8cb44b2d1b4" class="bulleted-list"><li style="list-style-type:disc">較小的 batch size 和 momentum 可幫助離開 critical points</li></ul><p id="f66ea0ca-387e-4eeb-8f4c-0455a4fe10e4" class="">
+</p><h1 id="077ad3a9-00b4-4151-a154-6f1d0b89bd37" class="">3. Adaptive Learning Rate</h1><p id="37535f20-bcec-4ff1-957c-3954b4bca4e3" class=""><strong>現象 1：</strong><br/>training stuck ≠ small gradient。loss 不再下降時，未必說明此時到達 critical point，梯度可能還很大。實際上走到 critical point 是一件很<strong>困難的事，</strong>有可能只是在<strong>山谷的谷壁間來回走</strong></p><figure id="c5d328a6-b30a-4478-bb1e-5f5ecf55df23" class="image"><a href="02.2-DeepLearning-%E9%A1%9E%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%E5%84%AA%E5%8C%96%E6%8A%80%E5%B7%A7/21.png"><img style="width:432px" src="02.2-DeepLearning-%E9%A1%9E%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%E5%84%AA%E5%8C%96%E6%8A%80%E5%B7%A7/21.png"/></a></figure><p id="b6e1e3a7-c32c-4fe1-9d8c-6df569431373" class=""><strong>現象 2：</strong><br/>如果使用<strong>固定的學習率，即使是在凸面體的優化</strong>，都會讓優化的過程非常困難</p><ul id="b01c4d0c-de90-4200-9faa-c478ed0aaf21" class="bulleted-list"><li style="list-style-type:disc">較大的學習率：loss 在山谷的谷壁間震蕩而不會下降</li></ul><ul id="94ffebf9-2684-485b-8d9b-c97b2d0d181b" class="bulleted-list"><li style="list-style-type:disc">較小的學習率：梯度較小時幾乎難以移動</li></ul><figure id="744e3f13-21a9-4fe6-843e-e11f281d0e90" class="image"><a href="02.2-DeepLearning-%E9%A1%9E%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%E5%84%AA%E5%8C%96%E6%8A%80%E5%B7%A7/22.png"><img style="width:480px" src="02.2-DeepLearning-%E9%A1%9E%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%E5%84%AA%E5%8C%96%E6%8A%80%E5%B7%A7/22.png"/></a></figure><h2 id="80edbd7c-3759-46ac-be17-40bac87bc95b" class="">3.1 客制化梯度</h2><p id="10397984-224c-4c1c-a130-29b95926d030" class="">不同的參數（大小）需要不同的學習率，<strong>新增參數</strong> <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mi>σ</mi><mi>i</mi><mi>t</mi></msubsup></mrow><annotation encoding="application/x-tex">\sigma^t_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.0522em;vertical-align:-0.2587em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">σ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.7936em;"><span style="top:-2.4413em;margin-left:-0.0359em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2587em;"><span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span></p><figure id="3514a5e6-8391-4048-a6c2-eb9ea04c7171" class="image"><a href="02.2-DeepLearning-%E9%A1%9E%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%E5%84%AA%E5%8C%96%E6%8A%80%E5%B7%A7/23.png"><img style="width:576px" src="02.2-DeepLearning-%E9%A1%9E%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%E5%84%AA%E5%8C%96%E6%8A%80%E5%B7%A7/23.png"/></a></figure><p id="53e819c8-f1d1-4ed7-b053-8207dda83c91" class="">根據參數此時的實際情況，調整 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mi>σ</mi><mi>i</mi><mi>t</mi></msubsup></mrow><annotation encoding="application/x-tex">\sigma^t_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.0522em;vertical-align:-0.2587em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">σ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.7936em;"><span style="top:-2.4413em;margin-left:-0.0359em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2587em;"><span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span> 的大小，實現對參數 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>θ</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">\theta_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8444em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02778em;">θ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.0278em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span> 的更新</p><p id="9d61ab03-8cb3-448d-aff3-33ebf0863d2b" class=""><strong>基本原則：</strong></p><ul id="5c8d2782-a326-49c0-ba0d-f0fe65b5b723" class="bulleted-list"><li style="list-style-type:disc">某一個方向上 gradient 的值很小，非常的平坦 ⇒ learning rate 調大一點</li></ul><ul id="788216b6-1359-4e3f-a683-a6d541a439f3" class="bulleted-list"><li style="list-style-type:disc">某一個方向上非常的陡峭，坡度很大 ⇒ learning rate 可以設小一點</li></ul><h3 id="3c73c260-acf1-4980-9c89-9746eed1531f" class="">方法一：<strong>Adagrad</strong></h3><p id="7760008e-e184-4de9-bdca-cc1cfe08889d" class=""><strong>考慮之前所有的梯度大小</strong><br/>求取 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>σ</mi></mrow><annotation encoding="application/x-tex">\sigma</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">σ</span></span></span></span></span><span>﻿</span></span> 的方式：</p><p id="aac80afd-dc74-4d65-b955-ffdc45fa66d2" class=""><strong>Root Mean Square（RMS），</strong>對本次及之前計算出的所有梯度求均方根</p><figure id="6c891582-5b76-40b5-bd5d-f8a394f958e2" class="image"><a href="02.2-DeepLearning-%E9%A1%9E%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%E5%84%AA%E5%8C%96%E6%8A%80%E5%B7%A7/24.png"><img style="width:432px" src="02.2-DeepLearning-%E9%A1%9E%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%E5%84%AA%E5%8C%96%E6%8A%80%E5%B7%A7/24.png"/></a></figure><figure id="90158713-ca6c-4fdb-8d33-92024211df46" class="image"><a href="02.2-DeepLearning-%E9%A1%9E%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%E5%84%AA%E5%8C%96%E6%8A%80%E5%B7%A7/25.png"><img style="width:432px" src="02.2-DeepLearning-%E9%A1%9E%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%E5%84%AA%E5%8C%96%E6%8A%80%E5%B7%A7/25.png"/></a><figcaption>上面的<strong>坡度比較小</strong> ⇒ gradient 較小 ⇒ σ 較小 ⇒ learning rate 大 ⇒ <strong>update 參數的量較大<br/></strong>下面的<strong>坡度比較大</strong> ⇒ gradient 較大 ⇒ σ 較大 ⇒ learning rate 小 ⇒ <strong>update 參數的量較小</strong></figcaption></figure><p id="91e19ec4-85cd-40e4-9743-ef5a72f77da4" class=""><strong>缺點：</strong></p><p id="f3ed1e3c-e00c-4882-acb8-0857df440494" class="">不能實時考慮梯度的變化情況</p><h3 id="dc0ea5d9-5e87-4720-8149-54884eaaf44f" class="">方法二：RMSProp</h3><p id="bd094b4e-4cdc-4797-88ea-eafd484d2e5b" class="">調整當前梯度與過去梯度的重要性<br/>添加參數 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>α</mi></mrow><annotation encoding="application/x-tex">\alpha</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.0037em;">α</span></span></span></span></span><span>﻿</span></span>，越大說明過去的梯度訊息<strong>更重要</strong></p><ul id="012f6727-3eb1-4ddc-bd17-1d7be2e8d343" class="bulleted-list"><li style="list-style-type:disc"><strong>α 設很小趨近於 0</strong>，代表過去的 gradient 較<strong>不重要</strong>，現在的 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>g</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">g_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">g</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.0359em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span> 比較<strong>重要</strong></li></ul><ul id="a3dd8f1b-f371-402e-835d-98cb9f06ca07" class="bulleted-list"><li style="list-style-type:disc"><strong>α 設很大趨近於 1</strong>，代表過去的 gradient 較<strong>重要</strong>，現在的 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>g</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">g_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">g</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.0359em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span> 比較<strong>不重要</strong></li></ul><figure id="46b3e25e-2363-48ae-8d2c-46df96f5b1f3" class="image"><a href="02.2-DeepLearning-%E9%A1%9E%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%E5%84%AA%E5%8C%96%E6%8A%80%E5%B7%A7/26.png"><img style="width:432px" src="02.2-DeepLearning-%E9%A1%9E%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%E5%84%AA%E5%8C%96%E6%8A%80%E5%B7%A7/26.png"/></a></figure><h3 id="9aa3050b-efe2-4420-ae64-95edc7b0b9cd" class="">方法三：Adam = RMSProp + Momentum（最常用的策略）</h3><figure id="3a2eb6f5-2ecc-45ec-bdbb-2dfeb78e464f" class="image"><a href="02.2-DeepLearning-%E9%A1%9E%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%E5%84%AA%E5%8C%96%E6%8A%80%E5%B7%A7/27.png"><img style="width:432px" src="02.2-DeepLearning-%E9%A1%9E%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%E5%84%AA%E5%8C%96%E6%8A%80%E5%B7%A7/27.png"/></a></figure><p id="5d4b81e2-9ec8-4067-833a-eabb41af2aef" class="">使用 PyTorch 中預設的參數就能夠得到比較好的結果</p><h2 id="9b708e8c-0938-4c9c-8fc6-b37607194217" class="">3.2 Learning Rate Scheduling</h2><p id="fe62531c-aaca-4fb6-a156-bb82787f7a96" class=""><strong>讓 learning rate 與訓練時間有關</strong></p><figure id="1c04f33c-17fc-494e-b6c5-d33c26d42e07" class="image"><a href="02.2-DeepLearning-%E9%A1%9E%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%E5%84%AA%E5%8C%96%E6%8A%80%E5%B7%A7/28.png"><img style="width:432px" src="02.2-DeepLearning-%E9%A1%9E%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%E5%84%AA%E5%8C%96%E6%8A%80%E5%B7%A7/28.png"/></a></figure><p id="5a4ff6c0-297b-4cfc-8c38-54c9256b490e" class="">問題<strong>：</strong></p><ul id="2514fcd1-c4e1-4c25-8aed-2d2429aa64dc" class="bulleted-list"><li style="list-style-type:disc">與右上圖相比，右下圖使用 <strong>Adagram</strong> 方法可以繼續往目標前進</li></ul><ul id="1d40fa4c-2cbc-4d15-b546-913bfd422ce4" class="bulleted-list"><li style="list-style-type:disc">紅色方框中累積了很小的 gradient，導致累積了很小的 σ，有突然暴增的情況</li></ul><p id="e4d85e7e-f9e3-4399-887c-4dec93d9cba4" class=""><strong>解決：</strong></p><p id="a4f160cc-8f32-4c4a-aa39-a13261e22ce4" class=""><strong>新增 </strong><style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>η</mi><mi>t</mi></msup></mrow><annotation encoding="application/x-tex">η^t</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.988em;vertical-align:-0.1944em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">η</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7936em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span><strong>，讓它與時間有關</strong></p><figure id="a63aea60-a382-4775-b618-5bc7b501f3eb" class="image"><a href="02.2-DeepLearning-%E9%A1%9E%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%E5%84%AA%E5%8C%96%E6%8A%80%E5%B7%A7/29.png"><img style="width:432px" src="02.2-DeepLearning-%E9%A1%9E%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%E5%84%AA%E5%8C%96%E6%8A%80%E5%B7%A7/29.png"/></a></figure><p id="f75970a2-d71c-43b7-9073-548cbae184fd" class=""><strong>Learning Rate Decay：</strong>隨著時間的不斷地前進，隨著參數不斷的 update，<style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>η</mi><mi>t</mi></msup></mrow><annotation encoding="application/x-tex">η^t</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.988em;vertical-align:-0.1944em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">η</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7936em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span> 越來越小</p><p id="5e55b5bb-dd56-4524-9770-5b1825162eca" class=""><strong>Warm Up：</strong>讓 learning rate 先變大後再變小</p><figure id="d94865c6-da7e-4228-86ae-b77707acddb5" class="image"><a href="02.2-DeepLearning-%E9%A1%9E%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%E5%84%AA%E5%8C%96%E6%8A%80%E5%B7%A7/30.png"><img style="width:432px" src="02.2-DeepLearning-%E9%A1%9E%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%E5%84%AA%E5%8C%96%E6%8A%80%E5%B7%A7/30.png"/></a></figure><p id="c6b5fad7-7514-4400-a9e3-be97e29e78ba" class=""><strong>解釋：</strong></p><p id="36a2a5c6-081e-4a0c-ba98-fe649bcc5a31" class=""><style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>σ</mi></mrow><annotation encoding="application/x-tex">\sigma</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">σ</span></span></span></span></span><span>﻿</span></span> 指示某一個方向它到底有多陡/多平滑，這個統計的結果，要看得夠多筆數據以後才精準，所以一開始我們的統計是不精準的。一開始 learning rate 比較小，是讓它探索收集一些有關 error surface 的情報，在這一階段使用較小的 learning rate，限制參數不會走的離初始的地方太遠；等到 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>σ</mi></mrow><annotation encoding="application/x-tex">\sigma</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">σ</span></span></span></span></span><span>﻿</span></span> 統計得比較精準以後再讓 learning rate 慢慢爬升</p><p id="1bd1fa59-c47e-4819-ad1a-e7eae2fbe7cc" class="">補充：<a href="https://arxiv.org/abs/1908.03265">RAdam</a> 有更詳細的解釋 Warm Up</p><h2 id="2f5804cd-4494-419d-94ac-d15d62f02c41" class="">3.3 總結</h2><figure id="a837267a-145b-4cef-9546-bab539f7ab6f" class="image"><a href="02.2-DeepLearning-%E9%A1%9E%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%E5%84%AA%E5%8C%96%E6%8A%80%E5%B7%A7/31.png"><img style="width:432px" src="02.2-DeepLearning-%E9%A1%9E%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%E5%84%AA%E5%8C%96%E6%8A%80%E5%B7%A7/31.png"/></a></figure><ul id="01679926-ee7e-4ad3-b987-856950889de9" class="bulleted-list"><li style="list-style-type:disc">使用動量，考慮過去的梯度“大小”與“方向”</li></ul><ul id="0a28eade-f6e1-4a2c-87d1-c2d1e6fe4e88" class="bulleted-list"><li style="list-style-type:disc">引入 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>σ</mi></mrow><annotation encoding="application/x-tex">\sigma</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">σ</span></span></span></span></span><span>﻿</span></span>，考慮過去梯度的<strong>大小</strong>（RMS）</li></ul><ul id="44a398a6-7e6b-4c53-b2bf-875779a64448" class="bulleted-list"><li style="list-style-type:disc">使用 learning rate schedule</li></ul><h2 id="b017f239-15d1-4a94-8285-9eb75e97702c" class="">3.4 Learn More</h2><div id="7fa9badd-b3fe-41d0-a449-8cbebbe7f765" class="column-list"><div id="13a819c7-75d8-4fbe-bf1a-3808113efde0" style="width:43.75%" class="column"><figure id="8841c6ec-765e-4d3f-99b2-e2cc13544740" class="image" style="text-align:right"><a href="02.2-DeepLearning-%E9%A1%9E%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%E5%84%AA%E5%8C%96%E6%8A%80%E5%B7%A7/32.png"><img style="width:144px" src="02.2-DeepLearning-%E9%A1%9E%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%E5%84%AA%E5%8C%96%E6%8A%80%E5%B7%A7/32.png"/></a><figcaption><mark class="highlight-blue"><a href="https://youtu.be/4pUmZ8hXlHM">https://youtu.be/4pUmZ8hXlHM</a></mark></figcaption></figure></div><div id="b96ee3f2-af99-480f-b206-519f57d5a2f6" style="width:56.25%" class="column"><figure id="d4fa98ff-c026-4a0f-a3e6-127c81bf5974" class="image" style="text-align:center"><a href="02.2-DeepLearning-%E9%A1%9E%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%E5%84%AA%E5%8C%96%E6%8A%80%E5%B7%A7/33.png"><img style="width:144px" src="02.2-DeepLearning-%E9%A1%9E%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%E5%84%AA%E5%8C%96%E6%8A%80%E5%B7%A7/33.png"/></a><figcaption><mark class="highlight-blue"><a href="https://youtu.be/e03YKGHXnL8">https://youtu.be/e03YKGHXnL8</a></mark></figcaption></figure></div></div><p id="6b9b0bf5-87e0-407c-b078-61ae93fd73cb" class="">
+</p><h1 id="754a4abe-63ad-4239-81c7-69258e2894f2" class="">4. Batch Normalization</h1><p id="c31bdb31-9730-4164-953b-bf3843728628" class=""><strong>現象：</strong></p><p id="0f548e2e-02fc-445b-ad12-723ffeded3d5" class="">不同的參數發生變化，引起損失函數變化的程度不同，原因是因<strong>受不同維度輸入值的差異的影響</strong></p><div id="a609bddb-070d-4408-8e1c-4ba54202e38c" class="column-list"><div id="40747b25-d3ec-446f-adc7-cf913b107693" style="width:50%" class="column"><figure id="2521de59-1c25-4461-a6af-826a00ca2b06" class="image" style="text-align:right"><a href="02.2-DeepLearning-%E9%A1%9E%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%E5%84%AA%E5%8C%96%E6%8A%80%E5%B7%A7/34.png"><img style="width:288px" src="02.2-DeepLearning-%E9%A1%9E%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%E5%84%AA%E5%8C%96%E6%8A%80%E5%B7%A7/34.png"/></a></figure></div><div id="d5c93c9f-7c9d-4ab4-9dd5-0621efcccd95" style="width:50%" class="column"><figure id="946ec12a-82b8-470a-be4a-aa6407de1a7d" class="image"><a href="02.2-DeepLearning-%E9%A1%9E%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%E5%84%AA%E5%8C%96%E6%8A%80%E5%B7%A7/35.png"><img style="width:288px" src="02.2-DeepLearning-%E9%A1%9E%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%E5%84%AA%E5%8C%96%E6%8A%80%E5%B7%A7/35.png"/></a></figure></div></div><p id="8208564c-3620-4c7b-b743-31e1e7abf61d" class=""><strong>說明：</strong></p><ul id="f6c7df62-ef2d-4506-ac09-45d4ceea2f3e" class="bulleted-list"><li style="list-style-type:disc">因 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>x</mi><mn>1</mn></msub></mrow><annotation encoding="application/x-tex">x_1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.5806em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span> 是乘上 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>w</mi><mn>1</mn></msub></mrow><annotation encoding="application/x-tex">w_1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.5806em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02691em;">w</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:-0.0269em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span>， 當 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>x</mi><mn>1</mn></msub></mrow><annotation encoding="application/x-tex">x_1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.5806em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span> 的值很小時，參數 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>w</mi><mn>1</mn></msub></mrow><annotation encoding="application/x-tex">w_1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.5806em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02691em;">w</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:-0.0269em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span> 有變化時，使對 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi></mrow><annotation encoding="application/x-tex">y</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span></span></span></span></span><span>﻿</span></span> 的影響很小，從而對 loss 的影響比較小</li></ul><ul id="f868961b-a81f-43bf-9c43-e1cde9eff22d" class="bulleted-list"><li style="list-style-type:disc">因 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>x</mi><mn>2</mn></msub></mrow><annotation encoding="application/x-tex">x_2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.5806em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span> 是乘上 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>w</mi><mn>2</mn></msub></mrow><annotation encoding="application/x-tex">w_2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.5806em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02691em;">w</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:-0.0269em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span>， 當 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>x</mi><mn>2</mn></msub></mrow><annotation encoding="application/x-tex">x_2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.5806em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span> 的值很大時，參數 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>w</mi><mn>2</mn></msub></mrow><annotation encoding="application/x-tex">w_2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.5806em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02691em;">w</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:-0.0269em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span> 有變化時，使對 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi></mrow><annotation encoding="application/x-tex">y</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span></span></span></span></span><span>﻿</span></span> 的影響很大，從而對 loss 的影響比較大</li></ul><p id="93d278f5-a730-4357-a8c6-3041465340d8" class=""><strong>結論：</strong></p><p id="97a5e718-3b0a-4994-bffe-ff6a2209b714" class="">不同維度的輸入值 <strong>scale 差距可能很大</strong>，就會產生在不同方向上，斜率、坡度非常不同的 error surface</p><figure id="dd325f78-493e-4d78-be6d-3d961f15ba2c" class="image"><a href="02.2-DeepLearning-%E9%A1%9E%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%E5%84%AA%E5%8C%96%E6%8A%80%E5%B7%A7/36.png"><img style="width:384px" src="02.2-DeepLearning-%E9%A1%9E%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%E5%84%AA%E5%8C%96%E6%8A%80%E5%B7%A7/36.png"/></a></figure><h2 id="4627876a-a03a-4b9e-bbf3-e5c09f718c91" class="">4.1 <strong>Feature Normalization</strong>（歸一化）</h2><h3 id="8fc66d2b-a4d8-4b9b-b058-d1b06d794f9b" class="">4.1.1 一種 <strong>Normalization </strong>方法</h3><p id="b1188f32-914d-429c-b114-f55e8a22b219" class="">對不同 feature 向量的同一維度進行<strong>標準化（Standardization）</strong></p><figure id="4f075903-3691-4176-9059-f6d012f1af5c" class="image"><a href="02.2-DeepLearning-%E9%A1%9E%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%E5%84%AA%E5%8C%96%E6%8A%80%E5%B7%A7/37.png"><img style="width:432px" src="02.2-DeepLearning-%E9%A1%9E%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%E5%84%AA%E5%8C%96%E6%8A%80%E5%B7%A7/37.png"/></a></figure><figure id="5870208e-f12e-4635-8c58-30e718eccadd" class="equation"><style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><div class="equation-container"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mover accent="true"><msubsup><mi>x</mi><mi>i</mi><mi>r</mi></msubsup><mo>~</mo></mover><mo>=</mo><mfrac><mrow><msubsup><mi>x</mi><mi>i</mi><mi>r</mi></msubsup><mo>−</mo><msub><mi>m</mi><mi>i</mi></msub></mrow><msub><mi>σ</mi><mi>i</mi></msub></mfrac></mrow><annotation encoding="application/x-tex">\tilde{x^r_i} = \frac{x^r_i-m_i}{\sigma_i}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.1599em;vertical-align:-0.2769em;"></span><span class="mord accent"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8831em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.6462em;"><span style="top:-2.4231em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span><span style="top:-3.0448em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.02778em;">r</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2769em;"><span></span></span></span></span></span></span></span><span style="top:-3.5652em;"><span class="pstrut" style="height:3em;"></span><span class="accent-body" style="left:-0.25em;"><span class="mord">~</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2769em;"><span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:2.1774em;vertical-align:-0.836em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3414em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">σ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.0359em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.6644em;"><span style="top:-2.4413em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.02778em;">r</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2587em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord"><span class="mord mathnormal">m</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.836em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></span></div></figure><ul id="5652ed62-d618-4113-a4cd-7fb17d288f88" class="bulleted-list"><li style="list-style-type:disc">做完 normalize 後，這個 dimension 上面的數值平均為 0，variance 為 1，所以<strong>這一列數值的分布會都在 0 上下</strong></li></ul><ul id="c0d31a5f-d9a6-4a3c-b306-3431c3259f1d" class="bulleted-list"><li style="list-style-type:disc">對每一個 dimension 都做一樣的 normalization，就會發現所有 feature 不同 dimension 的數值都在 0 上下，就可以<strong>製造一個比較好的 error surface</strong></li></ul><h3 id="c7aca3a6-92cb-4919-bdac-57ba59b78c53" class="">4.1.2 每一層都需要一次 Normalization</h3><p id="be161867-4df8-4802-81dc-bd779458ee75" class=""><style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover accent="true"><mi>x</mi><mo>~</mo></mover></mrow><annotation encoding="application/x-tex">\tilde{x}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6679em;"></span><span class="mord accent"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.6679em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord mathnormal">x</span></span><span style="top:-3.35em;"><span class="pstrut" style="height:3em;"></span><span class="accent-body" style="left:-0.2222em;"><span class="mord">~</span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span> 經過 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>W</mi><mn>1</mn></msub></mrow><annotation encoding="application/x-tex">W_1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">W</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:-0.1389em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span> 矩陣後，<style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>a</mi><mo separator="true">,</mo><mi>z</mi></mrow><annotation encoding="application/x-tex">a,z</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal">a</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.04398em;">z</span></span></span></span></span><span>﻿</span></span> 數值的分布各維度仍然有很大的差異，要 train 第二層的參數 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>W</mi><mn>2</mn></msub></mrow><annotation encoding="application/x-tex">W_2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">W</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:-0.1389em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span> 也會有困難，因此<strong>需要對 </strong><style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>a</mi></mrow><annotation encoding="application/x-tex">a</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">a</span></span></span></span></span><span>﻿</span></span><strong> 或者 </strong><style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>z</mi></mrow><annotation encoding="application/x-tex">z</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.04398em;">z</span></span></span></span></span><span>﻿</span></span><strong> 進行 normalization</strong></p><figure id="bee9f46a-68e5-4f36-a5d4-fbe0c0b3b897" class="image"><a href="02.2-DeepLearning-%E9%A1%9E%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%E5%84%AA%E5%8C%96%E6%8A%80%E5%B7%A7/38.png"><img style="width:384px" src="02.2-DeepLearning-%E9%A1%9E%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%E5%84%AA%E5%8C%96%E6%8A%80%E5%B7%A7/38.png"/></a></figure><p id="ab16d22b-a5a5-4355-8e1a-c6fc0a751442" class="">一般而言，<strong>normalization 步驟要放在 activation function 之前或之後都是可以的</strong></p><p id="0f06d6e9-121d-4df6-b5b8-f759f4516d34" class="">如果<strong>選擇的是 sigmoid</strong>，比較<strong>推薦對 </strong><style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>z</mi></mrow><annotation encoding="application/x-tex">z</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.04398em;">z</span></span></span></span></span><span>﻿</span></span><strong> 做 feature normalization</strong>。因為 Sigmoid 在 0 附近斜率比較大，所以如果對 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>z</mi></mrow><annotation encoding="application/x-tex">z</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.04398em;">z</span></span></span></span></span><span>﻿</span></span> 做 feature normalization，把所有的值都挪到 0 附近，算 gradient 時，出來的值會比較大</p><p id="43a1618b-82d4-4e2b-8b7b-73dbe05ca639" class=""><strong>具體步驟（對 </strong><style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>z</mi></mrow><annotation encoding="application/x-tex">z</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.04398em;">z</span></span></span></span></span><span>﻿</span></span><strong> 做 Feature Normalization）：</strong></p><figure id="772187f8-29ad-4704-92df-08cb113e5fc5" class="image"><a href="02.2-DeepLearning-%E9%A1%9E%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%E5%84%AA%E5%8C%96%E6%8A%80%E5%B7%A7/39.png"><img style="width:384px" src="02.2-DeepLearning-%E9%A1%9E%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%E5%84%AA%E5%8C%96%E6%8A%80%E5%B7%A7/39.png"/></a><figcaption><strong>1. 對向量的對應 element 做求平均、標準差的運算，求得向量 </strong><strong><style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>μ</mi><mo separator="true">,</mo><mi>σ</mi></mrow><annotation encoding="application/x-tex">\mu,\sigma</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal">μ</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">σ</span></span></span></span></span><span>﻿</span></span></strong></figcaption></figure><figure id="0167b15c-e11f-48cb-8932-d95f2bc9ec62" class="image"><a href="02.2-DeepLearning-%E9%A1%9E%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%E5%84%AA%E5%8C%96%E6%8A%80%E5%B7%A7/40.png"><img style="width:432px" src="02.2-DeepLearning-%E9%A1%9E%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%E5%84%AA%E5%8C%96%E6%8A%80%E5%B7%A7/40.png"/></a><figcaption><strong>2. 對每個向量 </strong><strong><style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>z</mi></mrow><annotation encoding="application/x-tex">z</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.04398em;">z</span></span></span></span></span><span>﻿</span></span></strong><strong> 利用 </strong><strong><style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>μ</mi><mo separator="true">,</mo><mi>σ</mi></mrow><annotation encoding="application/x-tex">\mu,\sigma</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal">μ</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">σ</span></span></span></span></span><span>﻿</span></span></strong><strong> 對對應 element 進行歸一化，得到 </strong><style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover accent="true"><mi>z</mi><mo>~</mo></mover></mrow><annotation encoding="application/x-tex">\tilde{z}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6679em;"></span><span class="mord accent"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.6679em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord mathnormal" style="margin-right:0.04398em;">z</span></span><span style="top:-3.35em;"><span class="pstrut" style="height:3em;"></span><span class="accent-body" style="left:-0.1944em;"><span class="mord">~</span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span></figcaption></figure><figure id="c92b1976-0937-4d45-91de-1ffe66df0b2a" class="image"><a href="02.2-DeepLearning-%E9%A1%9E%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%E5%84%AA%E5%8C%96%E6%8A%80%E5%B7%A7/41.png"><img style="width:432px" src="02.2-DeepLearning-%E9%A1%9E%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%E5%84%AA%E5%8C%96%E6%8A%80%E5%B7%A7/41.png"/></a><figcaption><strong>3. 繼續後續的步驟</strong></figcaption></figure><h3 id="fac54d77-ca6e-4f7e-84b3-e29a672ae33c" class="">4.1.3 注意：對一批 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>z</mi></mrow><annotation encoding="application/x-tex">z</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.04398em;">z</span></span></span></span></span><span>﻿</span></span> 數據進行歸一化</h3><p id="41a5275d-4d6b-4952-ac14-e5e3865da8b7" class="">模型變為需<strong>一次處理一批 features 的模型，數據之間相互關聯</strong></p><figure id="6cc08972-2efe-4662-a6ed-2466d02d773f" class="image"><a href="02.2-DeepLearning-%E9%A1%9E%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%E5%84%AA%E5%8C%96%E6%8A%80%E5%B7%A7/42.png"><img style="width:432px" src="02.2-DeepLearning-%E9%A1%9E%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%E5%84%AA%E5%8C%96%E6%8A%80%E5%B7%A7/42.png"/></a></figure><ul id="63982d77-b93c-41b4-ade0-d2799efcc2d5" class="bulleted-list"><li style="list-style-type:disc">這μ 跟 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>σ</mi></mrow><annotation encoding="application/x-tex">\sigma</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">σ</span></span></span></span></span><span>﻿</span></span> 都是根據 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>z</mi><mn>1</mn></msup></mrow><annotation encoding="application/x-tex">z^1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8141em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.04398em;">z</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span>, <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>z</mi><mn>2</mn></msup></mrow><annotation encoding="application/x-tex">z^2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8141em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.04398em;">z</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span>, <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>z</mi><mn>3</mn></msup></mrow><annotation encoding="application/x-tex">z^3</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8141em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.04398em;">z</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">3</span></span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span> 算出來的，有做 feature normalization，當改變 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>z</mi><mn>1</mn></msup></mrow><annotation encoding="application/x-tex">z^1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8141em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.04398em;">z</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span> 的值時，μ 跟 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>σ</mi></mrow><annotation encoding="application/x-tex">\sigma</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">σ</span></span></span></span></span><span>﻿</span></span> 也會跟著改變，當 μ 跟 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>σ</mi></mrow><annotation encoding="application/x-tex">\sigma</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">σ</span></span></span></span></span><span>﻿</span></span> 改變後，<style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>z</mi><mn>2</mn></msup></mrow><annotation encoding="application/x-tex">z^2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8141em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.04398em;">z</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span> 的值、<style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>a</mi><mn>2</mn></msup></mrow><annotation encoding="application/x-tex">a^2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8141em;"></span><span class="mord"><span class="mord mathnormal">a</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span> 的值、<style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>z</mi><mn>3</mn></msup></mrow><annotation encoding="application/x-tex">z^3</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8141em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.04398em;">z</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">3</span></span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span> 的值、<style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>a</mi><mn>3</mn></msup></mrow><annotation encoding="application/x-tex">a^3</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8141em;"></span><span class="mord"><span class="mord mathnormal">a</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">3</span></span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span> 的值也會跟著改變</li></ul><ul id="d4092308-8478-469a-854a-86b916a5a9c5" class="bulleted-list"><li style="list-style-type:disc">之前每一個 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover accent="true"><mi>x</mi><mo>~</mo></mover></mrow><annotation encoding="application/x-tex">\tilde{x}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6679em;"></span><span class="mord accent"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.6679em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord mathnormal">x</span></span><span style="top:-3.35em;"><span class="pstrut" style="height:3em;"></span><span class="accent-body" style="left:-0.2222em;"><span class="mord">~</span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span> 都是獨立分開處理的，但當做 feature normalization 後，這三個 feature 變得彼此關聯</li></ul><ul id="9c794fb9-19ef-4ff5-9209-f99c0c9335ce" class="bulleted-list"><li style="list-style-type:disc">之前的 network 都吃一個 feature 得到一個 output，現在有一個比較大的 network，這個 network 是吃一堆 features 用這堆 features 在這個 network 裡面，要算出 μ 跟 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>σ</mi></mrow><annotation encoding="application/x-tex">\sigma</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">σ</span></span></span></span></span><span>﻿</span></span>，然後產生一堆 output</li></ul><h3 id="2c75d5cf-57e3-480d-871a-5353ceb64948" class="">4.1.4 Batch Normalization</h3><p id="c6571364-1be5-4bc1-80f5-df8cce8b3a7b" class="">實際上做 normalization 時，只考慮有限數量的數據，即<strong>考慮一個 batch 內的數據，近似整個數據集</strong></p><p id="c27d984d-3ee8-4110-9165-64411ce1c122" class="">Batch Normalization 適用於 batch size 比較大。一個 batch 內的 data 可以認為足以表示整個 corpus 的分布，本來要對整個 corpus 做 feature normalization 這件事情，改成<strong>只在一個 batch 中做 feature normalization 作為近似</strong></p><p id="7551335f-624f-4e8b-82d3-7784a60b6f68" class=""><strong>還原：</strong></p><p id="e633bf9f-a221-4b1a-ba44-533171d48dbb" class="">引入向量 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>γ</mi><mo separator="true">,</mo><mi>β</mi></mrow><annotation encoding="application/x-tex">\gamma,\beta</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.05556em;">γ</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.05278em;">β</span></span></span></span></span><span>﻿</span></span>，將原本被歸一化到 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>μ</mi><mo>=</mo><mn>0</mn><mo separator="true">,</mo><mi>σ</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">μ=0,\sigma=1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal">μ</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8389em;vertical-align:-0.1944em;"></span><span class="mord">0</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">σ</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">1</span></span></span></span></span><span>﻿</span></span> 的各維度資料恢復到某一分布</p><figure id="70b92a6d-3c9c-45ae-a00b-521fdb630103" class="image"><a href="02.2-DeepLearning-%E9%A1%9E%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%E5%84%AA%E5%8C%96%E6%8A%80%E5%B7%A7/43.png"><img style="width:432px" src="02.2-DeepLearning-%E9%A1%9E%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%E5%84%AA%E5%8C%96%E6%8A%80%E5%B7%A7/43.png"/></a></figure><p id="b89dfe3b-4fbd-4bc9-8615-c5e60c2c7774" class="">做 normalization 以後 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover accent="true"><mi>z</mi><mo>~</mo></mover></mrow><annotation encoding="application/x-tex">\tilde{z}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6679em;"></span><span class="mord accent"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.6679em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord mathnormal" style="margin-right:0.04398em;">z</span></span><span style="top:-3.35em;"><span class="pstrut" style="height:3em;"></span><span class="accent-body" style="left:-0.1944em;"><span class="mord">~</span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span> 平均就一定是 0，可以視作是給 network 一些限制，但這個限制可能會帶來負面的影響，因而增加 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>γ</mi><mo separator="true">,</mo><mi>β</mi></mrow><annotation encoding="application/x-tex">\gamma,\beta</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.05556em;">γ</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.05278em;">β</span></span></span></span></span><span>﻿</span></span> 參數</p><p id="1bf652de-1e6d-413a-96cf-3ecf8919d2e9" class="">訓練時<strong>初始將 </strong><style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>γ</mi></mrow><annotation encoding="application/x-tex">\gamma</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.05556em;">γ</span></span></span></span></span><span>﻿</span></span><strong> 設為全為 1 的向量，</strong><style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>β</mi></mrow><annotation encoding="application/x-tex">\beta</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.05278em;">β</span></span></span></span></span><span>﻿</span></span><strong> 設為全為 0 的向量</strong>。在一開始訓練的時，讓每一個 dimension 的分布比較接近。<strong>訓練夠長的一段時間</strong>，已經走<strong>到一個比較好的 error surface</strong>，那<strong>再把 </strong><style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>γ</mi><mo separator="true">,</mo><mi>β</mi></mrow><annotation encoding="application/x-tex">\gamma,\beta</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.05556em;">γ</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.05278em;">β</span></span></span></span></span><span>﻿</span></span><strong> 慢慢地加進去</strong></p><h3 id="05abeffb-1a4b-41a4-92d5-15fe651debc9" class="">4.1.5 Testing 時會遇到的問題</h3><p id="295db261-ea79-4c64-8e23-d863be74b3fd" class="">testing（inference）時<strong>沒有 Batch 進行歸一化</strong> ⇒ <strong>Training 時會紀錄 </strong><style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover accent="true"><mi>μ</mi><mo>ˉ</mo></mover></mrow><annotation encoding="application/x-tex">\bar{\mu}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7622em;vertical-align:-0.1944em;"></span><span class="mord accent"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.5678em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord mathnormal">μ</span></span><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="accent-body" style="left:-0.2222em;"><span class="mord">ˉ</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.1944em;"><span></span></span></span></span></span></span></span></span></span><span>﻿</span></span><strong> 及 </strong><style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover accent="true"><mi>σ</mi><mo>ˉ</mo></mover></mrow><annotation encoding="application/x-tex">\bar{\sigma}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.5678em;"></span><span class="mord accent"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.5678em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">σ</span></span><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="accent-body" style="left:-0.25em;"><span class="mord">ˉ</span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span></p><figure id="831e464e-4e3a-43b4-9123-1cd0ea1afb86" class="image"><a href="02.2-DeepLearning-%E9%A1%9E%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%E5%84%AA%E5%8C%96%E6%8A%80%E5%B7%A7/44.png"><img style="width:432px" src="02.2-DeepLearning-%E9%A1%9E%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%E5%84%AA%E5%8C%96%E6%8A%80%E5%B7%A7/44.png"/></a><figcaption>（<style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi></mrow><annotation encoding="application/x-tex">p</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal">p</span></span></span></span></span><span>﻿</span></span> 是超參數）</figcaption></figure><p id="eb3cb7e4-9c4e-4ecf-b2e0-1b571bd6737a" class="">在 testing 階段一筆資料進來就要產生結果，沒有一個“batch”的數據可以進行歸一化，所以在 PyTorch 中，training 時就會把每一個 batch 計算出來的 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>μ</mi></mrow><annotation encoding="application/x-tex">\mu</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal">μ</span></span></span></span></span><span>﻿</span></span> 跟 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>σ</mi></mrow><annotation encoding="application/x-tex">\sigma</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">σ</span></span></span></span></span><span>﻿</span></span>，拿出來算 <strong>moving average</strong></p><h3 id="e71bb4e3-0f01-4887-b1a7-3d6326f307f4" class="">4.1.6 結果比較</h3><p id="21ffca5b-af4c-4330-ad31-7ec864e1b8cf" class="">紅色虛線（有做 Batch Normalization）收斂的速度顯然比黑色虛線（沒有做 Batch Normalization）要快很多</p><figure id="14bfc2ca-15f9-4569-b30c-6f4d87192ec2" class="image"><a href="02.2-DeepLearning-%E9%A1%9E%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%E5%84%AA%E5%8C%96%E6%8A%80%E5%B7%A7/45.png"><img style="width:432px" src="02.2-DeepLearning-%E9%A1%9E%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%E5%84%AA%E5%8C%96%E6%8A%80%E5%B7%A7/45.png"/></a><figcaption>橫軸：訓練過程，縱軸：準確率（Validation set）</figcaption></figure><p id="6f4e0685-11be-4ffb-8d09-2b7a2a61cefd" class=""><strong>為什麼 Batch Normalization 會比較好？</strong></p><p id="d39f2166-16ab-4316-850d-ef906bce51c0" class="">在 <em><a href="https://arxiv.org/abs/1805.11604">How Does Batch Normalization Help Optimization</a></em> 論文中，作者從實驗上，也從理論上，至少支持了 batch normalization 可以改變 error surface，讓 error surface 比較不崎嶇這個觀點</p><h3 id="7fc154b3-437c-49a6-8c2c-fa2f6a2a21fb" class="">4.1.7 其他 Normalization 方法</h3><ul id="7f075a48-8b21-4260-9f06-3a8c8f44b702" class="bulleted-list"><li style="list-style-type:disc"><a href="https://arxiv.org/abs/1702.03275">Batch Renormalization</a></li></ul><ul id="f3546c31-ea00-46db-b61b-3b805f0f72a3" class="bulleted-list"><li style="list-style-type:disc"><a href="https://arxiv.org/abs/1607.06450">Layer Normalization</a></li></ul><ul id="2263455d-5ea9-4fa8-879b-1912c006a682" class="bulleted-list"><li style="list-style-type:disc"><a href="https://arxiv.org/abs/1607.08022">Instance Normalization</a></li></ul><ul id="bdb5cfb1-43e9-4f14-860f-7b5acbaf46c3" class="bulleted-list"><li style="list-style-type:disc"><a href="https://arxiv.org/abs/1803.08494">Group Normalization</a></li></ul><ul id="d38a8162-d6fa-4769-8bb2-370bdc469bb8" class="bulleted-list"><li style="list-style-type:disc"><a href="https://arxiv.org/abs/1602.07868">Weight Normalization</a></li></ul><ul id="52b3d3ac-f7d1-4cb2-aae1-30e0f2a48255" class="bulleted-list"><li style="list-style-type:disc"><a href="https://arxiv.org/abs/1705.10941">Spectrum Normalization</a><br/></li></ul><p id="501d73e8-d1c2-440c-8b92-e54ab351a29c" class="">
+</p></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>

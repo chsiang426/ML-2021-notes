@@ -1,0 +1,777 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>13-Life Long Learning（終身學習）</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 10px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.collection-content td {
+	white-space: pre-wrap;
+	word-break: break-word;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+	margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.callout img.notion-static-icon {
+	width: 1em;
+	height: 1em;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+blockquote.quote-large {
+	font-size: 1.25em;
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray {
+	color: rgba(128, 125, 120, 1);
+	fill: rgba(128, 125, 120, 1);
+}
+.highlight-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.highlight-orange {
+	color: rgba(204, 121, 47, 1);
+	fill: rgba(204, 121, 47, 1);
+}
+.highlight-yellow {
+	color: rgba(195, 148, 67, 1);
+	fill: rgba(195, 148, 67, 1);
+}
+.highlight-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.highlight-blue {
+	color: rgba(63, 126, 190, 1);
+	fill: rgba(63, 126, 190, 1);
+}
+.highlight-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.highlight-pink {
+	color: rgba(179, 84, 136, 1);
+	fill: rgba(179, 84, 136, 1);
+}
+.highlight-red {
+	color: rgba(201, 85, 73, 1);
+	fill: rgba(201, 85, 73, 1);
+}
+.highlight-default_background {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray_background {
+	background: rgba(42, 28, 0, 0.07);
+}
+.highlight-brown_background {
+	background: rgba(139, 46, 0, 0.086);
+}
+.highlight-orange_background {
+	background: rgba(224, 101, 1, 0.129);
+}
+.highlight-yellow_background {
+	background: rgba(211, 168, 0, 0.137);
+}
+.highlight-teal_background {
+	background: rgba(0, 100, 45, 0.09);
+}
+.highlight-blue_background {
+	background: rgba(0, 111, 200, 0.09);
+}
+.highlight-purple_background {
+	background: rgba(102, 0, 178, 0.078);
+}
+.highlight-pink_background {
+	background: rgba(197, 0, 93, 0.086);
+}
+.highlight-red_background {
+	background: rgba(223, 22, 0, 0.094);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(128, 125, 120, 1);
+	fill: rgba(128, 125, 120, 1);
+}
+.block-color-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.block-color-orange {
+	color: rgba(204, 121, 47, 1);
+	fill: rgba(204, 121, 47, 1);
+}
+.block-color-yellow {
+	color: rgba(195, 148, 67, 1);
+	fill: rgba(195, 148, 67, 1);
+}
+.block-color-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.block-color-blue {
+	color: rgba(63, 126, 190, 1);
+	fill: rgba(63, 126, 190, 1);
+}
+.block-color-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.block-color-pink {
+	color: rgba(179, 84, 136, 1);
+	fill: rgba(179, 84, 136, 1);
+}
+.block-color-red {
+	color: rgba(201, 85, 73, 1);
+	fill: rgba(201, 85, 73, 1);
+}
+.block-color-default_background {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray_background {
+	background: rgba(240, 239, 237, 1);
+}
+.block-color-brown_background {
+	background: rgba(245, 237, 233, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 235, 222, 1);
+}
+.block-color-yellow_background {
+	background: rgba(249, 243, 220, 1);
+}
+.block-color-teal_background {
+	background: rgba(232, 241, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(232, 242, 250, 1);
+}
+.block-color-purple_background {
+	background: rgba(243, 235, 249, 1);
+}
+.block-color-pink_background {
+	background: rgba(250, 233, 241, 1);
+}
+.block-color-red_background {
+	background: rgba(252, 233, 231, 1);
+}
+.select-value-color-default { background-color: rgba(42, 28, 0, 0.07); }
+.select-value-color-gray { background-color: rgba(28, 19, 1, 0.11); }
+.select-value-color-brown { background-color: rgba(127, 51, 0, 0.156); }
+.select-value-color-orange { background-color: rgba(196, 88, 0, 0.203); }
+.select-value-color-yellow { background-color: rgba(209, 156, 0, 0.282); }
+.select-value-color-green { background-color: rgba(0, 96, 38, 0.156); }
+.select-value-color-blue { background-color: rgba(0, 99, 174, 0.172); }
+.select-value-color-purple { background-color: rgba(92, 0, 163, 0.141); }
+.select-value-color-pink { background-color: rgba(183, 0, 78, 0.152); }
+.select-value-color-red { background-color: rgba(206, 24, 0, 0.164); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+
+
+/* Back-to-index button */
+.floating-button {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.4em;
+	padding: 0.55em 1.15em;
+	border-radius: 999px;
+	background: rgba(255, 255, 255, 0.92);
+	color: #1f2933;
+	font-size: 0.9rem;
+	font-weight: 500;
+	text-decoration: none;
+	border: 1px solid rgba(15, 23, 42, 0.12);
+	box-shadow: 0 8px 24px rgba(15, 23, 42, 0.12);
+	backdrop-filter: blur(12px);
+	transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+.floating-button:hover {
+	background: #1f2933;
+	color: #ffffff;
+	box-shadow: 0 12px 32px rgba(15, 23, 42, 0.18);
+	transform: translateY(-1px);
+}
+.floating-button:active {
+	transform: translateY(0);
+	box-shadow: 0 6px 18px rgba(15, 23, 42, 0.14);
+}
+.back-to-index {
+	position: fixed;
+	top: 20px;
+	left: 20px;
+	z-index: 1000;
+}
+.nav-controls {
+	position: fixed;
+	top: 20px;
+	right: 20px;
+	z-index: 1000;
+	display: inline-flex;
+	gap: 0.6em;
+	flex-wrap: wrap;
+	justify-content: flex-end;
+}
+@media (max-width: 600px) {
+	.back-to-index {
+		top: 16px;
+		left: 16px;
+	}
+	.nav-controls {
+		top: 16px;
+		right: 16px;
+		gap: 0.5em;
+	}
+	.floating-button {
+		padding: 0.45em 1em;
+		font-size: 0.85rem;
+	}
+}
+@media print {
+	.back-to-index,
+	.nav-controls {
+		display: none;
+	}
+}
+
+</style></head><body>
+<a class="floating-button back-to-index" href="../index.html">回到目錄</a>
+<div class="nav-controls">
+	<a class="floating-button nav-button" href="../12-Reinforcement Learning（強化學習）/12-Reinforcement Learning（強化學習）.html" title="上一節：12-Reinforcement Learning（強化學習）">上一節</a>
+	<a class="floating-button nav-button" href="../14-Nerwork Compression/14-Nerwork Compression.html" title="下一節：14-Nerwork Compression">下一節</a>
+</div>
+<article id="51582d9b-b84f-430f-b8eb-e5b3dae7c7b2" class="page sans"><header><div class="page-header-icon undefined"><img class="icon notion-static-icon" src="https://www.notion.so/icons/document_blue.svg"/></div><h1 class="page-title">13-Life Long Learning（終身學習）</h1><p class="page-description"></p><table class="properties"><tbody></tbody></table></header><div class="page-body"><nav id="d48933c2-f2b1-4a09-8b34-2fe66c7e15ef" class="block-color-gray table_of_contents"><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#a3f8063b-f30c-447f-9f1a-849cf6bed35c">1. Basic</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#c24ccb17-2b74-48a1-93a3-207c22d52a2e">1.1 現實世界的應用</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#0a3fb3b7-cfb6-42a5-ac70-a89c8b93300c">1.2 Catastrophic Forgetting</a></div><div class="table_of_contents-item table_of_contents-indent-2"><a class="table_of_contents-link" href="#85160886-3fdc-4b76-9bc8-da383e691c29">1.2.1 Example 1：數字辨識</a></div><div class="table_of_contents-item table_of_contents-indent-2"><a class="table_of_contents-link" href="#6b1bb29f-6cf0-4abe-ad5a-b56830215a80">1.2.2 Example 2：QA 任務</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#6afd46be-ff41-4c48-8f6b-582a7e60767b">1.3 Multi-Task Training</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#dc3ec7fd-5f33-4f29-8982-c9e297d93db8">1.4 Train a model for each task</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#d8e54fc8-bf68-40e8-924a-6d1970bd33e9">1.5 Life-long learning vs Transfer Learning</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#96397249-dbaf-4d98-b86d-780fcb02b863">2. Evaluation</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#77cc1206-afd1-41fb-b9ec-7ee5dd03000a">3. Why Catastrophic Forgetting？</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#5bfec020-cf26-4514-8c7f-b6003b8cf410">4. LLL 的三種解法</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#0c015bcf-6d95-4fe4-acbb-d7b13edeccd4">4.1 Selective Synaptic Plasticity（Regularization based Approach）</a></div><div class="table_of_contents-item table_of_contents-indent-2"><a class="table_of_contents-link" href="#8f12fbf1-f14a-4519-b3be-4de0c195ea3c">4.1.1 改寫 Loss Function</a></div><div class="table_of_contents-item table_of_contents-indent-2"><a class="table_of_contents-link" href="#68739cc0-fe5f-465a-888e-4638e12c36f3">4.1.2 設定 guard b</a></div><div class="table_of_contents-item table_of_contents-indent-2"><a class="table_of_contents-link" href="#ae1b55d3-3f54-4f6d-8ed1-68028fe4eaee">4.1.3 實驗結果</a></div><div class="table_of_contents-item table_of_contents-indent-2"><a class="table_of_contents-link" href="#9e6c3497-98d7-449f-97a1-82e9e9807121">4.1.4 <a href="https://arxiv.org/abs/1706.08840">Gradient Episodic Memory</a>（GEM）</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#50bcc489-8d57-43ad-9b14-916038a2cd99">4.2 Additional Neural Resource Allocation Memory</a></div><div class="table_of_contents-item table_of_contents-indent-2"><a class="table_of_contents-link" href="#d418af03-da77-44e1-8063-aedefdde06bd">4.2.1 Progressive Neural Network</a></div><div class="table_of_contents-item table_of_contents-indent-2"><a class="table_of_contents-link" href="#52d183c9-aae3-4cd5-b1af-3272d91893a2">4.2.2 PackNet</a></div><div class="table_of_contents-item table_of_contents-indent-2"><a class="table_of_contents-link" href="#5279f3c3-85bb-43fd-82df-5404de13798d">4.2.3 CPG（Progressive Neural Network + PackNet）</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#0825f07a-c6de-44de-a549-f0b5929708aa">4.3 Memory Reply</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#d8728d6a-b4a5-48c9-b92f-6011703d636d">5. Adding new classes</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#0be437f1-6fea-43d9-bf07-305977dc8d7f">6. Three scenarios for Continual Learning（LLL）</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#2ff70ebd-0131-4f14-86eb-6f54daca6b1a">7. Curriculum Learning</a></div></nav><h1 id="a3f8063b-f30c-447f-9f1a-849cf6bed35c" class="">1. Basic</h1><p id="c8dbd57f-b70c-4c23-a740-6e2d5389aba1" class=""><strong>Life Long Learning（LLL）</strong>，期望機器不斷學習新的任務，又稱為 <strong>Continual Learning</strong>、<strong>Never Ending Learning</strong>、 Incremental Learning</p><p id="d2b04937-83f5-41d6-a772-cc0c6fbeca00" class=""><strong>注意：</strong></p><p id="3484f6f0-63b7-4021-a954-bbeced08d277" class="">在 LLL 中，讓機器不斷學習”不同的任務”，實際上是學習類似的任務但<strong>”不同的 domain”</strong>，只是習慣當成不同的任務</p><h2 id="c24ccb17-2b74-48a1-93a3-207c22d52a2e" class="">1.1 現實世界的應用</h2><p id="05334e40-bc22-4782-967a-9af6291ede0c" class="">模型上線後蒐集到新的資料，新的資料就可以更新模型的參數</p><figure id="979e098f-01e0-4d28-ad81-041904092c22" class="image"><a href="13-Life%20Long%20Learning%EF%BC%88%E7%B5%82%E8%BA%AB%E5%AD%B8%E7%BF%92%EF%BC%89/0.png"><img style="width:432px" src="13-Life%20Long%20Learning%EF%BC%88%E7%B5%82%E8%BA%AB%E5%AD%B8%E7%BF%92%EF%BC%89/0.png"/></a></figure><p id="cabbfdea-e388-4d85-afa7-e9c468920a51" class="">把舊有的資料想成是<strong>過去的任務</strong>，把新的、來自於使用者 feedback 的資料想成是<strong>新的任務</strong></p><h2 id="0a3fb3b7-cfb6-42a5-ac70-a89c8b93300c" class="">1.2 Catastrophic Forgetting</h2><p id="1f1e18f3-7c47-4f61-92f7-9a684214fe97" class="">核心概念機器是<strong>學了新的任務（資料）就忘了舊的任務（資料）</strong></p><h3 id="85160886-3fdc-4b76-9bc8-da383e691c29" class="">1.2.1 Example 1：數字辨識</h3><p id="12841a01-02db-48a0-b1ed-131b381e22bd" class="">針對兩個 task，訓練一個模型對不同的數字進行識別</p><figure id="c5848552-1512-4e38-bf40-ff6517a88bfa" class="image"><a href="13-Life%20Long%20Learning%EF%BC%88%E7%B5%82%E8%BA%AB%E5%AD%B8%E7%BF%92%EF%BC%89/1.png"><img style="width:384px" src="13-Life%20Long%20Learning%EF%BC%88%E7%B5%82%E8%BA%AB%E5%AD%B8%E7%BF%92%EF%BC%89/1.png"/></a></figure><div id="3cab39a9-99f5-4622-bfba-82070e631735" class="column-list"><div id="213ad452-1006-4dee-875a-d386f2bf0eb4" style="width:50%" class="column"><ul id="bcbb81c7-3b6c-4e8a-a49b-e80393116f06" class="bulleted-list"><li style="list-style-type:disc"><strong>先後利用兩個任務的資料進行訓練</strong>，以 task 2 的資料訓練模型後，機器在 task 1 的表現下降許多<figure id="f4caf565-f81f-4465-9864-a0406f873785" class="image"><a href="13-Life%20Long%20Learning%EF%BC%88%E7%B5%82%E8%BA%AB%E5%AD%B8%E7%BF%92%EF%BC%89/2.png"><img style="width:302.02777099609375px" src="13-Life%20Long%20Learning%EF%BC%88%E7%B5%82%E8%BA%AB%E5%AD%B8%E7%BF%92%EF%BC%89/2.png"/></a></figure></li></ul></div><div id="b7b9184d-abd4-4948-854c-41d67efda007" style="width:50%" class="column"><ul id="7efaa836-80b7-4d05-9a62-6d907e554bd2" class="bulleted-list"><li style="list-style-type:disc"><strong>同時利用兩個任務的資料進行訓練</strong>，機器在兩個 task 上都表現不錯<figure id="8b69038f-3805-4d76-adf5-95a141baa5b0" class="image"><a href="13-Life%20Long%20Learning%EF%BC%88%E7%B5%82%E8%BA%AB%E5%AD%B8%E7%BF%92%EF%BC%89/3.png"><img style="width:302.0138854980469px" src="13-Life%20Long%20Learning%EF%BC%88%E7%B5%82%E8%BA%AB%E5%AD%B8%E7%BF%92%EF%BC%89/3.png"/></a></figure></li></ul></div></div><h3 id="6b1bb29f-6cf0-4abe-ad5a-b56830215a80" class="">1.2.2 Example 2：QA 任務</h3><figure id="6b3162f7-2876-43c4-9917-89a1a458dda6" class="image"><a href="13-Life%20Long%20Learning%EF%BC%88%E7%B5%82%E8%BA%AB%E5%AD%B8%E7%BF%92%EF%BC%89/4.png"><img style="width:384px" src="13-Life%20Long%20Learning%EF%BC%88%E7%B5%82%E8%BA%AB%E5%AD%B8%E7%BF%92%EF%BC%89/4.png"/></a></figure><div id="d69e99ad-4dc4-4989-8f17-184217802ef3" class="column-list"><div id="1f2b45df-b7fd-4e32-a5d0-d6bad575fc6b" style="width:50%" class="column"><ul id="43ffadd8-fd82-4bea-b6e9-20420b718038" class="bulleted-list"><li style="list-style-type:disc">依序學 20 個任務，學到 task 5 時的準確率提升，但自 task 6 後準確率暴跌<figure id="4ccf233b-0bdd-43a0-8e49-0e5802ec932e" class="image"><a href="13-Life%20Long%20Learning%EF%BC%88%E7%B5%82%E8%BA%AB%E5%AD%B8%E7%BF%92%EF%BC%89/5.png"><img style="width:384px" src="13-Life%20Long%20Learning%EF%BC%88%E7%B5%82%E8%BA%AB%E5%AD%B8%E7%BF%92%EF%BC%89/5.png"/></a></figure></li></ul></div><div id="a3f5757f-57be-4359-bd7e-0fdec62de95d" style="width:50%" class="column"><ul id="13172015-fa26-4ee1-aaa5-57d7625df0be" class="bulleted-list"><li style="list-style-type:disc">同時學 20 個任務</li></ul><figure id="5997aafc-775a-4cb1-b5cf-602a15d4b578" class="image"><a href="13-Life%20Long%20Learning%EF%BC%88%E7%B5%82%E8%BA%AB%E5%AD%B8%E7%BF%92%EF%BC%89/6.png"><img style="width:336px" src="13-Life%20Long%20Learning%EF%BC%88%E7%B5%82%E8%BA%AB%E5%AD%B8%E7%BF%92%EF%BC%89/6.png"/></a></figure></div></div><h2 id="6afd46be-ff41-4c48-8f6b-582a7e60767b" class="">1.3 Multi-Task Training</h2><p id="ba9a3592-9768-4726-9799-b081a53f5827" class="">讓機器<strong>同時利用多個任務的資料進行學習</strong>的訓練方法稱為 <strong>multi-task training</strong></p><p id="23c6960f-626a-4978-8c09-7bed98391913" class="">雖然某種程度上可以解決上述 catastrophic forgetting 的問題，但當機器要學新的任務時，都要<strong>把之前學過的任務資料也都重新一起帶入訓練</strong>，時間和空間難以負荷</p><figure id="475f21e3-9dd7-47d9-b0b0-44a3daa7f09b" class="image"><a href="13-Life%20Long%20Learning%EF%BC%88%E7%B5%82%E8%BA%AB%E5%AD%B8%E7%BF%92%EF%BC%89/7.png"><img style="width:384px" src="13-Life%20Long%20Learning%EF%BC%88%E7%B5%82%E8%BA%AB%E5%AD%B8%E7%BF%92%EF%BC%89/7.png"/></a></figure><p id="d9a29ad8-e0ea-40e5-9dd1-f16e78baea02" class="">multi-task training 雖不切實際，但它確實可以讓機器學會多個任務，因而<strong>被視為 LLL 的 upper bound，是 LLL 沒有辦法超越的結果</strong></p><p id="22663586-97d9-4149-a31b-eb6c225d664c" class="block-color-red"><strong>研究目標會希望 LLL 的技術去逼近 upper bound 的結果</strong></p><h2 id="dc3ec7fd-5f33-4f29-8982-c9e297d93db8" class="">1.4 Train a model for each task</h2><figure id="198e20fa-dec1-4979-868a-2598dacb52e0" class="image"><a href="13-Life%20Long%20Learning%EF%BC%88%E7%B5%82%E8%BA%AB%E5%AD%B8%E7%BF%92%EF%BC%89/8.png"><img style="width:384px" src="13-Life%20Long%20Learning%EF%BC%88%E7%B5%82%E8%BA%AB%E5%AD%B8%E7%BF%92%EF%BC%89/8.png"/></a></figure><p id="9af12649-f055-45bb-9785-efe665afd065" class=""><strong>問題：</strong></p><ul id="ac389e00-6b68-45f2-a264-251501bed7ca" class="bulleted-list"><li style="list-style-type:disc">模型過多無法儲存</li></ul><ul id="54f2c635-26fe-4985-910c-9cb514e2693f" class="bulleted-list"><li style="list-style-type:disc">訊息和資料不能在不同的任務間遷移</li></ul><h2 id="d8e54fc8-bf68-40e8-924a-6d1970bd33e9" class="">1.5 Life-long learning vs Transfer Learning</h2><figure id="40c88dc0-298e-4205-94b1-6abcb7e7c74b" class="image"><a href="13-Life%20Long%20Learning%EF%BC%88%E7%B5%82%E8%BA%AB%E5%AD%B8%E7%BF%92%EF%BC%89/9.png"><img style="width:384px" src="13-Life%20Long%20Learning%EF%BC%88%E7%B5%82%E8%BA%AB%E5%AD%B8%E7%BF%92%EF%BC%89/9.png"/></a></figure><p id="a05bdcfd-3741-44ab-8683-6c1d90dde75a" class=""><strong>兩者的關注角度不同：</strong></p><ul id="9a5c307c-902f-4f8b-902e-b45fd2b736d4" class="bulleted-list"><li style="list-style-type:disc">Life Long Learning 關注的是機器學完新的任務後，還能不能夠解先前的任務</li></ul><ul id="4ca143e3-1291-4b28-b72c-d2139c5aeb0c" class="bulleted-list"><li style="list-style-type:disc">Transfer Learning 關注的是機器學習完先前的任務後，能不能夠對新的任務有幫助</li></ul><p id="315fc725-684d-44c7-b6cd-b95bdd6d4af5" class="">
+</p><h1 id="96397249-dbaf-4d98-b86d-780fcb02b863" class="">2. Evaluation</h1><p id="b98737d7-0888-4634-b677-bf3f1af01955" class="">先準備一系列的任務<div class="indented"><figure id="03a89325-eff1-43bb-b607-2fe1125ff84d" class="image" style="text-align:center"><a href="13-Life%20Long%20Learning%EF%BC%88%E7%B5%82%E8%BA%AB%E5%AD%B8%E7%BF%92%EF%BC%89/10.png"><img style="width:432px" src="13-Life%20Long%20Learning%EF%BC%88%E7%B5%82%E8%BA%AB%E5%AD%B8%E7%BF%92%EF%BC%89/10.png"/></a></figure></div></p><p id="dc3e892b-5e86-4780-b56b-2cc18c971a5f" class="">機器依序學習各個不同的任務，每學完一個新任務就在所有任務的測試資料上計算正確率</p><figure id="bc20b45b-efd5-463d-9eca-b74b1d45fbf0" class="image"><a href="13-Life%20Long%20Learning%EF%BC%88%E7%B5%82%E8%BA%AB%E5%AD%B8%E7%BF%92%EF%BC%89/11.png"><img style="width:432px" src="13-Life%20Long%20Learning%EF%BC%88%E7%B5%82%E8%BA%AB%E5%AD%B8%E7%BF%92%EF%BC%89/11.png"/></a></figure><p id="0aa18108-a668-4e17-ad24-02e273cc8a2f" class=""><style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>R</mi><mrow><mi>i</mi><mo separator="true">,</mo><mi>j</mi></mrow></msub></mrow><annotation encoding="application/x-tex">R_{i,j}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.9694em;vertical-align:-0.2861em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.00773em;">R</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.0077em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">i</span><span class="mpunct mtight">,</span><span class="mord mathnormal mtight" style="margin-right:0.05724em;">j</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span> 表示學完任務 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi></mrow><annotation encoding="application/x-tex">i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6595em;"></span><span class="mord mathnormal">i</span></span></span></span></span><span>﻿</span></span>，在任務 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>j</mi></mrow><annotation encoding="application/x-tex">j</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.854em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.05724em;">j</span></span></span></span></span><span>﻿</span></span> 上的表現</p><ul id="04fdbc08-b54f-45c7-85ea-baeeb7f67ed8" class="bulleted-list"><li style="list-style-type:disc">若 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi><mo>&gt;</mo><mi>j</mi></mrow><annotation encoding="application/x-tex">i&gt;j</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6986em;vertical-align:-0.0391em;"></span><span class="mord mathnormal">i</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">&gt;</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.854em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.05724em;">j</span></span></span></span></span><span>﻿</span></span>，可以觀察機器學了任務 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi></mrow><annotation encoding="application/x-tex">i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6595em;"></span><span class="mord mathnormal">i</span></span></span></span></span><span>﻿</span></span> 後，在之前學過的任務 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>j</mi></mrow><annotation encoding="application/x-tex">j</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.854em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.05724em;">j</span></span></span></span></span><span>﻿</span></span> 上的表現</li></ul><ul id="22ba6cef-8a1c-481a-8b90-bc2fffe7d1b0" class="bulleted-list"><li style="list-style-type:disc">若 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi><mo>&lt;</mo><mi>j</mi></mrow><annotation encoding="application/x-tex">i&lt;j</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6986em;vertical-align:-0.0391em;"></span><span class="mord mathnormal">i</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">&lt;</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.854em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.05724em;">j</span></span></span></span></span><span>﻿</span></span>，可以觀察機器還沒學任務 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>j</mi></mrow><annotation encoding="application/x-tex">j</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.854em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.05724em;">j</span></span></span></span></span><span>﻿</span></span>，只學到任務 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi></mrow><annotation encoding="application/x-tex">i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6595em;"></span><span class="mord mathnormal">i</span></span></span></span></span><span>﻿</span></span>，在任務 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>j</mi></mrow><annotation encoding="application/x-tex">j</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.854em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.05724em;">j</span></span></span></span></span><span>﻿</span></span> 上的表現</li></ul><p id="e7f0e0ab-4a96-4eed-b0e6-6224f20056a0" class=""><strong>三種評估方法：</strong></p><ul id="22c55052-0893-4917-8689-205cc0bc0dfb" class="bulleted-list"><li style="list-style-type:disc"><strong>Accuracy：</strong>學完所有任務後，各個任務的準確率<figure id="4083736e-1367-4054-bde5-567341118abc" class="image" style="text-align:left"><a href="13-Life%20Long%20Learning%EF%BC%88%E7%B5%82%E8%BA%AB%E5%AD%B8%E7%BF%92%EF%BC%89/12.png"><img style="width:240px" src="13-Life%20Long%20Learning%EF%BC%88%E7%B5%82%E8%BA%AB%E5%AD%B8%E7%BF%92%EF%BC%89/12.png"/></a></figure></li></ul><ul id="2a6d65cd-06e8-4a71-9d54-e61e06defd0a" class="bulleted-list"><li style="list-style-type:disc"><strong>Backward Transfer</strong><figure id="f0721bf5-f547-4942-a998-bf16ccada2a3" class="image"><a href="13-Life%20Long%20Learning%EF%BC%88%E7%B5%82%E8%BA%AB%E5%AD%B8%E7%BF%92%EF%BC%89/13.png"><img style="width:240px" src="13-Life%20Long%20Learning%EF%BC%88%E7%B5%82%E8%BA%AB%E5%AD%B8%E7%BF%92%EF%BC%89/13.png"/></a></figure></li></ul><ul id="01f57bfe-6425-416f-844a-c61aa0d6c9f1" class="bulleted-list"><li style="list-style-type:disc"><strong>Forward Transfer：</strong>不看任務 T，只看前 T-1 個任務，對在任務 T 的表現<figure id="0f758ee4-8a15-4378-a983-903a3568e57d" class="image"><a href="13-Life%20Long%20Learning%EF%BC%88%E7%B5%82%E8%BA%AB%E5%AD%B8%E7%BF%92%EF%BC%89/14.png"><img style="width:240px" src="13-Life%20Long%20Learning%EF%BC%88%E7%B5%82%E8%BA%AB%E5%AD%B8%E7%BF%92%EF%BC%89/14.png"/></a></figure></li></ul><p id="66d6e71e-b72c-4237-bd8c-e203e66bf11c" class="">
+</p><h1 id="77cc1206-afd1-41fb-b9ec-7ee5dd03000a" class="">3. Why Catastrophic Forgetting？</h1><p id="400d73bb-0bc0-4155-8a43-dfe7c6c25ab6" class=""><strong>關鍵：</strong></p><p id="f9ac6926-874d-42f2-9800-da4f2857c419" class="">任務間的 <strong>error surface 不同</strong></p><figure id="c0b5887f-c3bb-4bd5-93ab-286884fa468f" class="image"><a href="13-Life%20Long%20Learning%EF%BC%88%E7%B5%82%E8%BA%AB%E5%AD%B8%E7%BF%92%EF%BC%89/15.png"><img style="width:336px" src="13-Life%20Long%20Learning%EF%BC%88%E7%B5%82%E8%BA%AB%E5%AD%B8%E7%BF%92%EF%BC%89/15.png"/></a></figure><p id="db4c0ea4-a253-49bc-bd79-d13c25f649df" class="">兩個任務的 error surface 如上圖，顏色越深，代表 loss 越小</p><ol type="1" id="f26e4da7-fc41-40ca-b901-30856e2dbc92" class="numbered-list" start="1"><li>先用 task 1 訓練模型，隨機初始化參數 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>θ</mi><mn>0</mn></msup></mrow><annotation encoding="application/x-tex">\theta^0</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8141em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02778em;">θ</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span>，用 gradient descent 更新參數得到 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>θ</mi><mi>b</mi></msup></mrow><annotation encoding="application/x-tex">\theta^b</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8491em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02778em;">θ</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8491em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">b</span></span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span></li></ol><ol type="1" id="58d38dab-7c13-42f6-a75e-42c5e154bf34" class="numbered-list" start="2"><li>將 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>θ</mi><mi>b</mi></msup></mrow><annotation encoding="application/x-tex">\theta^b</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8491em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02778em;">θ</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8491em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">b</span></span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span> 作為初始參數用 task 2 訓練模型，使用 gradient descent 更新參數得到 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>θ</mi><mo>∗</mo></msup></mrow><annotation encoding="application/x-tex">\theta^*</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02778em;">θ</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.6887em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mbin mtight">∗</span></span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span></li></ol><p id="69d8c088-dce4-4e23-bfe4-2ee4c0a0746d" class=""><strong>問題：</strong></p><p id="9125220e-ce7f-4c17-8d33-02238005ee2b" class="">由於兩個任務的 error surface 不同，<strong>擁有小的 loss 所對應的參數不同，導致 catastrophic forgetting</strong></p><p id="398ff18f-13ee-450e-89e7-e18d060ed4d6" class=""><strong>解決：</strong></p><p id="1dc33fdb-cb4a-4861-b320-290a9b2e7f2c" class="">嘗試讓參數往 task 2 的橢圓 error surface 下緣靠近</p><p id="d8826d8b-440b-4b88-beba-66a0538b2fc6" class="">
+</p><h1 id="5bfec020-cf26-4514-8c7f-b6003b8cf410" class="">4. LLL 的三種解法</h1><h2 id="0c015bcf-6d95-4fe4-acbb-d7b13edeccd4" class="">4.1 Selective Synaptic Plasticity（Regularization based Approach）</h2><p id="4879ea78-8bc4-4a77-9a54-c3081805edd1" class="">每個參數對過去學過的任務的<strong>重要性不盡相同<br/></strong>對於舊的任務所學習到的參數有”重要”與”不重要”之別，在學習新的任務時，針對<strong>重要的參數盡量維持不變，只要改變不重要的參數</strong></p><h3 id="8f12fbf1-f14a-4519-b3be-4de0c195ea3c" class="">4.1.1 改寫 Loss Function</h3><p id="a5a4dbc5-9989-4b07-9241-b4f716a16003" class=""><strong>對模型的每一個參數 </strong><style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mi>θ</mi><mi>i</mi><mi>b</mi></msubsup></mrow><annotation encoding="application/x-tex">\theta^b_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.1078em;vertical-align:-0.2587em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02778em;">θ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8491em;"><span style="top:-2.4413em;margin-left:-0.0278em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">b</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2587em;"><span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span><strong> 新增參數 guard </strong><style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>b</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">b_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8444em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">b</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span></p><figure id="6f9505ba-12f9-45f2-be6f-f6af5649c1c3" class="image"><a href="13-Life%20Long%20Learning%EF%BC%88%E7%B5%82%E8%BA%AB%E5%AD%B8%E7%BF%92%EF%BC%89/16.png"><img style="width:432px" src="13-Life%20Long%20Learning%EF%BC%88%E7%B5%82%E8%BA%AB%E5%AD%B8%E7%BF%92%EF%BC%89/16.png"/></a></figure><p id="3ca930e6-0d0e-470f-b9e3-1166f66c406f" class="">在新的任務原始的 loss <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>L</mi><mo stretchy="false">(</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">L(\theta)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">L</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.02778em;">θ</span><span class="mclose">)</span></span></span></span></span><span>﻿</span></span> 後再加上新學到的參數 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>θ</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">\theta_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8444em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02778em;">θ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.0278em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span> 減去過去學到參數 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mi>θ</mi><mi>i</mi><mi>b</mi></msubsup></mrow><annotation encoding="application/x-tex">\theta^b_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.1078em;vertical-align:-0.2587em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02778em;">θ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8491em;"><span style="top:-2.4413em;margin-left:-0.0278em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">b</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2587em;"><span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span> 並取平方，再乘上當前參數的 guard <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>b</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">b_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8444em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">b</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span>，最後針對每一個參數的結果做加總</p><ul id="6f8d8d6b-ab2f-479c-90bc-0e26b8a294d7" class="bulleted-list"><li style="list-style-type:disc">若 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>b</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">b_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8444em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">b</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span> <strong>越大</strong>，表示<strong>越希望 </strong><style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>θ</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">\theta_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8444em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02778em;">θ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.0278em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span><strong> 與 </strong><style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mi>θ</mi><mi>i</mi><mi>b</mi></msubsup></mrow><annotation encoding="application/x-tex">\theta^b_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.1078em;vertical-align:-0.2587em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02778em;">θ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8491em;"><span style="top:-2.4413em;margin-left:-0.0278em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">b</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2587em;"><span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span><strong> 值越接近</strong><ul id="9d58ca86-8613-477a-afe1-da300dcbe3eb" class="bulleted-list"><li style="list-style-type:circle"><style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>b</mi><mi>i</mi></msub><mo>=</mo><mi mathvariant="normal">∞</mi></mrow><annotation encoding="application/x-tex">b_i=\infin</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8444em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">b</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord">∞</span></span></span></span></span><span>﻿</span></span>，強烈希望 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>θ</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">\theta_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8444em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02778em;">θ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.0278em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span> 與 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mi>θ</mi><mi>i</mi><mi>b</mi></msubsup></mrow><annotation encoding="application/x-tex">\theta_i^b</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.1078em;vertical-align:-0.2587em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02778em;">θ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8491em;"><span style="top:-2.4413em;margin-left:-0.0278em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">b</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2587em;"><span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span> 相等，會導致 <strong>intransigence</strong>（在新的任務學不好）</li></ul></li></ul><ul id="d88d8032-eace-4881-8644-df9cd86aef43" class="bulleted-list"><li style="list-style-type:disc">若 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>b</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">b_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8444em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">b</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span> <strong>越小</strong>，表示<strong>不在乎 </strong><style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>θ</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">\theta_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8444em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02778em;">θ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.0278em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span><strong> 與 </strong><style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mi>θ</mi><mi>i</mi><mi>b</mi></msubsup></mrow><annotation encoding="application/x-tex">\theta^b_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.1078em;vertical-align:-0.2587em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02778em;">θ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8491em;"><span style="top:-2.4413em;margin-left:-0.0278em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">b</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2587em;"><span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span><strong> 接不接近</strong><ul id="88531c2d-8153-498d-8d3c-a637ee9247cb" class="bulleted-list"><li style="list-style-type:circle"><style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>b</mi><mi>i</mi></msub><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">b_i=0</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8444em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">b</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">0</span></span></span></span></span><span>﻿</span></span>，對 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>θ</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">\theta_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8444em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02778em;">θ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.0278em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span> 沒有限制，會導致 <strong>catastrophic forgetting</strong></li></ul></li></ul><h3 id="68739cc0-fe5f-465a-888e-4638e12c36f3" class="">4.1.2 設定 guard b</h3><p id="90373128-de0e-4fec-8a7c-0b7cf58c542e" class=""><strong>人工設定 guard </strong><style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>b</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">b_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8444em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">b</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span>，在 task 1 上訓練完後得到 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>θ</mi><mi>b</mi></msup></mrow><annotation encoding="application/x-tex">\theta^b</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8491em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02778em;">θ</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8491em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">b</span></span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span>，逐一調整 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>θ</mi><mi>b</mi></msup></mrow><annotation encoding="application/x-tex">\theta^b</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8491em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02778em;">θ</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8491em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">b</span></span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span> 的每一個參數，觀察在新任務上 loss 的變化</p><figure id="7ecd6e94-086d-4871-b5d7-e0e335ce0303" class="image"><a href="13-Life%20Long%20Learning%EF%BC%88%E7%B5%82%E8%BA%AB%E5%AD%B8%E7%BF%92%EF%BC%89/17.png"><img style="width:384px" src="13-Life%20Long%20Learning%EF%BC%88%E7%B5%82%E8%BA%AB%E5%AD%B8%E7%BF%92%EF%BC%89/17.png"/></a></figure><p id="04690f1a-f560-4228-a693-d01affe007c5" class=""><strong>舉例：</strong></p><ul id="fa634bbd-8fc3-43dd-9b15-92f35f3e2f25" class="bulleted-list"><li style="list-style-type:disc">針對 task 2 調整 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>θ</mi><mn>1</mn></msub></mrow><annotation encoding="application/x-tex">\theta_1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8444em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02778em;">θ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:-0.0278em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span>，發現<strong>對 task 1 的 loss 影響較小</strong>，代表 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>θ</mi><mn>1</mn></msub></mrow><annotation encoding="application/x-tex">\theta_1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8444em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02778em;">θ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:-0.0278em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span> <strong>對 task 1 較不重要</strong>，因此<strong>將 </strong><style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>b</mi><mn>1</mn></msub></mrow><annotation encoding="application/x-tex">b_1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8444em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">b</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span><strong> 設較小的值</strong></li></ul><ul id="afec7611-d016-4c55-bb4a-717f33457dca" class="bulleted-list"><li style="list-style-type:disc">針對 task 2 調整 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>θ</mi><mn>2</mn></msub></mrow><annotation encoding="application/x-tex">\theta_2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8444em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02778em;">θ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:-0.0278em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span>，發現<strong>對 task 1 的 loss 影響較大</strong>，代表 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>θ</mi><mn>2</mn></msub></mrow><annotation encoding="application/x-tex">\theta_2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8444em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02778em;">θ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:-0.0278em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span> <strong>對 task 1 較重要</strong>，因此<strong>將 </strong><style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>b</mi><mn>2</mn></msub></mrow><annotation encoding="application/x-tex">b_2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8444em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">b</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span><strong> 設較大的值</strong></li></ul><figure id="b9e34d20-7f28-4556-ae79-8d8054da8326" class="image"><a href="13-Life%20Long%20Learning%EF%BC%88%E7%B5%82%E8%BA%AB%E5%AD%B8%E7%BF%92%EF%BC%89/18.png"><img style="width:384px" src="13-Life%20Long%20Learning%EF%BC%88%E7%B5%82%E8%BA%AB%E5%AD%B8%E7%BF%92%EF%BC%89/18.png"/></a></figure><p id="9abcf69c-2269-4d6c-bd35-1545f71bc307" class="">由於 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>b</mi><mn>1</mn></msub></mrow><annotation encoding="application/x-tex">b_1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8444em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">b</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span> 較小、<style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>b</mi><mn>2</mn></msub></mrow><annotation encoding="application/x-tex">b_2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8444em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">b</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span> 較大，因此參數在 task 2 上更新時，會更傾向於改變 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>θ</mi><mn>1</mn></msub></mrow><annotation encoding="application/x-tex">\theta_1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8444em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02778em;">θ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:-0.0278em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span> 而不改變 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>θ</mi><mn>2</mn></msub></mrow><annotation encoding="application/x-tex">\theta_2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8444em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02778em;">θ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:-0.0278em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span>，如此得到的 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>θ</mi><mo>∗</mo></msup></mrow><annotation encoding="application/x-tex">\theta^*</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02778em;">θ</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.6887em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mbin mtight">∗</span></span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span> 在 task 1 和 task 2 上都可以有較好的結果</p><p id="2fc051a9-ee22-4ed2-895c-458487cb3def" class=""><strong>如何計算 </strong><style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>b</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">b_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8444em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">b</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span><strong>？</strong></p><ul id="15186b3e-08d9-4dfd-b6ab-2e5a2c2d4004" class="bulleted-list"><li style="list-style-type:disc"><a href="https://arxiv.org/abs/1612.00796">Elastic Weight Consolidation</a>（EWC）</li></ul><ul id="eefd9daf-0bfa-4814-9cb1-79ad8097ad4d" class="bulleted-list"><li style="list-style-type:disc"><a href="https://arxiv.org/abs/1703.04200">Synaptic Intelligence</a>（SI）</li></ul><ul id="168880b4-5898-4c02-af88-31af8a1f44a5" class="bulleted-list"><li style="list-style-type:disc"><a href="https://arxiv.org/abs/1711.09601">Memory Aware Synapses</a>（MAS）</li></ul><ul id="dfc56b23-4637-4f59-9f82-c25ead99891a" class="bulleted-list"><li style="list-style-type:disc"><a href="https://arxiv.org/abs/1801.10112">RWalk</a></li></ul><ul id="80be479c-b2b5-47ab-9534-42f81bbf3034" class="bulleted-list"><li style="list-style-type:disc"><a href="https://openreview.net/forum?id=BJge3TNKwH">Sliced Cramer Preservation</a>（SCP）</li></ul><h3 id="ae1b55d3-3f54-4f6d-8ed1-68028fe4eaee" class="">4.1.3 實驗結果</h3><p id="226058a3-e184-4e42-900d-e4fc71987365" class="">SGD 表示 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>b</mi></mrow><annotation encoding="application/x-tex">b</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal">b</span></span></span></span></span><span>﻿</span></span> 皆為 0；L2 表示 b 皆為 1；EWC 表示根據 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>θ</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">\theta_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8444em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02778em;">θ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.0278em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span> 的重要性有不同的 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>b</mi></mrow><annotation encoding="application/x-tex">b</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal">b</span></span></span></span></span><span>﻿</span></span></p><figure id="61e8f3ec-ca01-4697-a7fd-65cba7331a76" class="image"><a href="13-Life%20Long%20Learning%EF%BC%88%E7%B5%82%E8%BA%AB%E5%AD%B8%E7%BF%92%EF%BC%89/19.png"><img style="width:336px" src="13-Life%20Long%20Learning%EF%BC%88%E7%B5%82%E8%BA%AB%E5%AD%B8%E7%BF%92%EF%BC%89/19.png"/></a></figure><ul id="a4b4a49b-b203-4049-91ee-0b032674f741" class="bulleted-list"><li style="list-style-type:disc">SGD 方法有 <strong>catastrophic forgetting 的問題</strong></li></ul><ul id="20948360-ef4a-48d7-a9ea-1cf5102bcdcb" class="bulleted-list"><li style="list-style-type:disc">L2 方法雖然<strong>沒有 catastrophic forgetting 的問題，但有 intransigence 的問題</strong></li></ul><ul id="fba02dc1-b9aa-49e2-b108-12a2b186b057" class="bulleted-list"><li style="list-style-type:disc">EWC 方法實現了 LLL</li></ul><h3 id="9e6c3497-98d7-449f-97a1-82e9e9807121" class="">4.1.4 <a href="https://arxiv.org/abs/1706.08840">Gradient Episodic Memory</a>（GEM）</h3><p id="82e1415f-56d0-4335-8c21-b12169ff5915" class="">不在參數上做限制，而是<strong>在 gradient 更新的方向上做限制</strong></p><figure id="931ca7eb-e647-4585-b8f5-75e2b1ef0c93" class="image"><a href="13-Life%20Long%20Learning%EF%BC%88%E7%B5%82%E8%BA%AB%E5%AD%B8%E7%BF%92%EF%BC%89/20.png"><img style="width:384px" src="13-Life%20Long%20Learning%EF%BC%88%E7%B5%82%E8%BA%AB%E5%AD%B8%E7%BF%92%EF%BC%89/20.png"/></a></figure><p id="31141923-2396-42ad-a3ae-4eece9744185" class="">
+</p><p id="0799ec3e-3f9c-41f0-bcbb-c42a211d7de3" class="">在 task 2 算出 gradient <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>g</mi></mrow><annotation encoding="application/x-tex">g</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">g</span></span></span></span></span><span>﻿</span></span> 更新參數前，先計算該參數在 task 1上的 gradient <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>g</mi><mi>b</mi></msup></mrow><annotation encoding="application/x-tex">g^b</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.0435em;vertical-align:-0.1944em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">g</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8491em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">b</span></span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span>，之後兩者做內積，若 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>g</mi><mo>⋅</mo><msup><mi>g</mi><mi>b</mi></msup><mo>&lt;</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">g \cdot g^b&lt;0</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6389em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">g</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">⋅</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1.0435em;vertical-align:-0.1944em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">g</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8491em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">b</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">&lt;</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">0</span></span></span></span></span><span>﻿</span></span>（夾角為鈍角），則修改 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>g</mi></mrow><annotation encoding="application/x-tex">g</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">g</span></span></span></span></span><span>﻿</span></span> 變成 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>g</mi><mo mathvariant="normal" lspace="0em" rspace="0em">′</mo></msup></mrow><annotation encoding="application/x-tex">g&#x27;</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.9463em;vertical-align:-0.1944em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">g</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7519em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">′</span></span></span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span>，讓 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>g</mi><mo>⋅</mo><msup><mi>g</mi><mi>b</mi></msup><mo>&gt;</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">g \cdot g^b&gt;0</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6389em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">g</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">⋅</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1.0435em;vertical-align:-0.1944em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">g</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8491em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">b</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">&gt;</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">0</span></span></span></span></span><span>﻿</span></span>（夾角為銳角），且 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>g</mi><mo mathvariant="normal" lspace="0em" rspace="0em">′</mo></msup></mrow><annotation encoding="application/x-tex">g&#x27;</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.9463em;vertical-align:-0.1944em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">g</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7519em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">′</span></span></span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span> 與 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>g</mi></mrow><annotation encoding="application/x-tex">g</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">g</span></span></span></span></span><span>﻿</span></span> 不可以差太多</p><h2 id="50bcc489-8d57-43ad-9b14-916038a2cd99" class="">4.2 Additional Neural Resource Allocation Memory</h2><p id="e3d5ef3e-c6d7-4c2d-920b-a1ce0f08da98" class="">改變使用在每一個任務里面的 neural 的 resource</p><h3 id="d418af03-da77-44e1-8063-aedefdde06bd" class="">4.2.1 Progressive Neural Network</h3><figure id="3d144535-cbed-4790-89c9-6582347c6abd" class="image"><a href="13-Life%20Long%20Learning%EF%BC%88%E7%B5%82%E8%BA%AB%E5%AD%B8%E7%BF%92%EF%BC%89/21.png"><img style="width:336px" src="13-Life%20Long%20Learning%EF%BC%88%E7%B5%82%E8%BA%AB%E5%AD%B8%E7%BF%92%EF%BC%89/21.png"/></a></figure><p id="3dcbf2f1-853b-4683-8270-8f9c3dfa4cce" class="">每一個任務都重新訓練一些<strong>額外的 neural</strong>，以保證<strong>過去的任務的模型參數不會被改變</strong></p><p id="99f3f79a-b728-46c3-a97a-788fa1a676da" class=""><strong>問題：</strong></p><p id="2733e187-1c98-43f4-baea-92c90350cab8" class="">當模型大小增長過快時，空間上仍難以負荷</p><h3 id="52d183c9-aae3-4cd5-b1af-3272d91893a2" class="">4.2.2 PackNet</h3><p id="cf69a58b-8e93-445a-850d-4ed35fc6f3c0" class="">先分配一個較大的模型，限制每個任務只允許使用某些參數</p><figure id="c0c356fc-0427-4db6-916e-208ca3d44b48" class="image"><a href="13-Life%20Long%20Learning%EF%BC%88%E7%B5%82%E8%BA%AB%E5%AD%B8%E7%BF%92%EF%BC%89/22.png"><img style="width:432px" src="13-Life%20Long%20Learning%EF%BC%88%E7%B5%82%E8%BA%AB%E5%AD%B8%E7%BF%92%EF%BC%89/22.png"/></a></figure><h3 id="5279f3c3-85bb-43fd-82df-5404de13798d" class="">4.2.3 CPG（Progressive Neural Network + PackNet）</h3><p id="b8479157-c823-4442-ade8-78c01483e8dc" class="">模型既可以增加新的參數，且每訓練一個新的任務，又都只保留部分的參數可以拿來做訓練</p><figure id="025a1ab3-6dac-47b5-8ba0-fa6e26262131" class="image"><a href="13-Life%20Long%20Learning%EF%BC%88%E7%B5%82%E8%BA%AB%E5%AD%B8%E7%BF%92%EF%BC%89/23.png"><img style="width:432px" src="13-Life%20Long%20Learning%EF%BC%88%E7%B5%82%E8%BA%AB%E5%AD%B8%E7%BF%92%EF%BC%89/23.png"/></a></figure><h2 id="0825f07a-c6de-44de-a549-f0b5929708aa" class="">4.3 Memory Reply</h2><p id="d4275a1e-01be-45f6-a3e7-ac08951a2cba" class="">針對每個新任務，額外訓練一個<strong>可以產出該任務即過去所有任務的資料的 generator</strong></p><figure id="0588d6a1-7b2d-4187-a6c9-56d03d0dd561" class="image"><a href="13-Life%20Long%20Learning%EF%BC%88%E7%B5%82%E8%BA%AB%E5%AD%B8%E7%BF%92%EF%BC%89/24.png"><img style="width:384px" src="13-Life%20Long%20Learning%EF%BC%88%E7%B5%82%E8%BA%AB%E5%AD%B8%E7%BF%92%EF%BC%89/24.png"/></a></figure><p id="fcf9b5dc-8221-4b38-b607-89c6060891ea" class=""><strong>問題：</strong></p><p id="5f8e72c4-c267-4cb6-9c32-12dbb2699dd0" class="">額外訓練 generator 同樣會佔用空間，但如果這個空間比儲存訓練資料佔用的空間小，那就是一個有效的方法</p><p id="46b29ef5-4a17-4d1f-8072-3563030130e7" class="">實際上，<strong>此方法往往都可以逼近 LLL 的 upper bound，可以做到跟 multi-task learning 差不多的結果</strong></p><p id="e79745ce-d3d6-43a6-a379-fa5de546ec99" class="">
+</p><h1 id="d8728d6a-b4a5-48c9-b92f-6011703d636d" class="">5. Adding new classes</h1><p id="149e0fac-e4aa-4535-9f6b-1534a89eb65b" class=""><strong>問題：</strong></p><p id="b395f350-1631-4d2e-8b00-b08d2daf0d8a" class="">不同的任務間的 class 數目不一樣</p><figure id="d8719a4c-e64a-4979-99ac-a54204174da9" class="image"><a href="13-Life%20Long%20Learning%EF%BC%88%E7%B5%82%E8%BA%AB%E5%AD%B8%E7%BF%92%EF%BC%89/25.png"><img style="width:432px" src="13-Life%20Long%20Learning%EF%BC%88%E7%B5%82%E8%BA%AB%E5%AD%B8%E7%BF%92%EF%BC%89/25.png"/></a></figure><p id="3c0a9d4d-dd36-415c-a5d9-392ac5ccc071" class=""><strong>解決：</strong></p><p id="a2a35130-8ded-4351-a183-1a9fcbba4f0e" class=""><em><a href="https://arxiv.org/abs/1606.09282">Learning without Forgetting</a></em><strong>（LwF）</strong></p><p id="60e6d1cf-30d1-4caa-9861-1f67961ddb0d" class=""><em><a href="https://arxiv.org/abs/1611.07725">iCaRL: Incremental Classifier and Representation Learning</a></em></p><p id="a83a6b2b-6f77-41ee-8131-5ed6c3b6d3db" class="">
+</p><h1 id="0be437f1-6fea-43d9-bf07-305977dc8d7f" class="">6. Three scenarios for Continual Learning（LLL）</h1><p id="bdfec08a-8fd9-4b54-913e-3b37ae9eab2a" class="">LLL 有三種 scenarios，課程只介紹其中一種，其他兩種可參考論文：<em><a href="https://arxiv.org/abs/1904.07734">Three scenarios for continual learning</a></em></p><p id="d8cff126-f066-4f95-842d-de64828b5902" class="">
+</p><h1 id="2ff70ebd-0131-4f14-86eb-6f54daca6b1a" class="">7. Curriculum Learning</h1><p id="b20ec073-d306-441b-885e-6c8c901f1de2" class=""><strong>兩個實驗：</strong></p><ul id="38b91eef-443f-4275-8aca-227103278509" class="bulleted-list"><li style="list-style-type:disc">訓練模型 task 1 有雜訊的圖片，再到 task 2 沒有雜訊的圖片，發生 catastrophic forgetting</li></ul><ul id="bb83120f-e8bc-4b00-8c49-d1a3ebadcbe7" class="bulleted-list"><li style="list-style-type:disc">順序反過來，訓練模型 task 1 沒有雜訊的圖片，再到 task 2，沒有發生 catastrophic forgetting </li></ul><figure id="c8bad2b9-ad29-4131-b184-e5b25321a260" class="image"><a href="13-Life%20Long%20Learning%EF%BC%88%E7%B5%82%E8%BA%AB%E5%AD%B8%E7%BF%92%EF%BC%89/26.png"><img style="width:336px" src="13-Life%20Long%20Learning%EF%BC%88%E7%B5%82%E8%BA%AB%E5%AD%B8%E7%BF%92%EF%BC%89/26.png"/></a></figure><p id="6be5b595-1a24-4432-bff2-8ff2a68ca9a7" class=""><strong>結論：</strong></p><p id="29270373-f146-4be9-a57c-5937a11823b0" class=""><strong>任務的順序</strong>也是關鍵</p><p id="818c80a4-fab5-4e15-9d6e-8ae1a75fbdc9" class="">
+</p></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>

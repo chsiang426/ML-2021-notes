@@ -1,0 +1,773 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>07-Self-Supervised Learning（BERT）</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 10px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.collection-content td {
+	white-space: pre-wrap;
+	word-break: break-word;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+	margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.callout img.notion-static-icon {
+	width: 1em;
+	height: 1em;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+blockquote.quote-large {
+	font-size: 1.25em;
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray {
+	color: rgba(128, 125, 120, 1);
+	fill: rgba(128, 125, 120, 1);
+}
+.highlight-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.highlight-orange {
+	color: rgba(204, 121, 47, 1);
+	fill: rgba(204, 121, 47, 1);
+}
+.highlight-yellow {
+	color: rgba(195, 148, 67, 1);
+	fill: rgba(195, 148, 67, 1);
+}
+.highlight-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.highlight-blue {
+	color: rgba(63, 126, 190, 1);
+	fill: rgba(63, 126, 190, 1);
+}
+.highlight-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.highlight-pink {
+	color: rgba(179, 84, 136, 1);
+	fill: rgba(179, 84, 136, 1);
+}
+.highlight-red {
+	color: rgba(201, 85, 73, 1);
+	fill: rgba(201, 85, 73, 1);
+}
+.highlight-default_background {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray_background {
+	background: rgba(42, 28, 0, 0.07);
+}
+.highlight-brown_background {
+	background: rgba(139, 46, 0, 0.086);
+}
+.highlight-orange_background {
+	background: rgba(224, 101, 1, 0.129);
+}
+.highlight-yellow_background {
+	background: rgba(211, 168, 0, 0.137);
+}
+.highlight-teal_background {
+	background: rgba(0, 100, 45, 0.09);
+}
+.highlight-blue_background {
+	background: rgba(0, 111, 200, 0.09);
+}
+.highlight-purple_background {
+	background: rgba(102, 0, 178, 0.078);
+}
+.highlight-pink_background {
+	background: rgba(197, 0, 93, 0.086);
+}
+.highlight-red_background {
+	background: rgba(223, 22, 0, 0.094);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(128, 125, 120, 1);
+	fill: rgba(128, 125, 120, 1);
+}
+.block-color-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.block-color-orange {
+	color: rgba(204, 121, 47, 1);
+	fill: rgba(204, 121, 47, 1);
+}
+.block-color-yellow {
+	color: rgba(195, 148, 67, 1);
+	fill: rgba(195, 148, 67, 1);
+}
+.block-color-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.block-color-blue {
+	color: rgba(63, 126, 190, 1);
+	fill: rgba(63, 126, 190, 1);
+}
+.block-color-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.block-color-pink {
+	color: rgba(179, 84, 136, 1);
+	fill: rgba(179, 84, 136, 1);
+}
+.block-color-red {
+	color: rgba(201, 85, 73, 1);
+	fill: rgba(201, 85, 73, 1);
+}
+.block-color-default_background {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray_background {
+	background: rgba(240, 239, 237, 1);
+}
+.block-color-brown_background {
+	background: rgba(245, 237, 233, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 235, 222, 1);
+}
+.block-color-yellow_background {
+	background: rgba(249, 243, 220, 1);
+}
+.block-color-teal_background {
+	background: rgba(232, 241, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(232, 242, 250, 1);
+}
+.block-color-purple_background {
+	background: rgba(243, 235, 249, 1);
+}
+.block-color-pink_background {
+	background: rgba(250, 233, 241, 1);
+}
+.block-color-red_background {
+	background: rgba(252, 233, 231, 1);
+}
+.select-value-color-default { background-color: rgba(42, 28, 0, 0.07); }
+.select-value-color-gray { background-color: rgba(28, 19, 1, 0.11); }
+.select-value-color-brown { background-color: rgba(127, 51, 0, 0.156); }
+.select-value-color-orange { background-color: rgba(196, 88, 0, 0.203); }
+.select-value-color-yellow { background-color: rgba(209, 156, 0, 0.282); }
+.select-value-color-green { background-color: rgba(0, 96, 38, 0.156); }
+.select-value-color-blue { background-color: rgba(0, 99, 174, 0.172); }
+.select-value-color-purple { background-color: rgba(92, 0, 163, 0.141); }
+.select-value-color-pink { background-color: rgba(183, 0, 78, 0.152); }
+.select-value-color-red { background-color: rgba(206, 24, 0, 0.164); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+
+
+/* Back-to-index button */
+.floating-button {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.4em;
+	padding: 0.55em 1.15em;
+	border-radius: 999px;
+	background: rgba(255, 255, 255, 0.92);
+	color: #1f2933;
+	font-size: 0.9rem;
+	font-weight: 500;
+	text-decoration: none;
+	border: 1px solid rgba(15, 23, 42, 0.12);
+	box-shadow: 0 8px 24px rgba(15, 23, 42, 0.12);
+	backdrop-filter: blur(12px);
+	transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+.floating-button:hover {
+	background: #1f2933;
+	color: #ffffff;
+	box-shadow: 0 12px 32px rgba(15, 23, 42, 0.18);
+	transform: translateY(-1px);
+}
+.floating-button:active {
+	transform: translateY(0);
+	box-shadow: 0 6px 18px rgba(15, 23, 42, 0.14);
+}
+.back-to-index {
+	position: fixed;
+	top: 20px;
+	left: 20px;
+	z-index: 1000;
+}
+.nav-controls {
+	position: fixed;
+	top: 20px;
+	right: 20px;
+	z-index: 1000;
+	display: inline-flex;
+	gap: 0.6em;
+	flex-wrap: wrap;
+	justify-content: flex-end;
+}
+@media (max-width: 600px) {
+	.back-to-index {
+		top: 16px;
+		left: 16px;
+	}
+	.nav-controls {
+		top: 16px;
+		right: 16px;
+		gap: 0.5em;
+	}
+	.floating-button {
+		padding: 0.45em 1em;
+		font-size: 0.85rem;
+	}
+}
+@media print {
+	.back-to-index,
+	.nav-controls {
+		display: none;
+	}
+}
+
+</style></head><body>
+<a class="floating-button back-to-index" href="../index.html">回到目錄</a>
+<div class="nav-controls">
+	<a class="floating-button nav-button" href="../06-Generative Adversarial Network（GAN）/06-Generative Adversarial Network（GAN）.html" title="上一節：06-Generative Adversarial Network（GAN）">上一節</a>
+	<a class="floating-button nav-button" href="../08-Auto-encoder/08-Auto-encoder.html" title="下一節：08-Auto-encoder">下一節</a>
+</div>
+<article id="2cb6d4c6-2aa4-4f93-8670-8f3be787fba5" class="page sans"><header><div class="page-header-icon undefined"><img class="icon notion-static-icon" src="https://www.notion.so/icons/document_blue.svg"/></div><h1 class="page-title">07-Self-Supervised Learning（BERT）</h1><p class="page-description"></p><table class="properties"><tbody></tbody></table></header><div class="page-body"><nav id="29f74c58-52a8-4890-bbde-ba729ce53c98" class="block-color-gray table_of_contents"><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#c0d0e79f-d0c2-414b-aaf6-166e71228b74">1. Self-supervised Learning</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#7857241e-3850-418d-8588-1586e97bc092">2. BERT</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#650ccd38-a282-4a0a-9f80-41ba2ba4b3a1">2.1 Masking Input</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#f9fe6770-fd3b-46fc-97b1-d6505e59f676">2.2 Next Sentence Prediction</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#ecd7c117-550a-4f37-b02c-69fa50bfd0f1">2.3 BERT 的實際用途</a></div><div class="table_of_contents-item table_of_contents-indent-2"><a class="table_of_contents-link" href="#3987c945-7744-4c68-afab-f2e7dcf62e37">2.3.1 GLUE 指標（General Language Understanding Evaluation）</a></div><div class="table_of_contents-item table_of_contents-indent-2"><a class="table_of_contents-link" href="#d1cb3d68-5329-4381-a3f6-4471f08eef0f">2.3.2 Case 1：Sentiment analysis</a></div><div class="table_of_contents-item table_of_contents-indent-2"><a class="table_of_contents-link" href="#0b89bff9-3d28-4f23-83e3-e4812a4d5694">2.3.3 Case 2 ：POS tagging</a></div><div class="table_of_contents-item table_of_contents-indent-2"><a class="table_of_contents-link" href="#d6d4d025-8e99-421e-805a-61aae263cd1a">2.3.4 Case 3：Natural Language Inference（NLI）</a></div><div class="table_of_contents-item table_of_contents-indent-2"><a class="table_of_contents-link" href="#8b1a1d2e-74ca-4690-8f5e-2b36d1f224c7">2.3.5 Case 4：Extraction-based Question Answering（QA）</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#a80c3b71-ed3b-4afe-8f16-afc7c774fd41">2.4 BERT 訓練難度高</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#e79d2c7e-aff1-4ac8-89b5-f92f099a89db">3. Pre-training a seq2seq model</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#7b2b2915-b9da-4ce5-890f-373f8ab6c87a">4. 為什麼 BERT 有用？</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#f27ba57e-0c2f-44d4-af4c-e4a34205764d">4.1 Embedding</a></div><div class="table_of_contents-item table_of_contents-indent-2"><a class="table_of_contents-link" href="#e4051b6b-64ad-460a-aec3-7ba968f18d4a">4.1.1 相關技術：CBOW</a></div><div class="table_of_contents-item table_of_contents-indent-2"><a class="table_of_contents-link" href="#42c8a887-7389-4e0c-b6f3-b8662f6c217d">4.1.2 contextualized embedding</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#2839aa3d-d352-4ba1-8b00-6de24298c90d">4.2 Learn More BERT</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#c476cede-b6c1-44d2-9630-5c2a0da00587">5. <strong>Multi-lingual BERT</strong></a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#40eb08ce-0fc4-46df-a996-fb260829605f">5.1 <strong>Cross-lingual Alignment</strong></a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#87da1a39-5b86-472c-acb2-62d3a51b0dd9">6. GPT</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#4648f569-5afe-44a3-9d93-7ece0ac5eb5a">6.1 To Learn More</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#ea89bcda-4601-476a-9f22-714df39cfc1b">7. 其他 Self-supervesed Learning 應用</a></div></nav><h1 id="c0d0e79f-d0c2-414b-aaf6-166e71228b74" class="">1. Self-supervised Learning</h1><p id="43fae01c-f11a-470f-be9d-a4e73268563d" class=""><strong>self-supervised learning 屬於 unsupervised learning</strong> 的一種，其資料本身沒有標籤，但是訓練過程中實際上有模型自己生成的標籤</p><figure id="afc6dcb0-cf78-4498-9679-a3ae4ea1a2b8" class="image"><a href="07-Self-Supervised%20Learning%EF%BC%88BERT%EF%BC%89/0.png"><img style="width:432px" src="07-Self-Supervised%20Learning%EF%BC%88BERT%EF%BC%89/0.png"/></a></figure><p id="5c7ffc08-4487-45d2-9fd4-235b050c565f" class="">把訓練資料分為兩部分，一部分為<strong>輸入資料</strong>、另一部分為<strong>標註資料</strong></p><h1 id="7857241e-3850-418d-8588-1586e97bc092" class="">2. BERT</h1><p id="c2db7e86-455b-4942-aca0-1eaa01971dbd" class="">BERT 是一個 <strong>transformer 的 encoder。</strong>BERT 可以輸入一排向量，然後輸出另一排向量，輸出的長度與輸入的長度相同。BERT 一般用於<strong>自然語言處理</strong>，它的輸入是一串文本，也可以輸入語音、圖像等向量序列</p><p id="7ff12fde-b672-4394-ae7d-659693c9bded" class="">訓練 BERT 有兩個任務，分別是 <strong>Masking Input</strong> 及 <strong>Next Sentence Prediction</strong></p><h2 id="650ccd38-a282-4a0a-9f80-41ba2ba4b3a1" class="">2.1 Masking Input</h2><p id="5b2674fc-24f6-41f0-acf8-987c7acf8822" class=""><strong>mask 的方法：</strong></p><ul id="9246d776-8b17-45e2-ac7f-c9239360a9ad" class="bulleted-list"><li style="list-style-type:disc">方法一：用一個特殊的 token “<strong>MASK” 蓋住句子中的一個詞</strong></li></ul><ul id="05432c96-89f8-409d-8c4c-9bf946f4df65" class="bulleted-list"><li style="list-style-type:disc">方法二：<strong>隨機把某一個字換成另一個字</strong></li></ul><p id="d1aa2549-0999-41f4-aee2-f39a994537d5" class="">兩種方法<strong>都可以使用</strong>，使用哪種方法也是<strong>隨機決定的</strong></p><figure id="80824b7a-2e78-4bba-9096-875fcefbb56e" class="image"><a href="07-Self-Supervised%20Learning%EF%BC%88BERT%EF%BC%89/1.png"><img style="width:480px" src="07-Self-Supervised%20Learning%EF%BC%88BERT%EF%BC%89/1.png"/></a></figure><p id="39bc9fae-2187-4a01-ad6a-25ee7c4f59e1" class=""><strong>訓練方法：</strong></p><ol type="1" id="8ba7eecc-52ca-4f9a-a6db-a5546861834d" class="numbered-list" start="1"><li>向 BERT 輸入一個句子，先隨機決定哪一部分的字將被 mask</li></ol><ol type="1" id="fb37dda7-7f66-4425-9730-14d1f0a9595b" class="numbered-list" start="2"><li>輸入一個序列，我們把 BERT 的相應輸出看作是另一個序列</li></ol><ol type="1" id="85c4132c-1854-4b87-9557-e3c7eff2bf45" class="numbered-list" start="3"><li>在輸入序列中尋找 mask 部分的相應輸出，將這個向量通過一個 linear transform（矩陣相乘），並做 softmax 得到一個分布</li></ol><ol type="1" id="ab5bc59e-d6dd-4a28-bff7-e6ab84f4c8e9" class="numbered-list" start="4"><li>用 one-hot vector 表示被 mask 的字符，並使輸出和 one-hot vector 之間的 cross entropy 最小</li></ol><p id="2b07e74e-fb84-4881-adfe-cbc39f8f4526" class=""><strong>本質上就是在解決一個分類問題，BERT 要做的是預測什麼字被蓋住</strong></p><h2 id="f9fe6770-fd3b-46fc-97b1-d6505e59f676" class="">2.2 Next Sentence Prediction</h2><p id="278ca841-a674-45c9-b639-1adece288614" class="">在兩個句子之間添加一個特殊標記 <strong>[SEP]</strong>，代表兩句子的分隔，如此 BERT 就知道是兩個不同的句子，此外還會在句子的開頭添加另一個特殊標記 <strong>[CLS]</strong></p><figure id="b4e95302-9bbb-4fa2-a98a-e1b794e2f9de" class="image"><a href="07-Self-Supervised%20Learning%EF%BC%88BERT%EF%BC%89/2.png"><img style="width:480px" src="07-Self-Supervised%20Learning%EF%BC%88BERT%EF%BC%89/2.png"/></a></figure><p id="5a8325f0-2072-4aa5-a94a-7bcb0f5f664d" class=""><strong>只看 [CLS] 的輸出</strong>，把它乘以一個 linear transform，做一個二分類問題，輸出 yes/no，判斷兩句是否前後連續</p><p id="3a3e83ee-222a-488b-bb96-133baf0c02a6" class=""><strong>注意：</strong></p><p id="bfd6a16c-e3c7-40d7-8bf2-f306733c0822" class="">論文 <em><a href="https://arxiv.org/abs/1907.11692">Robustly Optimized BERT Approach</a></em>（RoBERTa）指出 Next Sentence Prediction 的方法幾乎沒有幫助，但還有另一種更有用的方法叫做 <strong>Sentence Order Prediction</strong>，該方法選擇兩個句子本來就是連接在一起，但順序可能顛倒或沒有顛倒兩種可能性，BERT 要回答是哪一種可能性。它被用於名為 <strong>ALBERT</strong> 的模型中，該模型是 <strong>BERT 的進階版本</strong></p><h2 id="ecd7c117-550a-4f37-b02c-69fa50bfd0f1" class="">2.3 BERT 的實際用途</h2><p id="baf45c35-cd68-4785-8675-e2c9e98b8749" class="">BERT 可以用於其他任務，這些任務不一定與填空有關， 它可能是完全不同的東西，這些任務是真正使用 BERT 的任務，其稱為 <strong>downstream tasks</strong></p><figure id="72df8e6a-9113-413e-aaf8-d56b2f9c3390" class="image"><a href="07-Self-Supervised%20Learning%EF%BC%88BERT%EF%BC%89/3.png"><img style="width:432px" src="07-Self-Supervised%20Learning%EF%BC%88BERT%EF%BC%89/3.png"/></a></figure><ul id="59c478a0-9c1f-40a1-8a41-a0795e0db2ee" class="bulleted-list"><li style="list-style-type:disc">預訓練（Pre-train）：產生 BERT 的過程</li></ul><ul id="5a1e93b8-0928-4770-8ac0-922f0bfe2ae8" class="bulleted-list"><li style="list-style-type:disc">微調（Fine-tune）：利用一些特別的訊息，使 BERT 能夠完成某種任務</li></ul><p id="095e1f7d-01f6-44de-9f8c-27dfab257a36" class="">透過預訓練及微調讓 BERT 能夠完成各式各樣的 downstream tasks</p><h3 id="3987c945-7744-4c68-afab-f2e7dcf62e37" class="">2.3.1 GLUE 指標（General Language Understanding Evaluation）</h3><p id="a8c95efe-a785-4558-8dc9-b2ca362d7e23" class="">一個測試指標，為了<strong>測試 self-supervised 學習的能力</strong>，通常會在一個任務集上測試它的準確性，取其平均值得到總分</p><div id="f9e8ab2a-7bff-4d14-a36c-7613f957a4a0" class="column-list"><div id="fc4d679c-8d69-4957-ba4d-19903805ebac" style="width:37.5%" class="column"><figure id="99fd01a0-35be-43b2-86e9-f9f46e9d0bc1" class="image"><a href="07-Self-Supervised%20Learning%EF%BC%88BERT%EF%BC%89/4.png"><img style="width:432px" src="07-Self-Supervised%20Learning%EF%BC%88BERT%EF%BC%89/4.png"/></a></figure></div><div id="3b13dc47-6c66-4630-b6f7-2d1bafa4676b" style="width:62.5%" class="column"><figure id="0d07d5d3-65ad-4c65-9643-798fb93e2e28" class="image"><a href="07-Self-Supervised%20Learning%EF%BC%88BERT%EF%BC%89/5.png"><img style="width:528px" src="07-Self-Supervised%20Learning%EF%BC%88BERT%EF%BC%89/5.png"/></a></figure></div></div><h3 id="d1cb3d68-5329-4381-a3f6-4471f08eef0f" class="">2.3.2 Case 1：Sentiment analysis</h3><p id="f34eac58-503c-4d31-9812-8f83f552ad03" class="">給 model 一個句子，把 [CLS] 放在句子的前面，只關注 [CLS] 的輸出向量，對它進行 linear transform + softmax，得到類別</p><figure id="abb0e1c5-bb18-4785-bacc-5f0c25ebdc5a" class="image"><a href="07-Self-Supervised%20Learning%EF%BC%88BERT%EF%BC%89/6.png"><img style="width:432px" src="07-Self-Supervised%20Learning%EF%BC%88BERT%EF%BC%89/6.png"/></a></figure><p id="dfcd6118-e4f1-42ab-9094-1e07be8a63d9" class="">針對情感分析任務作訓練需要一些有標註的資料，訓練的時候，linear transform 和 BERT 模型都是利用 gradient descent 來更新參數的</p><ul id="052c95e7-0d49-4900-9f2d-cf74ad14af50" class="bulleted-list"><li style="list-style-type:disc">linear transform 的參數是<strong>隨機初始化</strong>的</li></ul><ul id="25fae521-0898-4e54-b326-66abc9ce57c2" class="bulleted-list"><li style="list-style-type:disc">BERT 的初始化參數是 pre-train 時學到的參數，此舉<strong>會有更好的性能</strong></li></ul><figure id="07b896f9-a052-467b-bebf-14ac3d929068" class="image"><a href="07-Self-Supervised%20Learning%EF%BC%88BERT%EF%BC%89/7.png"><img style="width:384px" src="07-Self-Supervised%20Learning%EF%BC%88BERT%EF%BC%89/7.png"/></a></figure><p id="4e1e7ed3-0e2a-418f-a35d-04c673885d53" class="">有 pre-train 的 model 在各個任務上<strong>收斂速度都更快</strong>，在最後也都有<strong>較低的 training loss</strong></p><h3 id="0b89bff9-3d28-4f23-83e3-e4812a4d5694" class="">2.3.3 Case 2 ：POS tagging</h3><p id="5c91ae74-bb9a-40be-a56e-263f2069e781" class="">給 model 一個句子，把 [CLS] 放在句子的前面，關注每個字所對應的輸出向量，對每一個向量進行 linear transform + softmax，得到類別</p><figure id="d6870e4a-6816-4c1e-85b7-2a6ea7a46127" class="image"><a href="07-Self-Supervised%20Learning%EF%BC%88BERT%EF%BC%89/8.png"><img style="width:432px" src="07-Self-Supervised%20Learning%EF%BC%88BERT%EF%BC%89/8.png"/></a></figure><h3 id="d6d4d025-8e99-421e-805a-61aae263cd1a" class="">2.3.4 Case 3：Natural Language Inference（NLI）</h3><p id="fdb48d59-4d57-4a8d-9d35-4080ea50e737" class="">給出前提和假設，機器要做的是判斷是否有可能從前提中推斷出假設</p><figure id="49433bb8-5db2-4127-8281-5782fd56c4ea" class="image"><a href="07-Self-Supervised%20Learning%EF%BC%88BERT%EF%BC%89/9.png"><img style="width:432px" src="07-Self-Supervised%20Learning%EF%BC%88BERT%EF%BC%89/9.png"/></a></figure><p id="e5d1e603-91de-4183-ab4e-c861afb7d938" class="">給 model 兩個句子，把 [CLS] 放在句子的前面，以 [SEP] 隔開兩個句子，只關注 [CLS] 的輸出向量，對它進行 linear transform + softmax，得到類別</p><figure id="eb87e899-9240-4871-89ac-1db7863acc48" class="image"><a href="07-Self-Supervised%20Learning%EF%BC%88BERT%EF%BC%89/10.png"><img style="width:432px" src="07-Self-Supervised%20Learning%EF%BC%88BERT%EF%BC%89/10.png"/></a></figure><h3 id="8b1a1d2e-74ca-4690-8f5e-2b36d1f224c7" class="">2.3.5 Case 4：Extraction-based Question Answering（QA）</h3><p id="a7cae870-5bf1-4d52-9729-e63d9258b257" class="">Extraction-based QA 給模型一段文章，要模型回答跟文章相關的問題，保證答案一定在文章裡面</p><p id="81b76a0d-31cb-452f-bef7-3884709ebada" class="">給定文章和問題，輸出兩個整數 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>s</mi></mrow><annotation encoding="application/x-tex">s</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">s</span></span></span></span></span><span>﻿</span></span> 和 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>e</mi></mrow><annotation encoding="application/x-tex">e</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">e</span></span></span></span></span><span>﻿</span></span>，代表文章中的第 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>s</mi></mrow><annotation encoding="application/x-tex">s</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">s</span></span></span></span></span><span>﻿</span></span> 到 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>e</mi></mrow><annotation encoding="application/x-tex">e</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">e</span></span></span></span></span><span>﻿</span></span> 個詞彙是模型的答案</p><figure id="c182be9a-9dbd-4abd-a65f-bb2cc811b04c" class="image"><a href="07-Self-Supervised%20Learning%EF%BC%88BERT%EF%BC%89/11.png"><img style="width:432px" src="07-Self-Supervised%20Learning%EF%BC%88BERT%EF%BC%89/11.png"/></a></figure><p id="6abda142-3bf8-46c0-b25f-b45294c23fe9" class="">給 model 兩個句子，分別為 question 和 document，把 [CLS] 放在 question 的前面，以 [SEP] 隔開兩個句子，在這個 QA 任務中，只有<strong>兩個向量需要隨機初始化</strong>，用<strong>橘色向量</strong>和<strong>藍色向量</strong>來表示，這兩個向量的長度與 BERT 的輸出相同</p><div id="58f13bf6-69a9-48cb-942e-9d10582b3c5a" class="column-list"><div id="69000340-f326-469d-92cb-a03d6eeb420a" style="width:50%" class="column"><figure id="2dba49cf-b30e-49d4-b441-d9d144265035" class="image"><a href="07-Self-Supervised%20Learning%EF%BC%88BERT%EF%BC%89/12.png"><img style="width:288px" src="07-Self-Supervised%20Learning%EF%BC%88BERT%EF%BC%89/12.png"/></a></figure></div><div id="87a508d9-d38a-47e3-94c4-baa5dc1b1fba" style="width:50%" class="column"><figure id="e4f0f301-0e32-4a64-a4e3-bcfd0e00e21c" class="image"><a href="07-Self-Supervised%20Learning%EF%BC%88BERT%EF%BC%89/13.png"><img style="width:288px" src="07-Self-Supervised%20Learning%EF%BC%88BERT%EF%BC%89/13.png"/></a></figure></div></div><p id="3f869d6e-26b9-4748-9cc7-08bc50650f24" class=""><strong>方法：</strong></p><p id="8cb0e5b3-cc96-4e22-b623-d9e92d9dc86b" class="">計算 document 中的每一個詞的輸出與橘色向量的 inner product 後，做 softmax 取分數最高的詞彙作為 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>s</mi></mrow><annotation encoding="application/x-tex">s</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">s</span></span></span></span></span><span>﻿</span></span>；同樣在計算與藍色向量的 inner product 後，做 softmax 取分數最高的詞彙作為 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>e</mi></mrow><annotation encoding="application/x-tex">e</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">e</span></span></span></span></span><span>﻿</span></span></p><h2 id="a80c3b71-ed3b-4afe-8f16-afc7c774fd41" class="">2.4 BERT 訓練難度高</h2><figure id="3f5fca88-fa39-4af9-9b8e-fceec256b165" class="image"><a href="07-Self-Supervised%20Learning%EF%BC%88BERT%EF%BC%89/14.png"><img style="width:432px" src="07-Self-Supervised%20Learning%EF%BC%88BERT%EF%BC%89/14.png"/></a><figcaption>數據量大、訓練過程困難</figcaption></figure><p id="67a5386e-cf52-4ffd-89ed-9c756c826753" class="">
+</p><h1 id="e79d2c7e-aff1-4ac8-89b5-f92f099a89db" class="">3. Pre-training a seq2seq model</h1><p id="396f56ff-4e83-4055-a729-1c50e7decd62" class="">輸入是一串句子，輸出是一串句子，中間用 <strong>cross attention</strong> 連接起來，然後故意在 encoder 的輸入上做些干擾。encoder 看到的是被干擾的結果，decoder 應該輸出句子被破壞前的結果，訓練這個模型實際上是預訓練一個 Seq2Seq 模型</p><figure id="3ed76815-3064-4f6c-a26b-9ab9930a9a33" class="image"><a href="07-Self-Supervised%20Learning%EF%BC%88BERT%EF%BC%89/15.png"><img style="width:432px" src="07-Self-Supervised%20Learning%EF%BC%88BERT%EF%BC%89/15.png"/></a></figure><p id="f48f7484-813e-4f67-8ee9-d4a344629fd1" class=""><strong>方法：</strong></p><p id="14813acf-0e07-4dbd-b1ed-7e78999f92c4" class="">把某些詞遮住、刪除一些詞，打亂詞的順序，旋轉詞的順序、遮住一些詞再去掉一些詞等等</p><ul id="b2aab5f2-a52e-4474-b984-a490cbbccaa4" class="bulleted-list"><li style="list-style-type:disc">MASS：把某些詞遮住</li></ul><ul id="072bbef6-22d1-482c-9136-c37c93176a9e" class="bulleted-list"><li style="list-style-type:disc">BART：結合全部</li></ul><figure id="4c542762-c143-4488-990d-989248da3949" class="image"><a href="07-Self-Supervised%20Learning%EF%BC%88BERT%EF%BC%89/16.png"><img style="width:384px" src="07-Self-Supervised%20Learning%EF%BC%88BERT%EF%BC%89/16.png"/></a></figure><p id="0a6ba118-643c-4468-a482-17037350a6f4" class="">
+</p><h1 id="7b2b2915-b9da-4ce5-890f-373f8ab6c87a" class="">4. 為什麼 BERT 有用？</h1><h2 id="f27ba57e-0c2f-44d4-af4c-e4a34205764d" class="">4.1 Embedding</h2><p id="f26d24f6-8f1d-42dd-abb1-69f853d78a3e" class="">輸入一串文字，每個文字都有對應的向量，稱之為 <strong>embedding</strong>。這些向量代表了<strong>輸入詞的含義</strong></p><figure id="4540e0a5-0489-4121-862a-953cfa0b1585" class="image"><a href="07-Self-Supervised%20Learning%EF%BC%88BERT%EF%BC%89/17.png"><img style="width:480px" src="07-Self-Supervised%20Learning%EF%BC%88BERT%EF%BC%89/17.png"/></a></figure><p id="ef592be9-362f-4554-b7a9-fd222bcab222" class="">白話地說，把這些詞所對應的向量畫出來，或計算它們之間的<strong>距離</strong>，可以發現意思<strong>比較相似的詞</strong>，它們的<strong>向量比較接近</strong></p><p id="ea56ee7a-ca7a-42e7-8d41-f8892862ee69" class="">訓練 BERT 時，輸入 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>w</mi><mn>1</mn></msub></mrow><annotation encoding="application/x-tex">w_1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.5806em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02691em;">w</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:-0.0269em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span>、<style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>w</mi><mn>2</mn></msub></mrow><annotation encoding="application/x-tex">w_2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.5806em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02691em;">w</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:-0.0269em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span>、<style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>w</mi><mn>3</mn></msub></mrow><annotation encoding="application/x-tex">w_3</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.5806em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02691em;">w</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:-0.0269em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">3</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span> 和 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>w</mi><mn>4</mn></msub></mrow><annotation encoding="application/x-tex">w_4</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.5806em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02691em;">w</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:-0.0269em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">4</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span>，覆蓋 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>w</mi><mn>2</mn></msub></mrow><annotation encoding="application/x-tex">w_2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.5806em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02691em;">w</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:-0.0269em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span> 要 BERT 預測 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>w</mi><mn>2</mn></msub></mrow><annotation encoding="application/x-tex">w_2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.5806em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02691em;">w</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:-0.0269em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span>，而它就是從上下文中提取訊息來預測 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>w</mi><mn>2</mn></msub></mrow><annotation encoding="application/x-tex">w_2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.5806em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02691em;">w</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:-0.0269em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span>。所以這個向量是其<strong>上下文訊息的精華</strong>，可以用來預測 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>w</mi><mn>2</mn></msub></mrow><annotation encoding="application/x-tex">w_2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.5806em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02691em;">w</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:-0.0269em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span> 是什麽</p><figure id="1289e19a-1be3-42c2-bb59-a005b5ee223b" class="image"><a href="07-Self-Supervised%20Learning%EF%BC%88BERT%EF%BC%89/18.png"><img style="width:432px" src="07-Self-Supervised%20Learning%EF%BC%88BERT%EF%BC%89/18.png"/></a></figure><p id="7b7841cb-2e4c-4276-bcb2-90cfae2689de" class="">BERT 輸出的這些向量代表了該詞的含義，可以認為 BERT 在填空的過程中已經學會了每個漢字的意思</p><figure id="478d652f-cfbb-44b5-8646-855ecb545741" class="image"><a href="07-Self-Supervised%20Learning%EF%BC%88BERT%EF%BC%89/19.png"><img style="width:480px" src="07-Self-Supervised%20Learning%EF%BC%88BERT%EF%BC%89/19.png"/></a></figure><p id="533e9b7f-de18-4c63-854b-7e47c2c58dd8" class="">從上圖針對蘋果的相關性作圖，BERT 知道前五個句子的蘋果代表的是可食用的蘋果，後五個句子的蘋果代表的是蘋果產品</p><h3 id="e4051b6b-64ad-460a-aec3-7ba968f18d4a" class="">4.1.1 相關技術：CBOW</h3><p id="3f37f1f0-6684-4778-b9c6-c0e1742feda1" class="">CBOW 所做的，與 BERT 一樣。做一個空白，並要求它預測空白處的內容。由於算力原因，CBOW 是一個非常簡單的模型，只使用了兩個變換。今天的 BERT，就相當於一個深度版本的 CBOW</p><figure id="ae7f7f37-dbc5-4a15-a2f3-92839bcbcd9f" class="image"><a href="07-Self-Supervised%20Learning%EF%BC%88BERT%EF%BC%89/20.png"><img style="width:480px" src="07-Self-Supervised%20Learning%EF%BC%88BERT%EF%BC%89/20.png"/></a></figure><h3 id="42c8a887-7389-4e0c-b6f3-b8662f6c217d" class="">4.1.2 contextualized embedding</h3><p id="e0d38f01-18aa-4ce1-80bb-006242bd9a95" class="">BERT 還可以根據不同的上下文從相同的詞匯中產生不同的嵌入，因為它是詞嵌入的高級版本，考慮了上下文，BERT 抽取的這些向量或嵌入也稱為 <strong>contextualized word embedding</strong></p><h2 id="2839aa3d-d352-4ba1-8b00-6de24298c90d" class="">4.2 Learn More BERT</h2><figure id="85947344-7485-4ab6-8ef6-7133994bc485" class="image"><a href="07-Self-Supervised%20Learning%EF%BC%88BERT%EF%BC%89/21.png"><img style="width:432px" src="07-Self-Supervised%20Learning%EF%BC%88BERT%EF%BC%89/21.png"/></a><figcaption><a href="https://youtu.be/1_gRK9EIQpc">https://youtu.be/1_gRK9EIQpc</a>、<a href="https://youtu.be/Bywo7m6ySlk">https://youtu.be/Bywo7m6ySlk</a></figcaption></figure><p id="dfe11463-a634-49b5-ad41-578e0b775f8c" class="">
+</p><h1 id="c476cede-b6c1-44d2-9630-5c2a0da00587" class="">5. <strong>Multi-lingual BERT</strong></h1><p id="75d786ab-43cd-4145-b02b-250b86e1e717" class="">使用多語言來進行預訓練，比如中文、英文、德文、法文等等的填空題來訓練 BERT，稱為 <strong>multi-lingual BERT</strong></p><figure id="f841af7e-dbd3-4d77-9408-928e59f72475" class="image"><a href="07-Self-Supervised%20Learning%EF%BC%88BERT%EF%BC%89/22.png"><img style="width:432px" src="07-Self-Supervised%20Learning%EF%BC%88BERT%EF%BC%89/22.png"/></a></figure><p id="1a6d8f02-9c4d-4475-bcc4-02952a90ae06" class="">Google 訓練了一個 multi-lingual BERT，做了 104 種語言的填空題 pre-train。神奇之處是如果用英文問答數據做 fine-tune，但是測試中文問答，BERT 也可以表現得很好</p><figure id="7673ee45-ef21-4fbc-8df0-502f7e6ab6f7" class="image"><a href="07-Self-Supervised%20Learning%EF%BC%88BERT%EF%BC%89/23.png"><img style="width:432px" src="07-Self-Supervised%20Learning%EF%BC%88BERT%EF%BC%89/23.png"/></a></figure><h2 id="40eb08ce-0fc4-46df-a996-fb260829605f" class="">5.1 <strong>Cross-lingual Alignment</strong></h2><p id="f767a6a9-75d7-4187-b71e-1e0c5cad3384" class="">一個簡單的解釋上述現象，也許對於 multi-lingual 的 BERT 來說，不同的語言並沒有那麽大的差異。無論用中文還是英文顯示，對於<strong>具有相同含義的單詞，它們的 embedding 都很接近</strong>。中文的跳與英文的 jump 接近，中文的魚與英文的 fish 接近，也許在學習過程中 BERT 已經自動學會了</p><figure id="eef9a6b0-c1b7-4b31-8199-d2cc7887e4f7" class="image"><a href="07-Self-Supervised%20Learning%EF%BC%88BERT%EF%BC%89/24.png"><img style="width:432px" src="07-Self-Supervised%20Learning%EF%BC%88BERT%EF%BC%89/24.png"/></a></figure><p id="ca07ad65-6ea3-4ef7-b639-4c048721db7b" class=""><strong>MRR（Mean Reciprocal Rank）</strong>的值越高，同樣意思不同語言的詞其向量越接近</p><figure id="20a05dff-5a86-4771-b612-a74d73205ed2" class="image"><a href="07-Self-Supervised%20Learning%EF%BC%88BERT%EF%BC%89/25.png"><img style="width:432px" src="07-Self-Supervised%20Learning%EF%BC%88BERT%EF%BC%89/25.png"/></a></figure><p id="9ba4c001-36b4-4534-90c5-9c3a3fc72fd6" class="">一開始使用的資料較少，每種語言只使用了 20 萬個句子，訓練的模型的結果並不好。之後增加到 100 萬，有了更多的數據，<strong>BERT 可以學習 alignment</strong>，所以資料量是不同語言能否成功對齊的一個非常關鍵的因素</p><p id="051be313-4d8d-466a-9a75-3dee7d07f807" class="">
+</p><h1 id="87da1a39-5b86-472c-acb2-62d3a51b0dd9" class="">6. GPT</h1><p id="971003f1-1b94-4959-8b09-e3e58937f0ca" class="">架構類似 transformer encoder，用已知的詞來預測接下來的詞</p><figure id="e450f543-333e-457f-a843-0e6624ebd569" class="image"><a href="07-Self-Supervised%20Learning%EF%BC%88BERT%EF%BC%89/26.png"><img style="width:432px" src="07-Self-Supervised%20Learning%EF%BC%88BERT%EF%BC%89/26.png"/></a></figure><h2 id="4648f569-5afe-44a3-9d93-7ece0ac5eb5a" class="">6.1 To Learn More</h2><figure id="e5de7b00-7e30-4370-a751-abe7e043f53e" class="image"><a href="07-Self-Supervised%20Learning%EF%BC%88BERT%EF%BC%89/27.png"><img style="width:240px" src="07-Self-Supervised%20Learning%EF%BC%88BERT%EF%BC%89/27.png"/></a><figcaption><a href="https://youtu.be/DOG1L9lvsDY">https://youtu.be/DOG1L9lvsDY</a></figcaption></figure><h1 id="ea89bcda-4601-476a-9f22-714df39cfc1b" class="">7. 其他 Self-supervesed Learning 應用</h1><figure id="0703b05a-1144-46cb-a74b-ef9591bd933e" class="image"><a href="07-Self-Supervised%20Learning%EF%BC%88BERT%EF%BC%89/28.png"><img style="width:432px" src="07-Self-Supervised%20Learning%EF%BC%88BERT%EF%BC%89/28.png"/></a></figure></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>

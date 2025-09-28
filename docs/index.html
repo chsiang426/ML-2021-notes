@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>臺灣大學李宏毅教授「機器學習 2021 Spring」課程筆記</title>
+    <style>
+		:root {
+			color-scheme: light;
+		}
+		body {
+			font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+			font-size: 15px;
+			line-height: 1.6;
+			color: #1f2933;
+			max-width: 960px;
+			margin: 0 auto;
+			padding: 32px 24px 32px;
+			background: linear-gradient(135deg, #f8fafc 0%, #eef2ff 100%);
+		}
+		h1 {
+			text-align: center;
+			color: #111827;
+			font-size: 2.2rem;
+			font-weight: 600;
+			letter-spacing: -0.02em;
+			margin: 0 0 1.4rem;
+		}
+		.intro {
+			margin: 0 auto 2.2rem;
+			max-width: 760px;
+			text-align: center;
+		}
+		.resource-links {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 12px;
+			justify-content: center;
+		}
+		.resource-pill {
+			display: inline-flex;
+			align-items: center;
+			gap: 0.4em;
+			padding: 0.55em 1.2em;
+			border-radius: 999px;
+			border: 1px solid rgba(76, 81, 191, 0.25);
+			background: rgba(255, 255, 255, 0.92);
+			color: #3730a3;
+			font-size: 0.9rem;
+			font-weight: 500;
+			text-decoration: none;
+			box-shadow: 0 6px 20px rgba(79, 70, 229, 0.08);
+			transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+		}
+		.resource-pill:hover {
+			background: #4338ca;
+			color: #ffffff;
+			box-shadow: 0 12px 26px rgba(79, 70, 229, 0.18);
+			transform: translateY(-1px);
+		}
+		.resource-pill:active {
+			transform: translateY(0);
+			box-shadow: 0 6px 18px rgba(79, 70, 229, 0.14);
+		}
+		.resource-pill:focus-visible {
+			outline: 2px solid rgba(76, 81, 191, 0.45);
+			outline-offset: 3px;
+		}
+		.course-list {
+			list-style: none;
+			padding: 0;
+			margin: 0;
+			display: grid;
+			gap: 8px;
+			grid-template-columns: repeat(4, minmax(0, 1fr));
+			align-items: stretch;
+		}
+		.course-item {
+			margin: 0;
+			display: flex;
+		}
+		.course-link {
+			display: flex;
+			flex-direction: column;
+			justify-content: flex-start;
+			align-items: center;
+			gap: 0.65em;
+			text-align: center;
+			width: 100%;
+			padding: 1.05em 1.35em 1.15em;
+			min-height: 100px;
+			border-radius: 24px;
+			background: rgba(255, 255, 255, 0.94);
+			color: #1f2933;
+			text-decoration: none;
+			border: 1px solid rgba(15, 23, 42, 0.12);
+			box-shadow: 0 9px 24px rgba(15, 23, 42, 0.1);
+			transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+		}
+		.course-code {
+			display: block;
+			font-size: 0.95rem;
+			letter-spacing: 0.08em;
+			font-weight: 600;
+			text-transform: uppercase;
+			color: #4c51bf;
+		}
+		.course-title {
+			display: block;
+			font-size: 0.95rem;
+			font-weight: 500;
+			line-height: 1.5;
+			color: #1f2933;
+		}
+		.course-link:hover {
+			background: #1f2933;
+			color: #ffffff;
+			box-shadow: 0 16px 36px rgba(15, 23, 42, 0.18);
+			transform: translateY(-2px);
+		}
+		.course-link:hover .course-code,
+		.course-link:hover .course-title,
+		.course-link:focus-visible .course-code,
+		.course-link:focus-visible .course-title {
+			color: #ffffff;
+		}
+		.course-link:active {
+			transform: translateY(0);
+			box-shadow: 0 8px 20px rgba(15, 23, 42, 0.14);
+		}
+		.course-link:focus-visible {
+			outline: 2px solid #4338ca;
+			outline-offset: 3px;
+		}
+		@media (max-width: 1200px) {
+			.course-list {
+				grid-template-columns: repeat(3, minmax(0, 1fr));
+			}
+		}
+		@media (max-width: 860px) {
+			.course-list {
+				grid-template-columns: repeat(2, minmax(0, 1fr));
+			}
+		}
+		@media (max-width: 600px) {
+			body {
+				padding: 24px 18px 32px;
+			}
+			h1 {
+				font-size: 1.9rem;
+			}
+			.intro {
+				margin-bottom: 1.8rem;
+			}
+			.intro-text {
+				font-size: 0.94rem;
+			}
+			.resource-links {
+				gap: 10px;
+			}
+			.resource-pill {
+				padding: 0.5em 1em;
+				font-size: 0.88rem;
+			}
+			.course-link {
+				padding: 0.95em 1.05em 1em;
+				min-height: 90px;
+			}
+			.course-code {
+				font-size: 0.9rem;
+			}
+			.course-title {
+				font-size: 0.92rem;
+			}
+		}
+</style>
+</head>
+<body>
+	<h1>臺灣大學李宏毅教授「機器學習 2021 Spring」課程筆記</h1>
+	<div class="intro">
+		<div class="resource-links">
+			<a class="resource-pill" href="https://github.com/chsiang426/ML-2021-notes" target="_blank" rel="noopener">筆記 GitHub</a>
+			<a class="resource-pill" href="https://speech.ee.ntu.edu.tw/~hylee/ml/2021-spring.php" target="_blank" rel="noopener">課程網站</a>
+			<a class="resource-pill" href="https://www.youtube.com/playlist?list=PLJV_el3uVTsMhtt7_Y6sgTHGHp1Vb2P2J" target="_blank" rel="noopener">課程影片（YouTube）</a>
+		</div>
+	</div>
+	<ul class="course-list">
+		<li class="course-item"><a class="course-link" href="01-機器學習基本概念簡介/01-機器學習基本概念簡介.html"><span class="course-code">01</span><span class="course-title">機器學習基本概念簡介</span></a></li>
+		<li class="course-item"><a class="course-link" href="02.1-DeepLearning-General Guidance/02.1-DeepLearning-General Guidance.html"><span class="course-code">02.1</span><span class="course-title">DeepLearning<br>General Guidance</span></a></li>
+		<li class="course-item"><a class="course-link" href="02.2-DeepLearning-類神經網路優化技巧/02.2-DeepLearning-類神經網路優化技巧.html"><span class="course-code">02.2</span><span class="course-title">DeepLearning<br>類神經網路優化技巧</span></a></li>
+		<li class="course-item"><a class="course-link" href="02.3-DeepLearning-Loss of Classification/02.3-DeepLearning-Loss of Classification.html"><span class="course-code">02.3</span><span class="course-title">DeepLearning<br>Loss of Classification</span></a></li>
+		<li class="course-item"><a class="course-link" href="03-CNN（卷積神經網路）/03-CNN（卷積神經網路）.html"><span class="course-code">03</span><span class="course-title">CNN<br>（卷積神經網路）</span></a></li>
+		<li class="course-item"><a class="course-link" href="04-Self-attention/04-Self-attention.html"><span class="course-code">04</span><span class="course-title">Self-attention</span></a></li>
+		<li class="course-item"><a class="course-link" href="05-Transformer/05-Transformer.html"><span class="course-code">05</span><span class="course-title">Transformer</span></a></li>
+		<li class="course-item"><a class="course-link" href="06-Generative Adversarial Network（GAN）/06-Generative Adversarial Network（GAN）.html"><span class="course-code">06</span><span class="course-title">Generative Adversarial Network<br>（GAN）</span></a></li>
+		<li class="course-item"><a class="course-link" href="07-Self-Supervised Learning（BERT）/07-Self-Supervised Learning（BERT）.html"><span class="course-code">07</span><span class="course-title">Self-Supervised Learning<br>（BERT）</span></a></li>
+		<li class="course-item"><a class="course-link" href="08-Auto-encoder/08-Auto-encoder.html"><span class="course-code">08</span><span class="course-title">Auto-encoder</span></a></li>
+		<li class="course-item"><a class="course-link" href="09-Adversarial Attack/09-Adversarial Attack.html"><span class="course-code">09</span><span class="course-title">Adversarial Attack</span></a></li>
+		<li class="course-item"><a class="course-link" href="10-Explainable ML/10-Explainable ML.html"><span class="course-code">10</span><span class="course-title">Explainable ML</span></a></li>
+		<li class="course-item"><a class="course-link" href="11-Domain Adaptation/11-Domain Adaptation.html"><span class="course-code">11</span><span class="course-title">Domain Adaptation</span></a></li>
+		<li class="course-item"><a class="course-link" href="12-Reinforcement Learning（強化學習）/12-Reinforcement Learning（強化學習）.html"><span class="course-code">12</span><span class="course-title">Reinforcement Learning<br>（強化學習）</span></a></li>
+		<li class="course-item"><a class="course-link" href="13-Life Long Learning（終身學習）/13-Life Long Learning（終身學習）.html"><span class="course-code">13</span><span class="course-title">Life Long Learning<br>（終身學習）</span></a></li>
+		<li class="course-item"><a class="course-link" href="14-Network Compression/14-Network Compression.html"><span class="course-code">14</span><span class="course-title">Network Compression</span></a></li>
+		<li class="course-item"><a class="course-link" href="15-Meta Learning（元學習）/15-Meta Learning（元學習）.html"><span class="course-code">15</span><span class="course-title">Meta Learning<br>（元學習）</span></a></li>
+    </ul>
+</body>
+</html>

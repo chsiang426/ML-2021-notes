@@ -1,0 +1,770 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>02.1-DeepLearning-General Guidance</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 10px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.collection-content td {
+	white-space: pre-wrap;
+	word-break: break-word;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+	margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.callout img.notion-static-icon {
+	width: 1em;
+	height: 1em;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+blockquote.quote-large {
+	font-size: 1.25em;
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray {
+	color: rgba(128, 125, 120, 1);
+	fill: rgba(128, 125, 120, 1);
+}
+.highlight-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.highlight-orange {
+	color: rgba(204, 121, 47, 1);
+	fill: rgba(204, 121, 47, 1);
+}
+.highlight-yellow {
+	color: rgba(195, 148, 67, 1);
+	fill: rgba(195, 148, 67, 1);
+}
+.highlight-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.highlight-blue {
+	color: rgba(63, 126, 190, 1);
+	fill: rgba(63, 126, 190, 1);
+}
+.highlight-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.highlight-pink {
+	color: rgba(179, 84, 136, 1);
+	fill: rgba(179, 84, 136, 1);
+}
+.highlight-red {
+	color: rgba(201, 85, 73, 1);
+	fill: rgba(201, 85, 73, 1);
+}
+.highlight-default_background {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray_background {
+	background: rgba(42, 28, 0, 0.07);
+}
+.highlight-brown_background {
+	background: rgba(139, 46, 0, 0.086);
+}
+.highlight-orange_background {
+	background: rgba(224, 101, 1, 0.129);
+}
+.highlight-yellow_background {
+	background: rgba(211, 168, 0, 0.137);
+}
+.highlight-teal_background {
+	background: rgba(0, 100, 45, 0.09);
+}
+.highlight-blue_background {
+	background: rgba(0, 111, 200, 0.09);
+}
+.highlight-purple_background {
+	background: rgba(102, 0, 178, 0.078);
+}
+.highlight-pink_background {
+	background: rgba(197, 0, 93, 0.086);
+}
+.highlight-red_background {
+	background: rgba(223, 22, 0, 0.094);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(128, 125, 120, 1);
+	fill: rgba(128, 125, 120, 1);
+}
+.block-color-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.block-color-orange {
+	color: rgba(204, 121, 47, 1);
+	fill: rgba(204, 121, 47, 1);
+}
+.block-color-yellow {
+	color: rgba(195, 148, 67, 1);
+	fill: rgba(195, 148, 67, 1);
+}
+.block-color-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.block-color-blue {
+	color: rgba(63, 126, 190, 1);
+	fill: rgba(63, 126, 190, 1);
+}
+.block-color-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.block-color-pink {
+	color: rgba(179, 84, 136, 1);
+	fill: rgba(179, 84, 136, 1);
+}
+.block-color-red {
+	color: rgba(201, 85, 73, 1);
+	fill: rgba(201, 85, 73, 1);
+}
+.block-color-default_background {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray_background {
+	background: rgba(240, 239, 237, 1);
+}
+.block-color-brown_background {
+	background: rgba(245, 237, 233, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 235, 222, 1);
+}
+.block-color-yellow_background {
+	background: rgba(249, 243, 220, 1);
+}
+.block-color-teal_background {
+	background: rgba(232, 241, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(232, 242, 250, 1);
+}
+.block-color-purple_background {
+	background: rgba(243, 235, 249, 1);
+}
+.block-color-pink_background {
+	background: rgba(250, 233, 241, 1);
+}
+.block-color-red_background {
+	background: rgba(252, 233, 231, 1);
+}
+.select-value-color-default { background-color: rgba(42, 28, 0, 0.07); }
+.select-value-color-gray { background-color: rgba(28, 19, 1, 0.11); }
+.select-value-color-brown { background-color: rgba(127, 51, 0, 0.156); }
+.select-value-color-orange { background-color: rgba(196, 88, 0, 0.203); }
+.select-value-color-yellow { background-color: rgba(209, 156, 0, 0.282); }
+.select-value-color-green { background-color: rgba(0, 96, 38, 0.156); }
+.select-value-color-blue { background-color: rgba(0, 99, 174, 0.172); }
+.select-value-color-purple { background-color: rgba(92, 0, 163, 0.141); }
+.select-value-color-pink { background-color: rgba(183, 0, 78, 0.152); }
+.select-value-color-red { background-color: rgba(206, 24, 0, 0.164); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+
+
+/* Back-to-index button */
+.floating-button {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.4em;
+	padding: 0.55em 1.15em;
+	border-radius: 999px;
+	background: rgba(255, 255, 255, 0.92);
+	color: #1f2933;
+	font-size: 0.9rem;
+	font-weight: 500;
+	text-decoration: none;
+	border: 1px solid rgba(15, 23, 42, 0.12);
+	box-shadow: 0 8px 24px rgba(15, 23, 42, 0.12);
+	backdrop-filter: blur(12px);
+	transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+.floating-button:hover {
+	background: #1f2933;
+	color: #ffffff;
+	box-shadow: 0 12px 32px rgba(15, 23, 42, 0.18);
+	transform: translateY(-1px);
+}
+.floating-button:active {
+	transform: translateY(0);
+	box-shadow: 0 6px 18px rgba(15, 23, 42, 0.14);
+}
+.back-to-index {
+	position: fixed;
+	top: 20px;
+	left: 20px;
+	z-index: 1000;
+}
+.nav-controls {
+	position: fixed;
+	top: 20px;
+	right: 20px;
+	z-index: 1000;
+	display: inline-flex;
+	gap: 0.6em;
+	flex-wrap: wrap;
+	justify-content: flex-end;
+}
+@media (max-width: 600px) {
+	.back-to-index {
+		top: 16px;
+		left: 16px;
+	}
+	.nav-controls {
+		top: 16px;
+		right: 16px;
+		gap: 0.5em;
+	}
+	.floating-button {
+		padding: 0.45em 1em;
+		font-size: 0.85rem;
+	}
+}
+@media print {
+	.back-to-index,
+	.nav-controls {
+		display: none;
+	}
+}
+
+</style></head><body>
+<a class="floating-button back-to-index" href="../index.html">回到目錄</a>
+<div class="nav-controls">
+	<a class="floating-button nav-button" href="../01-機器學習基本概念簡介/01-機器學習基本概念簡介.html" title="上一節：01-機器學習基本概念簡介">上一節</a>
+	<a class="floating-button nav-button" href="../02.2-DeepLearning-類神經網路優化技巧/02.2-DeepLearning-類神經網路優化技巧.html" title="下一節：02.2-DeepLearning-類神經網路優化技巧">下一節</a>
+</div>
+<article id="8a5b0e74-6c03-406e-ba39-21c51734629c" class="page sans"><header><div class="page-header-icon undefined"><img class="icon notion-static-icon" src="https://www.notion.so/icons/document_blue.svg"/></div><h1 class="page-title">02.1-DeepLearning-General Guidance</h1><p class="page-description"></p><table class="properties"><tbody></tbody></table></header><div class="page-body"><nav id="eb6b693f-59c3-4829-a724-c8841427d080" class="block-color-gray table_of_contents"><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#4d78a49b-8aff-4996-9d50-a2b1ee5a3e55">1. Framework of ML</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#c93c3e38-6b0f-44b4-9532-798ba5df242b">1.1 訓練資料與測試資料</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#5e258f51-a0da-4656-9ec9-02aa21cef2a9">1.2 訓練的過程</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#0e8ee61e-3de5-4b68-aa75-000cb45ed447">2. General Guide</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#e6340011-34df-4c26-8d6a-25bbb406f28b">2.1 訓練資料上的 Loss</a></div><div class="table_of_contents-item table_of_contents-indent-2"><a class="table_of_contents-link" href="#2023991d-7714-483e-9376-ca1a2399d313">2.1.1 Model Bias</a></div><div class="table_of_contents-item table_of_contents-indent-2"><a class="table_of_contents-link" href="#a718057d-fb30-4663-8f12-07435160bf7d">2.1.2 Optimization</a></div><div class="table_of_contents-item table_of_contents-indent-2"><a class="table_of_contents-link" href="#699245cd-931f-416e-90b1-a3b65bea3b26">2.1.3 如何區分兩種情況？</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#6c417875-3e92-42cf-8b3f-7580594d0471">2.2 測試資料上的 Loss</a></div><div class="table_of_contents-item table_of_contents-indent-2"><a class="table_of_contents-link" href="#928c829d-044c-4413-b8ac-ee4aa843e049">2.2.1 Overfitting</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#64d62fd4-5100-4e0c-ad42-712b2afb0c75">2.3 不要加過大的彈性 ⇒ Model bias</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#a3ebd3ad-2ff2-435e-8912-7afcca36a9c9">2.4 Bias-Complexity Trade-off</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#6893be40-2e43-49ea-8731-c16a2ce2c3eb">2.5 Cross Validation</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#2b29a96b-9a0d-43f6-bc0f-30427f858771">2.6 N-fold Cross Validation</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#122a94fd-ccfd-47d8-8109-1d682da0f054">2.7 Mismatch</a></div></nav><h1 id="4d78a49b-8aff-4996-9d50-a2b1ee5a3e55" class="">1. Framework of ML</h1><h2 id="c93c3e38-6b0f-44b4-9532-798ba5df242b" class="">1.1 訓練資料與測試資料</h2><figure id="b80954d0-0468-4ed4-b001-4084c9e59a19" class="image"><a href="02.1-DeepLearning-General%20Guidance/0.png"><img style="width:384px" src="02.1-DeepLearning-General%20Guidance/0.png"/></a></figure><h2 id="5e258f51-a0da-4656-9ec9-02aa21cef2a9" class="">1.2 訓練的過程</h2><figure id="b828ec6d-298c-4f0b-bfa3-60daeeb1fec7" class="image"><a href="02.1-DeepLearning-General%20Guidance/1.png"><img style="width:432px" src="02.1-DeepLearning-General%20Guidance/1.png"/></a></figure><ol type="1" id="4d1ea2e4-f55b-4337-91fa-6d1aee8b25e0" class="numbered-list" start="1"><li>寫出一個有未知參數的 function，參數用 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>θ</mi></mrow><annotation encoding="application/x-tex">\theta</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">θ</span></span></span></span></span><span>﻿</span></span> 來表示</li></ol><ol type="1" id="0da3a272-3879-4d7d-b130-fa13c109d413" class="numbered-list" start="2"><li>確定損失函數，判斷 function 的參數 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>θ</mi></mrow><annotation encoding="application/x-tex">\theta</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">θ</span></span></span></span></span><span>﻿</span></span> 好不好</li></ol><ol type="1" id="b0ff4657-dbe5-4bdf-b56b-79861bfc5a13" class="numbered-list" start="3"><li>optimization，得到使損失函數最小的參數 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>θ</mi><mo>∗</mo></msup></mrow><annotation encoding="application/x-tex">\theta^*</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02778em;">θ</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.6887em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mbin mtight">∗</span></span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span> </li></ol><p id="db46c1c9-7bc0-4a22-bbad-acb37b8b7587" class="">
+</p><h1 id="0e8ee61e-3de5-4b68-aa75-000cb45ed447" class="">2. General Guide</h1><figure id="c1c9366e-0468-481e-9fcd-63c0b0e84774" class="image"><a href="02.1-DeepLearning-General%20Guidance/2.png"><img style="width:432px" src="02.1-DeepLearning-General%20Guidance/2.png"/></a></figure><h2 id="e6340011-34df-4c26-8d6a-25bbb406f28b" class="">2.1 訓練資料上的 Loss</h2><h3 id="2023991d-7714-483e-9376-ca1a2399d313" class="">2.1.1 Model Bias</h3><figure id="8c4a998e-8ee4-476f-8a47-5ca196201963" class="image"><a href="02.1-DeepLearning-General%20Guidance/3.png"><img style="width:480px" src="02.1-DeepLearning-General%20Guidance/3.png"/></a></figure><p id="a069580d-b628-4a56-ad12-6d181382f25c" class="">所有的 function 集合起來得到一個 function 的 set。但是這個 function 的 set 太小了，沒有包含任何一個 function 可以讓 loss 變低 ⇒ <strong>可以讓 loss 變低的 function 不在 model 可以描述的範圍內</strong></p><p id="cf4ceb1c-5921-49e6-b599-9b84b2ede2f6" class=""><strong>解決方法：</strong></p><p id="434d210f-3dd7-4a44-a333-50055d8db378" class=""><strong>重新設計一個 Model</strong>，一個更複雜的、更有彈性的、有未知參數的、需要更多 features 的 function</p><h3 id="a718057d-fb30-4663-8f12-07435160bf7d" class="">2.1.2 Optimization</h3><figure id="aa72a17e-9eec-4347-b7ba-21c327075939" class="image"><a href="02.1-DeepLearning-General%20Guidance/4.png"><img style="width:432px" src="02.1-DeepLearning-General%20Guidance/4.png"/></a></figure><p id="44f1c284-6c99-4a96-98ef-6ec22b7eb521" class="">可能會卡在 local minima（局部極小值/鞍點）的地方，沒有辦法找到真的可以讓 loss 很低的參數</p><h3 id="699245cd-931f-416e-90b1-a3b65bea3b26" class="">2.1.3 如何區分兩種情況？</h3><ul id="1d9ad6bb-6c51-4186-9a7e-c43d58b12f49" class="bulleted-list"><li style="list-style-type:disc">Start from shallower networks (or other models), which are easier to train.<p id="68abec1d-c43d-47ae-b8f2-dd11b36aea57" class="">看到一個從來沒有做過的問題，可以先跑一些比較小、比較淺的 network，或甚至用一些不是 deep learning 的方法 ⇒ <strong>比較容易做 optimize</strong>，<strong>較不會有 optimization 失敗的問題</strong></p></li></ul><ul id="d5ad7f57-2078-48bb-b302-47ef4d6b5be0" class="bulleted-list"><li style="list-style-type:disc">If deeper networks do not obtain smaller loss on training data, then there is optimization issue.<p id="b78c301c-3f1a-4474-8511-99f9a38b3424" class="">如果發現深的 model 跟淺的 model 比起來，<strong>深的 model 明明彈性比較大</strong>，但 <strong>loss 卻沒有辦法比淺的 model 壓得更低</strong>，那就代表 <strong>optimization 有問題</strong></p></li></ul><h2 id="6c417875-3e92-42cf-8b3f-7580594d0471" class="">2.2 測試資料上的 Loss</h2><h3 id="928c829d-044c-4413-b8ac-ee4aa843e049" class="">2.2.1 Overfitting</h3><p id="bcee739e-5605-4913-8551-d04da6dd7ee1" class=""><strong>training 的 loss 小，testing 的 loss大，有可能是 overfitting</strong>。如果你的 model 它的<strong>自由度很大</strong>的話，它會<strong>產生非常奇怪的曲線</strong>，導致訓練集上的結果好，但是測試集上的 loss 很大</p><figure id="e1ce2c7e-f7e4-4818-b6a2-5233cfd90518" class="image"><a href="02.1-DeepLearning-General%20Guidance/5.png"><img style="width:384px" src="02.1-DeepLearning-General%20Guidance/5.png"/></a></figure><p id="ad005fff-3d20-4a32-a66b-6b4547116dde" class=""><strong>解決：</strong></p><ol type="1" id="ae57b4bf-6356-4777-abc8-e29d36e19328" class="numbered-list" start="1"><li>增加訓練集</li></ol><p id="07403bae-efd7-4d1a-9bc9-29960d206e07" class="">雖然你的 model 它的彈性可能很大，但是因為數據樣本非常非常的多，它就可以限制住<br/><strong>Data Augmentation：用一些對於問題的理解，從已有的數據中創造出新的數據（注意合理性）</strong></p><figure id="48cdf0d9-cf1e-4db2-a0b6-33090f62155c" class="image"><a href="02.1-DeepLearning-General%20Guidance/6.png"><img style="width:432px" src="02.1-DeepLearning-General%20Guidance/6.png"/></a></figure><ol type="1" id="cb449bb7-93f7-4a59-8840-f8578b75fd6b" class="numbered-list" start="2"><li>限制模型，使之不要有那麼大的彈性</li></ol><figure id="9239fd2a-77ed-4ef2-a825-349b078bf550" class="image"><a href="02.1-DeepLearning-General%20Guidance/7.png"><img style="width:384px" src="02.1-DeepLearning-General%20Guidance/7.png"/></a></figure><ul id="a1797f7d-c6e7-463d-9570-4f9f26b1cf01" class="bulleted-list"><li style="list-style-type:disc">給<strong>比較少的參數（比如神經元的數目）</strong>；<strong>模型共用參數 (</strong><a href="https://www.notion.so/03-CNN-86e7f137fdd0494fb08f236d34c67b6e?pvs=21">03-CNN</a><strong>)</strong></li></ul><ul id="65c7abda-6b27-44f8-a26e-c3f45ec37536" class="bulleted-list"><li style="list-style-type:disc">使用<strong>比較少的 features</strong></li></ul><ul id="23e8b171-7141-473a-a6ed-0b996f008b03" class="bulleted-list"><li style="list-style-type:disc">Early Stopping</li></ul><ul id="7063d086-c37c-4821-a7f8-e81f12f22b9c" class="bulleted-list"><li style="list-style-type:disc">Regularization</li></ul><ul id="7bf3b7f5-f59e-48e0-b197-0556685d2260" class="bulleted-list"><li style="list-style-type:disc">Dropout</li></ul><h2 id="64d62fd4-5100-4e0c-ad42-712b2afb0c75" class="">2.3 不要加過大的彈性 ⇒ Model bias</h2><figure id="53739441-e865-4980-8770-ad05c2d7e1f1" class="image"><a href="02.1-DeepLearning-General%20Guidance/8.png"><img style="width:384px" src="02.1-DeepLearning-General%20Guidance/8.png"/></a></figure><h2 id="a3ebd3ad-2ff2-435e-8912-7afcca36a9c9" class="">2.4 Bias-Complexity Trade-off</h2><figure id="3a22f5b0-c2e9-4607-ac40-61c6efe46615" class="image"><a href="02.1-DeepLearning-General%20Guidance/9.png"><img style="width:432px" src="02.1-DeepLearning-General%20Guidance/9.png"/></a></figure><p id="ca0f9f33-2a9e-4102-bd61-cd1e09edbff3" class="">所謂比較複雜，是它可以<strong>包含的 function 比較多，它的參數比較多，這個就是一個比較複雜的 model</strong></p><p id="5e9b6275-2544-4a35-a0a1-4ff10700cfcd" class="">隨著 model 越來越複雜，<strong>training 的 loss 可以越來越低，</strong>當 model 越來越複雜的時候，剛開始 <strong>testing 的 loss 會跟著下降</strong>；但是當複雜的程度超過某一個程度以後，<strong>testing 的 loss 就突然暴增</strong></p><h2 id="6893be40-2e43-49ea-8731-c16a2ce2c3eb" class="">2.5 Cross Validation</h2><figure id="2e4d4351-e2da-4df8-a24c-b99d09c54b8f" class="image"><a href="02.1-DeepLearning-General%20Guidance/10.png"><img style="width:432px" src="02.1-DeepLearning-General%20Guidance/10.png"/></a></figure><ol type="1" id="939c7fce-7861-4b81-9dd2-843f7aecd1ae" class="numbered-list" start="1"><li>把 training 的資料分成兩部分，一部分叫作 training set，一部分是 validation set</li></ol><ol type="1" id="841edf44-e9fb-4238-b59a-c05692b7d2af" class="numbered-list" start="2"><li>在 validation set 上面去衡量它們的分數，根據 validation set 上面的分數去挑選結果，不要管在 public testing set 上的結果以避免 overfitting</li></ol><h2 id="2b29a96b-9a0d-43f6-bc0f-30427f858771" class="">2.6 N-fold Cross Validation</h2><p id="159e69e0-7dd0-433a-832c-e6f574fc9343" class=""><strong>N-fold Cross Validation</strong> 就是先把訓練集切成 N 等份，切完以後拿其中一份當作 Validation Set，另外 N-1 份當 training set，重覆 N 次</p><figure id="acb8539f-2ef6-4796-93bf-4005466e1e01" class="image"><a href="02.1-DeepLearning-General%20Guidance/11.png"><img style="width:432px" src="02.1-DeepLearning-General%20Guidance/11.png"/></a></figure><p id="8d86444e-9d4f-4b35-bea4-76c0452e6b4a" class="">把多個模型在這三個 setting 下通通跑過一次，把 N 種狀況的結果都平均起來，看看誰的結果最好；最後再把選出來的 model（這裡是 Model 1），再拿全部的 training set（public） 訓練 Model 1，訓練完畢後，再用在 testing set（private） 上面</p><h2 id="122a94fd-ccfd-47d8-8109-1d682da0f054" class="">2.7 Mismatch</h2><p id="d36717c5-7761-478b-ad08-1ea3e07f2da0" class="">訓練集跟測試集的分佈是不一樣的，依照對數據本身的理解來判斷</p><figure id="0ea7df3d-1cf0-4201-ad68-489e9f24117e" class="image"><a href="02.1-DeepLearning-General%20Guidance/12.png"><img style="width:480px" src="02.1-DeepLearning-General%20Guidance/12.png"/></a></figure></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>

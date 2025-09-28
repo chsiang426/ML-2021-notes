@@ -1,0 +1,774 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>03-CNN（卷積神經網路）</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 10px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.collection-content td {
+	white-space: pre-wrap;
+	word-break: break-word;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+	margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.callout img.notion-static-icon {
+	width: 1em;
+	height: 1em;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+blockquote.quote-large {
+	font-size: 1.25em;
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray {
+	color: rgba(128, 125, 120, 1);
+	fill: rgba(128, 125, 120, 1);
+}
+.highlight-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.highlight-orange {
+	color: rgba(204, 121, 47, 1);
+	fill: rgba(204, 121, 47, 1);
+}
+.highlight-yellow {
+	color: rgba(195, 148, 67, 1);
+	fill: rgba(195, 148, 67, 1);
+}
+.highlight-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.highlight-blue {
+	color: rgba(63, 126, 190, 1);
+	fill: rgba(63, 126, 190, 1);
+}
+.highlight-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.highlight-pink {
+	color: rgba(179, 84, 136, 1);
+	fill: rgba(179, 84, 136, 1);
+}
+.highlight-red {
+	color: rgba(201, 85, 73, 1);
+	fill: rgba(201, 85, 73, 1);
+}
+.highlight-default_background {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray_background {
+	background: rgba(42, 28, 0, 0.07);
+}
+.highlight-brown_background {
+	background: rgba(139, 46, 0, 0.086);
+}
+.highlight-orange_background {
+	background: rgba(224, 101, 1, 0.129);
+}
+.highlight-yellow_background {
+	background: rgba(211, 168, 0, 0.137);
+}
+.highlight-teal_background {
+	background: rgba(0, 100, 45, 0.09);
+}
+.highlight-blue_background {
+	background: rgba(0, 111, 200, 0.09);
+}
+.highlight-purple_background {
+	background: rgba(102, 0, 178, 0.078);
+}
+.highlight-pink_background {
+	background: rgba(197, 0, 93, 0.086);
+}
+.highlight-red_background {
+	background: rgba(223, 22, 0, 0.094);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(128, 125, 120, 1);
+	fill: rgba(128, 125, 120, 1);
+}
+.block-color-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.block-color-orange {
+	color: rgba(204, 121, 47, 1);
+	fill: rgba(204, 121, 47, 1);
+}
+.block-color-yellow {
+	color: rgba(195, 148, 67, 1);
+	fill: rgba(195, 148, 67, 1);
+}
+.block-color-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.block-color-blue {
+	color: rgba(63, 126, 190, 1);
+	fill: rgba(63, 126, 190, 1);
+}
+.block-color-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.block-color-pink {
+	color: rgba(179, 84, 136, 1);
+	fill: rgba(179, 84, 136, 1);
+}
+.block-color-red {
+	color: rgba(201, 85, 73, 1);
+	fill: rgba(201, 85, 73, 1);
+}
+.block-color-default_background {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray_background {
+	background: rgba(240, 239, 237, 1);
+}
+.block-color-brown_background {
+	background: rgba(245, 237, 233, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 235, 222, 1);
+}
+.block-color-yellow_background {
+	background: rgba(249, 243, 220, 1);
+}
+.block-color-teal_background {
+	background: rgba(232, 241, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(232, 242, 250, 1);
+}
+.block-color-purple_background {
+	background: rgba(243, 235, 249, 1);
+}
+.block-color-pink_background {
+	background: rgba(250, 233, 241, 1);
+}
+.block-color-red_background {
+	background: rgba(252, 233, 231, 1);
+}
+.select-value-color-default { background-color: rgba(42, 28, 0, 0.07); }
+.select-value-color-gray { background-color: rgba(28, 19, 1, 0.11); }
+.select-value-color-brown { background-color: rgba(127, 51, 0, 0.156); }
+.select-value-color-orange { background-color: rgba(196, 88, 0, 0.203); }
+.select-value-color-yellow { background-color: rgba(209, 156, 0, 0.282); }
+.select-value-color-green { background-color: rgba(0, 96, 38, 0.156); }
+.select-value-color-blue { background-color: rgba(0, 99, 174, 0.172); }
+.select-value-color-purple { background-color: rgba(92, 0, 163, 0.141); }
+.select-value-color-pink { background-color: rgba(183, 0, 78, 0.152); }
+.select-value-color-red { background-color: rgba(206, 24, 0, 0.164); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+
+
+/* Back-to-index button */
+.floating-button {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.4em;
+	padding: 0.55em 1.15em;
+	border-radius: 999px;
+	background: rgba(255, 255, 255, 0.92);
+	color: #1f2933;
+	font-size: 0.9rem;
+	font-weight: 500;
+	text-decoration: none;
+	border: 1px solid rgba(15, 23, 42, 0.12);
+	box-shadow: 0 8px 24px rgba(15, 23, 42, 0.12);
+	backdrop-filter: blur(12px);
+	transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+.floating-button:hover {
+	background: #1f2933;
+	color: #ffffff;
+	box-shadow: 0 12px 32px rgba(15, 23, 42, 0.18);
+	transform: translateY(-1px);
+}
+.floating-button:active {
+	transform: translateY(0);
+	box-shadow: 0 6px 18px rgba(15, 23, 42, 0.14);
+}
+.back-to-index {
+	position: fixed;
+	top: 20px;
+	left: 20px;
+	z-index: 1000;
+}
+.nav-controls {
+	position: fixed;
+	top: 20px;
+	right: 20px;
+	z-index: 1000;
+	display: inline-flex;
+	gap: 0.6em;
+	flex-wrap: wrap;
+	justify-content: flex-end;
+}
+@media (max-width: 600px) {
+	.back-to-index {
+		top: 16px;
+		left: 16px;
+	}
+	.nav-controls {
+		top: 16px;
+		right: 16px;
+		gap: 0.5em;
+	}
+	.floating-button {
+		padding: 0.45em 1em;
+		font-size: 0.85rem;
+	}
+}
+@media print {
+	.back-to-index,
+	.nav-controls {
+		display: none;
+	}
+}
+
+</style></head><body>
+<a class="floating-button back-to-index" href="../index.html">回到目錄</a>
+<div class="nav-controls">
+	<a class="floating-button nav-button" href="../02.3-DeepLearning-Loss of Classification/02.3-DeepLearning-Loss of Classification.html" title="上一節：02.3-DeepLearning-Loss of Classification">上一節</a>
+	<a class="floating-button nav-button" href="../04-Self-attention/04-Self-attention.html" title="下一節：04-Self-attention">下一節</a>
+</div>
+<article id="86e7f137-fdd0-494f-b08f-236d34c67b6e" class="page sans"><header><div class="page-header-icon undefined"><img class="icon notion-static-icon" src="https://www.notion.so/icons/document_blue.svg"/></div><h1 class="page-title">03-CNN（卷積神經網路）</h1><p class="page-description"></p><table class="properties"><tbody></tbody></table></header><div class="page-body"><p id="fa53c77b-973b-4d95-af04-8000a928c32d" class="">立足點：Network 的架構設計的思想</p><nav id="62226aee-9cc6-4535-b98c-269559d68d00" class="block-color-gray table_of_contents"><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#9700e659-59a4-4391-9998-adfa734d0fe3">1. Image Classification</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#50badfa7-9ddb-444f-8d4c-131074eb1016">1.1 基本步驟</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#72675f94-d9ae-47d6-915a-e30f1416de7b">1.2 將圖片輸入到模型中</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#9f3a4332-18b8-46f7-9732-3416cdd09b56">2. 神經元角度介紹 CNN</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#99ed6833-74fa-4faf-86aa-b61ad310fa96">觀察 ①</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#7d03488f-16dc-4880-b896-6ff9ade5a887">簡化 ①：Receptive Field</a></div><div class="table_of_contents-item table_of_contents-indent-2"><a class="table_of_contents-link" href="#579ebe5b-6e68-456c-ac04-f005113a8a7d">Receptive Field 的 Typical Setting（In general）</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#78f4bea9-5689-45d2-aed7-0b7ff65fb327">觀察 ②</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#e63b64c4-5fff-4dae-9f4d-33f07e95c5eb">簡化 ②：Parameter Sharing</a></div><div class="table_of_contents-item table_of_contents-indent-2"><a class="table_of_contents-link" href="#cf4b7b58-1d4f-41e2-8ba6-5cba0ad21006">Parameter Sharing 的 Typical Setting（In general）</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#82e931c7-e01b-40ea-a3a1-8215585aa100">Convolutional Layer 的優勢</a></div><div class="table_of_contents-item table_of_contents-indent-2"><a class="table_of_contents-link" href="#f192afde-f18b-4cc2-9d5b-82402393a9bd">卷積層是“受限”（彈性變小）的 Fully Connected Layer</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#3f076551-64f3-4058-b89f-7612a65828d3">3. 濾波器角度介紹 CNN</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#cfb04d64-b773-4660-bf10-9cf5e1d555e3">3.1 卷積層基本定義</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#27bf2025-32ac-4de9-9488-c1aedeae575d">3.2 多層卷積</a></div><div class="table_of_contents-item table_of_contents-indent-2"><a class="table_of_contents-link" href="#a298c19f-9a45-40ff-8b61-42d0a269257a">3.2.1 讓小卷積核看到大 pattern</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#8a01eb28-2b6d-49ca-94b0-1737887631ce">4. 神經元角度（Neuron）vs 濾波器角度（Filter）</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#49b4cf5d-e8cc-403e-aaba-035307ab847a">4.1 不用看整張圖片範圍</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#19bc05af-4190-4653-9357-7b4e5f408537">4.2 相同 Pattern 可能出現在圖片的不同位置</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#82a259c6-6d2b-4597-bfdb-5cb97f697871">5. Subsampling（Pooling）</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#b8e89993-0c7f-4b3f-b7a4-129d4e323bca">5.1 不同 Pooling 方法</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#9c0bdf9e-8b20-425b-916d-d7dee2a98cdb">6. The whole CNN（典型 CNN 結構）</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#217c5f11-a92f-4b58-82ea-a1a67fd3063e">Pooling 可有可無</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#b868600b-06d1-49cf-879a-f3875b5cd9f1">7. 應用</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#b39ea45a-c8ce-4d86-8207-414a926ce7b2">7.1 Alpha Go</a></div><div class="table_of_contents-item table_of_contents-indent-2"><a class="table_of_contents-link" href="#2e21a8d9-3a00-48f6-9dbe-01436dff6ce9">與圖像辨識的共同點</a></div><div class="table_of_contents-item table_of_contents-indent-2"><a class="table_of_contents-link" href="#06a27da2-2588-4a0c-b3d9-78d49d34f691">沒有 Pooling</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#388f7309-727c-4bc2-955d-eed12269d9d1">7.2 語音、NLP</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#ad704b21-7d9a-46d9-b5a9-69a904b11bef">8. Learn More</a></div></nav><h1 id="9700e659-59a4-4391-9998-adfa734d0fe3" class="">1. Image Classification</h1><h2 id="50badfa7-9ddb-444f-8d4c-131074eb1016" class="">1.1 基本步驟</h2><ol type="1" id="3bebe95b-8ab6-4f8b-86eb-549bad7ad81c" class="numbered-list" start="1"><li>把所有圖片都先 rescale 成大小一樣</li></ol><ol type="1" id="0dec81ca-031e-4c5d-af4b-c56b0fe62b02" class="numbered-list" start="2"><li>把每一個類別表示成一個 one-hot vector（dimension 的長度決定模型可以辨識出多少不同種類的東西）</li></ol><ol type="1" id="4d1fd7e0-7606-42da-bd0e-5c1e22ec7284" class="numbered-list" start="3"><li>將圖片輸入到模型中</li></ol><h2 id="72675f94-d9ae-47d6-915a-e30f1416de7b" class="">1.2 將圖片輸入到模型中</h2><p id="d2fcde62-848e-432b-a75c-152cc7dad121" class=""><strong>直覺思路會直接展平</strong>，但會導致<strong>參數量過大</strong></p><figure id="c98e88bf-a53e-4e19-88a0-402cc53382b1" class="image"><a href="03-CNN%EF%BC%88%E5%8D%B7%E7%A9%8D%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%EF%BC%89/0.png"><img style="width:384px" src="03-CNN%EF%BC%88%E5%8D%B7%E7%A9%8D%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%EF%BC%89/0.png"/></a></figure><p id="b2c6fb0e-69dd-49c1-8efa-0ecc1ae6ac86" class="">如果輸入的向量長度是 100 × 100 × 3，有 1000 個 neuron，那第一層的 weight 就有 1000 × 100 × 100 × 3，也就是 3×10 的 7 次方，是非常巨大的數目</p><p id="61efa661-17cd-4e71-a274-99b4957be7ac" class="">雖然隨著參數的增加，可以增加模型的彈性，可以增加它的能力，但是也<strong>增加了 overfitting 的風險</strong></p><p id="1bf29b8c-d369-4d03-91c9-da693c34fc8f" class=""><strong>思考：</strong></p><p id="27aec561-6a0d-46b5-968d-0106620a7c2b" class="">考慮到影像辨識問題本身的特性，其實<strong>並不一定需要 fully connected</strong>，不需要每一個 neuron 與 input 的每一個 dimension 都有一個 weight</p><p id="c4ccba26-cf2b-49ad-a7aa-80bc71eaa443" class="">
+</p><h1 id="9f3a4332-18b8-46f7-9732-3416cdd09b56" class="">2. 神經元角度介紹 CNN</h1><h2 id="99ed6833-74fa-4faf-86aa-b61ad310fa96" class="">觀察 ①</h2><p id="256d4398-86c0-4f4c-a15f-666972f6b2c5" class="">模型通過識別一些特定 patterns 來識別物體，而非整張圖</p><figure id="c5c9b76c-466a-40dd-a12b-ac8537c5d8fe" class="image"><a href="03-CNN%EF%BC%88%E5%8D%B7%E7%A9%8D%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%EF%BC%89/1.png"><img style="width:432px" src="03-CNN%EF%BC%88%E5%8D%B7%E7%A9%8D%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%EF%BC%89/1.png"/></a></figure><p id="a4e1d99d-ea70-4ea8-be94-7c794586d9be" class="">neuron 也許根本不需要把整張圖片當作輸入，只需把圖片的一小部分當作輸入，就足以偵測某些特別關鍵的 pattern 有沒有出現</p><h2 id="7d03488f-16dc-4880-b896-6ff9ade5a887" class="">簡化 ①：Receptive Field</h2><p id="3a7f587f-c8aa-4a42-8579-3d44a2b8d5cf" class="">每個神經元只需要考察自己特定範圍內的圖像訊息，將圖像內容展平後輸入到神經元中即可</p><div id="c4477c6a-1f60-43b3-b0db-a608d3f1ff31" class="column-list"><div id="63bf0991-7eae-43ba-88e2-6ff190072719" style="width:50%" class="column"><figure id="f3b36d2d-d288-4b8a-9b49-661a5f224855" class="image"><a href="03-CNN%EF%BC%88%E5%8D%B7%E7%A9%8D%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%EF%BC%89/2.png"><img style="width:480px" src="03-CNN%EF%BC%88%E5%8D%B7%E7%A9%8D%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%EF%BC%89/2.png"/></a></figure></div><div id="1931bfb0-520b-4ccf-b9ce-4d5f17be48bb" style="width:50%" class="column"><figure id="0fa03516-883a-4bc4-a3d4-94de70f5f470" class="image"><a href="03-CNN%EF%BC%88%E5%8D%B7%E7%A9%8D%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%EF%BC%89/3.png"><img style="width:336px" src="03-CNN%EF%BC%88%E5%8D%B7%E7%A9%8D%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%EF%BC%89/3.png"/></a></figure></div></div><p id="f409fe58-5704-4d82-afcf-686b55659b6f" class=""><strong>注意：</strong></p><ul id="359f7317-3a4c-4e6b-b232-20b54a9ee2b2" class="bulleted-list"><li style="list-style-type:disc">receptive field 之間可以重疊</li></ul><ul id="ee0f2af7-daba-449d-affd-3145335aeb66" class="bulleted-list"><li style="list-style-type:disc">一個 receptive field 可以有多個神經元守備</li></ul><ul id="28e76348-d6c5-4e91-85fb-7ca1ecc6e788" class="bulleted-list"><li style="list-style-type:disc">receptive field 可以有大有小</li></ul><ul id="6b4001ce-4f19-45d6-8f2f-720c8f72a062" class="bulleted-list"><li style="list-style-type:disc">receptive field 可以只考慮某一些 channel</li></ul><ul id="492324f5-0109-4aa3-a711-0d64186b9266" class="bulleted-list"><li style="list-style-type:disc">receptive field 可以是長方形</li></ul><ul id="fa7be932-fd92-42f8-887a-9455ab6fd0f7" class="bulleted-list"><li style="list-style-type:disc">receptive field 不一定要相連</li></ul><h3 id="579ebe5b-6e68-456c-ac04-f005113a8a7d" class="">Receptive Field 的 Typical Setting（In general）</h3><figure id="fae3cc28-3be8-4c76-8b5d-736313da958c" class="image"><a href="03-CNN%EF%BC%88%E5%8D%B7%E7%A9%8D%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%EF%BC%89/4.png"><img style="width:480px" src="03-CNN%EF%BC%88%E5%8D%B7%E7%A9%8D%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%EF%BC%89/4.png"/></a></figure><ol type="1" id="246e70a7-15af-4d88-aab6-6c703aa5b697" class="numbered-list" start="1"><li>一般在做影像辨識的時會看全部的 channel。所以在描述一個 receptive field 的時候，無需說明其 channel 數，只要講它的<strong>高、寬 ⇒ kernel size</strong><p id="762e3cf7-12a8-48d3-8510-8197ab9dd08b" class=""><strong>→ 一般不做過大的 kernal size，常常設定為 3 × 3</strong></p></li></ol><ol type="1" id="b1747e4f-efec-470c-908b-0f0dfb248158" class="numbered-list" start="2"><li>每個 receptive field 會有<strong>不止一個神經元進行守備 ⇒ 輸出通道數/卷積核數目</strong></li></ol><ol type="1" id="342afab8-1dca-4e12-ba7b-a1c25578a93c" class="numbered-list" start="3"><li>不同的 receptive field 之間的關係 ⇒ <strong>receptive field 的水平垂直位移：Stride</strong>【hyperparameter】<br/><strong>→ 一般希望 receptive field 之間有重疊，避免交界處的 pattern 被忽略</strong></li></ol><ol type="1" id="f8825b31-7cd6-4f74-9b91-1df738039ecc" class="numbered-list" start="4"><li><strong>receptive field 超出影響的範圍 ⇒ padding</strong>（補值：補 0、補平均值、補邊緣值、…）</li></ol><h2 id="78f4bea9-5689-45d2-aed7-0b7ff65fb327" class="">觀察 ②</h2><p id="f1b386a9-551b-483f-8b7e-c2d8f61f0a4c" class="">同樣的 pattern，可能出現在圖片的不同位置，偵測同樣 pattern 的神經元做的工作是一樣的，儘管<strong>守備的 receptive field 不一樣，但參數會是一樣的</strong></p><figure id="34d13e4d-e772-4cbd-bf73-0c93a4bd2492" class="image"><a href="03-CNN%EF%BC%88%E5%8D%B7%E7%A9%8D%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%EF%BC%89/5.png"><img style="width:480px" src="03-CNN%EF%BC%88%E5%8D%B7%E7%A9%8D%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%EF%BC%89/5.png"/></a></figure><h2 id="e63b64c4-5fff-4dae-9f4d-33f07e95c5eb" class="">簡化 ②：Parameter Sharing</h2><p id="eddfaa11-f43a-46aa-a27b-8854f2618e41" class="">兩個不同 receptive field 的 neurons 有做一樣的工作，就可以共用參數。儘管參數一樣，但因為是不同的 receptive field（不同的輸入），所以輸出也會是不一樣的</p><figure id="137534ab-dc51-46d2-a025-b46a1b33da30" class="image"><a href="03-CNN%EF%BC%88%E5%8D%B7%E7%A9%8D%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%EF%BC%89/6.png"><img style="width:480px" src="03-CNN%EF%BC%88%E5%8D%B7%E7%A9%8D%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%EF%BC%89/6.png"/></a></figure><h3 id="cf4b7b58-1d4f-41e2-8ba6-5cba0ad21006" class="">Parameter Sharing 的 Typical Setting（In general）</h3><figure id="02bc0b21-925d-48c5-9f05-a09d6e8aa697" class="image"><a href="03-CNN%EF%BC%88%E5%8D%B7%E7%A9%8D%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%EF%BC%89/7.png"><img style="width:480px" src="03-CNN%EF%BC%88%E5%8D%B7%E7%A9%8D%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%EF%BC%89/7.png"/></a></figure><p id="b0323927-233b-442c-824b-867472573eee" class="">對每個 receptive field，都使用一組神經元處理；這些神經元共用一組參數（weight），此組參數稱作 <strong>Filter</strong>，因此對不同 receptive field 使用的 Filter 參數相同</p><h2 id="82e931c7-e01b-40ea-a3a1-8215585aa100" class="">Convolutional Layer 的優勢</h2><h3 id="f192afde-f18b-4cc2-9d5b-82402393a9bd" class="">卷積層是“受限”（彈性變小）的 Fully Connected Layer</h3><figure id="3445c30b-b25a-42df-b49c-a1df31ed936f" class="image"><a href="03-CNN%EF%BC%88%E5%8D%B7%E7%A9%8D%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%EF%BC%89/8.png"><img style="width:432px" src="03-CNN%EF%BC%88%E5%8D%B7%E7%A9%8D%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%EF%BC%89/8.png"/></a></figure><p id="62920c17-b12a-4221-a502-a15253bd86de" class=""><strong>觀察：</strong></p><ul id="9910deac-0023-4576-810b-718850379b4c" class="bulleted-list"><li style="list-style-type:disc">FC 可以通過“學習”決定要看到的“圖片”的範圍。加上“receptive field”概念後，就只能看某一個範圍</li></ul><ul id="7477ce4a-b191-45df-af42-9d8020e4c47d" class="bulleted-list"><li style="list-style-type:disc">FC 可以自由決定守備不同 receptive field 的各個神經元參數。加上“權值共享”概念後，守備不同 receptive field 的<strong>同一個 filter 參數相同</strong></li></ul><p id="3e27457f-5b29-4d4e-b54b-ec5d38d1d53e" class=""><strong>分析：</strong></p><ul id="61e05da8-f5d5-4760-bf17-ebc467e9012a" class="bulleted-list"><li style="list-style-type:disc">一般而言，model bias 小、model 的 flexibility 很高的時候，比較容易 overfitting。f<strong>ully connected layer 可以有各式各樣的變化，但是它可能沒有辦法在任何特定的任務</strong>上做好</li></ul><ul id="16d2bc37-b7f1-4f4e-9334-19e77620c9e7" class="bulleted-list"><li style="list-style-type:disc">CNN 的 bias 比較大，它是專門為影像設計的，所以它在影像上仍然可以做得好</li></ul><p id="cf399cc9-9bc8-4659-a208-f4bed3b00bc8" class="">
+</p><h1 id="3f076551-64f3-4058-b89f-7612a65828d3" class="">3. 濾波器角度介紹 CNN</h1><h2 id="cfb04d64-b773-4660-bf10-9cf5e1d555e3" class="">3.1 卷積層基本定義</h2><figure id="b2d24486-c5c6-477a-be20-4ded92138dfb" class="image"><a href="03-CNN%EF%BC%88%E5%8D%B7%E7%A9%8D%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%EF%BC%89/9.png"><img style="width:432px" src="03-CNN%EF%BC%88%E5%8D%B7%E7%A9%8D%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%EF%BC%89/9.png"/></a></figure><p id="a0410839-08a3-41f8-bea2-c5286cd424f0" class="">卷積層中有若干個 filters，每個 filter 可以“抓取”圖片中的某一種 pattern（pattern 的大小小於 receptive field 大小）。<strong>filter 的參數就是神經元中的“權值（weight）”</strong></p><figure id="c35a460c-3bfb-4302-925c-671148e1bb1a" class="image"><a href="03-CNN%EF%BC%88%E5%8D%B7%E7%A9%8D%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%EF%BC%89/10.png"><img style="width:432px" src="03-CNN%EF%BC%88%E5%8D%B7%E7%A9%8D%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%EF%BC%89/10.png"/></a></figure><p id="e49eb8ac-88e8-4d6a-9447-eff2b1df7bb6" class=""><strong>filter 的計算是“內積”：</strong>filter 跟圖片對應位置的數值做矩陣乘法，乘完後再將元素相加</p><p id="48438cd5-f075-4b74-a8a0-0b16db9a8d7b" class=""><strong>注意：</strong></p><p id="0b3d077e-9262-477d-aac5-d75a3785c3c4" class="">上圖所示的濾波器，對主對角線為 1 的特徵敏感 ⇒ 對應卷積結果為 3（最大）</p><figure id="0fd4ab97-5749-4abf-91c8-73510b69feb7" class="image"><a href="03-CNN%EF%BC%88%E5%8D%B7%E7%A9%8D%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%EF%BC%89/11.png"><img style="width:384px" src="03-CNN%EF%BC%88%E5%8D%B7%E7%A9%8D%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%EF%BC%89/11.png"/></a></figure><p id="77da8890-964e-4c87-acba-523684f9fc13" class="">不同的 filter 掃過一張圖片，將會產生“新的圖片”，<strong>每個 filter 將會產生圖片中的一個 channel ⇒ feature map</strong></p><h2 id="27bf2025-32ac-4de9-9488-c1aedeae575d" class="">3.2 多層卷積</h2><figure id="e4260ab4-7099-4a04-9d7f-6a21aff703c1" class="image"><a href="03-CNN%EF%BC%88%E5%8D%B7%E7%A9%8D%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%EF%BC%89/12.png"><img style="width:384px" src="03-CNN%EF%BC%88%E5%8D%B7%E7%A9%8D%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%EF%BC%89/12.png"/></a></figure><p id="40cfa3da-aa9d-42ec-8ffc-d333d8b3ab38" class="">第一層的卷積結果產生了一張 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>4</mn><mo>×</mo><mn>4</mn><mo>×</mo><mn>64</mn></mrow><annotation encoding="application/x-tex">4\times4\times64</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">4</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">4</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">64</span></span></span></span></span><span>﻿</span></span> 的 feature map。繼續卷積時，需要對 64 個 channel 都進行處理 ⇒ filter 的“高度”要是 64</p><h3 id="a298c19f-9a45-40ff-8b61-42d0a269257a" class="">3.2.1 讓小卷積核看到大 pattern</h3><figure id="5ade2ad7-2c6d-4781-b484-9c234b232897" class="image"><a href="03-CNN%EF%BC%88%E5%8D%B7%E7%A9%8D%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%EF%BC%89/13.png"><img style="width:384px" src="03-CNN%EF%BC%88%E5%8D%B7%E7%A9%8D%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%EF%BC%89/13.png"/></a></figure><p id="f41c9aad-dec5-476e-b1cb-39c4e8ed09e9" class="">在考慮第二層中 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>3</mn><mo>×</mo><mn>3</mn></mrow><annotation encoding="application/x-tex">3\times3</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">3</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">3</span></span></span></span></span><span>﻿</span></span> 的範圍，在原圖實際上考慮了 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>5</mn><mo>×</mo><mn>5</mn></mrow><annotation encoding="application/x-tex">5\times5</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">5</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">5</span></span></span></span></span><span>﻿</span></span>範圍的pattern。當卷積層越來越深時，即使只是 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>3</mn><mo>×</mo><mn>3</mn></mrow><annotation encoding="application/x-tex">3\times3</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">3</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">3</span></span></span></span></span><span>﻿</span></span> 的 filter，看到的範圍實際上是會越來越大</p><h1 id="8a01eb28-2b6d-49ca-94b0-1737887631ce" class="">4. 神經元角度（Neuron）vs 濾波器角度（Filter）</h1><p id="b5767193-9769-489d-a675-9cd0b548bda3" class="">神經元角度說到 Neuron 會共用參數，這些共用的參數就是濾波器角度說到的 Filter</p><figure id="43a61bd0-b0fa-4a39-bffc-93a28d363c95" class="image"><a href="03-CNN%EF%BC%88%E5%8D%B7%E7%A9%8D%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%EF%BC%89/14.png"><img style="width:432px" src="03-CNN%EF%BC%88%E5%8D%B7%E7%A9%8D%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%EF%BC%89/14.png"/></a></figure><figure id="43b9947d-bc2c-41ce-90ac-a976991319fe" class="image"><a href="03-CNN%EF%BC%88%E5%8D%B7%E7%A9%8D%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%EF%BC%89/15.png"><img style="width:432px" src="03-CNN%EF%BC%88%E5%8D%B7%E7%A9%8D%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%EF%BC%89/15.png"/></a></figure><h3 id="49b4cf5d-e8cc-403e-aaba-035307ab847a" class="">4.1 不用看整張圖片範圍</h3><ul id="f70836fe-7258-461f-a173-edd44812a473" class="bulleted-list"><li style="list-style-type:disc">神經元角度：只要守備 receptive field</li></ul><ul id="0af5c50c-5231-4127-b12b-0a7109dc41a4" class="bulleted-list"><li style="list-style-type:disc">濾波器角度：使用 Filter 偵測模式 pattern</li></ul><h3 id="19bc05af-4190-4653-9357-7b4e5f408537" class="">4.2 相同 Pattern 可能出現在圖片的不同位置</h3><ul id="c50ea545-0db5-445b-ba33-3eaf0a769d40" class="bulleted-list"><li style="list-style-type:disc">神經元角度：守備不同 receptive field 的神經元可以共用參數</li></ul><ul id="36d48866-8749-4470-94b4-9e9c384fc737" class="bulleted-list"><li style="list-style-type:disc">濾波器角度：Filter 掃過整張圖片</li></ul><h1 id="82a259c6-6d2b-4597-bfdb-5cb97f697871" class="">5. Subsampling（Pooling）</h1><p id="ada01912-8a5a-42e8-b86f-f2c41e689926" class="">舉例而言，把偶數行拿掉，把基數列拿掉，不會影響圖片的辨析，同時可以<strong>減少運算量</strong></p><figure id="c48191b9-a241-4dcc-83fd-4c7700383448" class="image"><a href="03-CNN%EF%BC%88%E5%8D%B7%E7%A9%8D%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%EF%BC%89/16.png"><img style="width:432px" src="03-CNN%EF%BC%88%E5%8D%B7%E7%A9%8D%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%EF%BC%89/16.png"/></a></figure><p id="d2a319be-f1fe-42bb-ba16-4a7d88495476" class="">pooling 本身沒有參數，所以並不是一個 layer。行為類似於 activation function（sigmoid、ReLU ），是一個 operator，它的行為不是固定好的</p><h3 id="b8e89993-0c7f-4b3f-b7a4-129d4e323bca" class="">5.1 不同 Pooling 方法</h3><div id="0995278a-ca2b-4c57-b183-ac3961aaeddc" class="column-list"><div id="e508e97e-aa12-49bc-91d2-35b97d5811ae" style="width:50%" class="column"><ul id="23060915-fa87-46cc-8b41-fbf1f2895dd4" class="bulleted-list"><li style="list-style-type:disc">Max pooling<figure id="8d95f707-f9f4-4fd0-b1b8-b38b03b55e57" class="image" style="text-align:right"><a href="03-CNN%EF%BC%88%E5%8D%B7%E7%A9%8D%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%EF%BC%89/17.png"><img style="width:288px" src="03-CNN%EF%BC%88%E5%8D%B7%E7%A9%8D%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%EF%BC%89/17.png"/></a></figure></li></ul></div><div id="e874297b-3c4d-4740-a59a-f875dc862796" style="width:50%" class="column"><p id="92728612-b522-47a6-9661-ed5351b4938d" class="">
+</p><figure id="25e034d4-ad15-4771-a66d-18a1024edaed" class="image"><a href="03-CNN%EF%BC%88%E5%8D%B7%E7%A9%8D%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%EF%BC%89/18.png"><img style="width:288px" src="03-CNN%EF%BC%88%E5%8D%B7%E7%A9%8D%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%EF%BC%89/18.png"/></a></figure></div></div><ul id="1ce20658-1dad-4331-a14d-97d73f0ab5c0" class="bulleted-list"><li style="list-style-type:disc">Mean Pooling</li></ul><ul id="73803194-69f8-4831-b665-347c1a8fca58" class="bulleted-list"><li style="list-style-type:disc">…</li></ul><h1 id="9c0bdf9e-8b20-425b-916d-d7dee2a98cdb" class="">6. The whole CNN（典型 CNN 結構）</h1><p id="3766cccd-a44a-4667-a45b-695cc0a63e83" class="">典型架構讓 <strong>convolution 及 pooling 交錯運用</strong></p><p id="753877d2-ad91-4110-a205-f3d1d8ace88b" class=""><strong>Convolutional Layer → Pooling → ...（循環）→ Flatten（把矩陣拉直排成向量） → FC → Softmax</strong></p><div id="c724dc15-a422-4bf3-8428-6db7fe5a916b" class="column-list"><div id="30f2d038-ec27-4c75-8248-3290e1f455ec" style="width:50%" class="column"><figure id="c883929d-7cba-4d09-9a0c-aa187e5c0e35" class="image" style="text-align:right"><a href="03-CNN%EF%BC%88%E5%8D%B7%E7%A9%8D%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%EF%BC%89/19.png"><img style="width:288px" src="03-CNN%EF%BC%88%E5%8D%B7%E7%A9%8D%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%EF%BC%89/19.png"/></a></figure></div><div id="4e07fd69-e4b6-4593-8ddd-e227f77389c5" style="width:50%" class="column"><figure id="a803fa1e-d6f3-4334-8f0c-b734b5b82407" class="image"><a href="03-CNN%EF%BC%88%E5%8D%B7%E7%A9%8D%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%EF%BC%89/20.png"><img style="width:288px" src="03-CNN%EF%BC%88%E5%8D%B7%E7%A9%8D%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%EF%BC%89/20.png"/></a></figure></div></div><h2 id="217c5f11-a92f-4b58-82ea-a1a67fd3063e" class="">Pooling 可有可無</h2><p id="a135662c-2173-4d07-a689-9f16771f191b" class="">pooling 對於 rerformance 會帶來一點傷害。如果<strong>運算資源足夠</strong>，現今很多 network 的架構的設計往往就<strong>不做 pooling，改為全 convolution</strong></p><p id="007b9d8e-d005-42dd-a8c7-8a53976affff" class="">
+</p><h1 id="b868600b-06d1-49cf-879a-f3875b5cd9f1" class="">7. 應用</h1><h2 id="b39ea45a-c8ce-4d86-8207-414a926ce7b2" class="">7.1 Alpha Go</h2><p id="bfdbd92c-8f74-458d-bedc-b7a14e68abcf" class="">可使用 FC，但用 <strong>CNN 效果更好</strong></p><p id="fe6e12ef-1182-4e0f-988b-cf1c141425c6" class="">把棋盤看成 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>19</mn><mo>×</mo><mn>19</mn></mrow><annotation encoding="application/x-tex">19\times19</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">19</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">19</span></span></span></span></span><span>﻿</span></span> 的圖片，用 48 個 channel 來描述</p><figure id="4c7e3e77-2d47-4f7f-9174-f39fb7939519" class="image"><a href="03-CNN%EF%BC%88%E5%8D%B7%E7%A9%8D%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%EF%BC%89/21.png"><img style="width:480px" src="03-CNN%EF%BC%88%E5%8D%B7%E7%A9%8D%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%EF%BC%89/21.png"/></a></figure><h3 id="2e21a8d9-3a00-48f6-9dbe-01436dff6ce9" class="">與圖像辨識的共同點</h3><figure id="834e3c3f-6224-46b8-93c2-040e21a3330f" class="image"><a href="03-CNN%EF%BC%88%E5%8D%B7%E7%A9%8D%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%EF%BC%89/22.png"><img style="width:432px" src="03-CNN%EF%BC%88%E5%8D%B7%E7%A9%8D%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%EF%BC%89/22.png"/></a></figure><ul id="f51edee2-f00d-45b1-b005-44acda2f8b37" class="bulleted-list"><li style="list-style-type:disc">只看小範圍</li></ul><ul id="93fb38c1-d5a6-40d6-ae2a-b5f220836caa" class="bulleted-list"><li style="list-style-type:disc">同個 pattern 在不同位置出現</li></ul><h3 id="06a27da2-2588-4a0c-b3d9-78d49d34f691" class="">沒有 Pooling</h3><figure id="b224bcb3-4b5a-450c-aa63-b652ba3c0bcd" class="image"><a href="03-CNN%EF%BC%88%E5%8D%B7%E7%A9%8D%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%EF%BC%89/23.png"><img style="width:432px" src="03-CNN%EF%BC%88%E5%8D%B7%E7%A9%8D%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%EF%BC%89/23.png"/></a></figure><h2 id="388f7309-727c-4bc2-955d-eed12269d9d1" class="">7.2 語音、NLP</h2><figure id="11a6ca43-de96-4a47-a392-64a9534eef4e" class="image"><a href="03-CNN%EF%BC%88%E5%8D%B7%E7%A9%8D%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%EF%BC%89/24.png"><img style="width:432px" src="03-CNN%EF%BC%88%E5%8D%B7%E7%A9%8D%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%EF%BC%89/24.png"/></a></figure><h1 id="ad704b21-7d9a-46d9-b5a9-69a904b11bef" class="">8. Learn More</h1><p id="b7e03331-21bd-443e-af58-e07d17bf5fe6" class=""><strong>CNN 的缺陷</strong>：</p><p id="4a42de47-a2d7-445d-925e-0cf8f449e7cb" class="">CNN 並不能夠處理影像放大縮小，或者是旋轉的問題。所以在做影像辨識的時候，往往都要做 data augmentation，把訓練數據截一小塊出來放大縮小、把圖片旋轉，CNN 才會做到好的結果</p><p id="1da145f2-7b39-40e9-ba09-4de1d45e7b08" class="">可以用 <strong>Spacial Transformer Layer</strong> 處理這個問題</p><figure id="170737d7-5137-46fe-9813-79ebcb3eeb88" class="image"><a href="03-CNN%EF%BC%88%E5%8D%B7%E7%A9%8D%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%EF%BC%89/25.png"><img style="width:480px" src="03-CNN%EF%BC%88%E5%8D%B7%E7%A9%8D%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF%EF%BC%89/25.png"/></a></figure><p id="20c8ac39-c7ae-4236-84fd-48858da1b45c" class="">
+</p></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>

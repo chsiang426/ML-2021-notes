@@ -1,0 +1,773 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>09-Adversarial Attack</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 10px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.collection-content td {
+	white-space: pre-wrap;
+	word-break: break-word;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+	margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.callout img.notion-static-icon {
+	width: 1em;
+	height: 1em;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+blockquote.quote-large {
+	font-size: 1.25em;
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray {
+	color: rgba(128, 125, 120, 1);
+	fill: rgba(128, 125, 120, 1);
+}
+.highlight-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.highlight-orange {
+	color: rgba(204, 121, 47, 1);
+	fill: rgba(204, 121, 47, 1);
+}
+.highlight-yellow {
+	color: rgba(195, 148, 67, 1);
+	fill: rgba(195, 148, 67, 1);
+}
+.highlight-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.highlight-blue {
+	color: rgba(63, 126, 190, 1);
+	fill: rgba(63, 126, 190, 1);
+}
+.highlight-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.highlight-pink {
+	color: rgba(179, 84, 136, 1);
+	fill: rgba(179, 84, 136, 1);
+}
+.highlight-red {
+	color: rgba(201, 85, 73, 1);
+	fill: rgba(201, 85, 73, 1);
+}
+.highlight-default_background {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray_background {
+	background: rgba(42, 28, 0, 0.07);
+}
+.highlight-brown_background {
+	background: rgba(139, 46, 0, 0.086);
+}
+.highlight-orange_background {
+	background: rgba(224, 101, 1, 0.129);
+}
+.highlight-yellow_background {
+	background: rgba(211, 168, 0, 0.137);
+}
+.highlight-teal_background {
+	background: rgba(0, 100, 45, 0.09);
+}
+.highlight-blue_background {
+	background: rgba(0, 111, 200, 0.09);
+}
+.highlight-purple_background {
+	background: rgba(102, 0, 178, 0.078);
+}
+.highlight-pink_background {
+	background: rgba(197, 0, 93, 0.086);
+}
+.highlight-red_background {
+	background: rgba(223, 22, 0, 0.094);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(128, 125, 120, 1);
+	fill: rgba(128, 125, 120, 1);
+}
+.block-color-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.block-color-orange {
+	color: rgba(204, 121, 47, 1);
+	fill: rgba(204, 121, 47, 1);
+}
+.block-color-yellow {
+	color: rgba(195, 148, 67, 1);
+	fill: rgba(195, 148, 67, 1);
+}
+.block-color-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.block-color-blue {
+	color: rgba(63, 126, 190, 1);
+	fill: rgba(63, 126, 190, 1);
+}
+.block-color-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.block-color-pink {
+	color: rgba(179, 84, 136, 1);
+	fill: rgba(179, 84, 136, 1);
+}
+.block-color-red {
+	color: rgba(201, 85, 73, 1);
+	fill: rgba(201, 85, 73, 1);
+}
+.block-color-default_background {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray_background {
+	background: rgba(240, 239, 237, 1);
+}
+.block-color-brown_background {
+	background: rgba(245, 237, 233, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 235, 222, 1);
+}
+.block-color-yellow_background {
+	background: rgba(249, 243, 220, 1);
+}
+.block-color-teal_background {
+	background: rgba(232, 241, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(232, 242, 250, 1);
+}
+.block-color-purple_background {
+	background: rgba(243, 235, 249, 1);
+}
+.block-color-pink_background {
+	background: rgba(250, 233, 241, 1);
+}
+.block-color-red_background {
+	background: rgba(252, 233, 231, 1);
+}
+.select-value-color-default { background-color: rgba(42, 28, 0, 0.07); }
+.select-value-color-gray { background-color: rgba(28, 19, 1, 0.11); }
+.select-value-color-brown { background-color: rgba(127, 51, 0, 0.156); }
+.select-value-color-orange { background-color: rgba(196, 88, 0, 0.203); }
+.select-value-color-yellow { background-color: rgba(209, 156, 0, 0.282); }
+.select-value-color-green { background-color: rgba(0, 96, 38, 0.156); }
+.select-value-color-blue { background-color: rgba(0, 99, 174, 0.172); }
+.select-value-color-purple { background-color: rgba(92, 0, 163, 0.141); }
+.select-value-color-pink { background-color: rgba(183, 0, 78, 0.152); }
+.select-value-color-red { background-color: rgba(206, 24, 0, 0.164); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+
+
+/* Back-to-index button */
+.floating-button {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.4em;
+	padding: 0.55em 1.15em;
+	border-radius: 999px;
+	background: rgba(255, 255, 255, 0.92);
+	color: #1f2933;
+	font-size: 0.9rem;
+	font-weight: 500;
+	text-decoration: none;
+	border: 1px solid rgba(15, 23, 42, 0.12);
+	box-shadow: 0 8px 24px rgba(15, 23, 42, 0.12);
+	backdrop-filter: blur(12px);
+	transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+.floating-button:hover {
+	background: #1f2933;
+	color: #ffffff;
+	box-shadow: 0 12px 32px rgba(15, 23, 42, 0.18);
+	transform: translateY(-1px);
+}
+.floating-button:active {
+	transform: translateY(0);
+	box-shadow: 0 6px 18px rgba(15, 23, 42, 0.14);
+}
+.back-to-index {
+	position: fixed;
+	top: 20px;
+	left: 20px;
+	z-index: 1000;
+}
+.nav-controls {
+	position: fixed;
+	top: 20px;
+	right: 20px;
+	z-index: 1000;
+	display: inline-flex;
+	gap: 0.6em;
+	flex-wrap: wrap;
+	justify-content: flex-end;
+}
+@media (max-width: 600px) {
+	.back-to-index {
+		top: 16px;
+		left: 16px;
+	}
+	.nav-controls {
+		top: 16px;
+		right: 16px;
+		gap: 0.5em;
+	}
+	.floating-button {
+		padding: 0.45em 1em;
+		font-size: 0.85rem;
+	}
+}
+@media print {
+	.back-to-index,
+	.nav-controls {
+		display: none;
+	}
+}
+
+</style></head><body>
+<a class="floating-button back-to-index" href="../index.html">回到目錄</a>
+<div class="nav-controls">
+	<a class="floating-button nav-button" href="../08-Auto-encoder/08-Auto-encoder.html" title="上一節：08-Auto-encoder">上一節</a>
+	<a class="floating-button nav-button" href="../10-Explainable ML/10-Explainable ML.html" title="下一節：10-Explainable ML">下一節</a>
+</div>
+<article id="b2cea886-ebd9-4672-8721-27b4db066b4d" class="page sans"><header><div class="page-header-icon undefined"><img class="icon notion-static-icon" src="https://www.notion.so/icons/document_blue.svg"/></div><h1 class="page-title">09-Adversarial Attack</h1><p class="page-description"></p><table class="properties"><tbody></tbody></table></header><div class="page-body"><nav id="88bcb980-14e5-46ae-a063-453b993c198c" class="block-color-gray table_of_contents"><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#f2678843-25dd-4520-8278-43e85c9265c4">1. How to attack？</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#f53d4e21-c7e5-4d2e-9bd9-49d32113bb29">1.1 <strong>Non-targeted &amp; Targeted</strong></a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#24bf4b67-e532-48b8-ac19-e14905c3f0ee">1.2 <strong>白箱攻擊 &amp; 黑箱攻擊</strong></a></div><div class="table_of_contents-item table_of_contents-indent-2"><a class="table_of_contents-link" href="#cf92f82f-1304-4cd2-aace-0999ad771803">1.2.1 白箱攻擊</a></div><div class="table_of_contents-item table_of_contents-indent-2"><a class="table_of_contents-link" href="#bdf0d3b2-f856-4f76-aab3-8d109d8d7e70">1.2.2 黑箱攻擊</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#92535d09-f6d3-4592-894d-e21b1c6cbc12">1.3 攻擊如此簡單的原因</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#f4794658-d5ee-4fc5-8625-90411fc01cf7">2. Attacked Cases</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#48c007cd-8506-4fb2-8037-d1c9de82c525">2.1 <a href="https://arxiv.org/abs/1710.08864">One pixel attack</a></a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#627c3a16-325d-4ca5-b702-0a8d8eae65ea">2.2 <strong><a href="https://arxiv.org/abs/1610.08401">Universal Adversarial Attack</a></strong></a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#69461d13-8f3f-4c6c-b29a-aa20f95cb97d">2.3 Speech Processing：偵測一段聲音是否是被合成出來的</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#6c50eeaa-7f3d-4d53-9f34-2ec789e64a9f">2.4 Natural Language Processing：控制 QA 结果</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#7cad7b36-c058-46a1-8ceb-05a5508cd8de">2.5 真實世界的攻擊</a></div><div class="table_of_contents-item table_of_contents-indent-2"><a class="table_of_contents-link" href="#dcd1aa13-c0de-49af-acfe-2a10551b9188">2.5.1 人臉識別</a></div><div class="table_of_contents-item table_of_contents-indent-2"><a class="table_of_contents-link" href="#f1cf43f4-5e1f-4fd5-90fe-007f713090ce">2.5.2 號誌辨識</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#d8fda2d7-4f22-4380-a3ba-02783019b44a">2.6 <strong>Adversarial Reprogramming</strong></a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#81c39fcc-2c1b-46af-ad7d-bf46a565d418">2.7 <strong>“Backdoor” in Model（在模型訓練時攻擊）</strong></a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#77b92c19-b4b6-4c4b-ae07-b61d3e046fc5">3. Defense</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#ec2fe224-96ae-42c1-a0e4-7326a717d488">3.1 被動防禦</a></div><div class="table_of_contents-item table_of_contents-indent-2"><a class="table_of_contents-link" href="#eb8746d9-ef88-439a-a138-5dbd17a6e6cc">3.1.1 <strong>其他方法</strong></a></div><div class="table_of_contents-item table_of_contents-indent-2"><a class="table_of_contents-link" href="#81b2b3d8-fa08-41a8-b019-56b1ac0e2498">3.1.2 弱點</a></div><div class="table_of_contents-item table_of_contents-indent-2"><a class="table_of_contents-link" href="#de5c1e0f-d3c1-40b2-be2a-510c8c4dd843">3.1.3 隨機（Randomization）</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#55684af3-050d-46cd-b9cb-046cbbe74645">3.2 主動防禦</a></div></nav><h1 id="f2678843-25dd-4520-8278-43e85c9265c4" class="">1. How to attack？</h1><p id="63d2220d-66e8-4283-ae92-1897c19d6af7" class="">要把 network 用在真正應用上光是正確率高是不夠的，還需要能夠<strong>應付來自人類的惡意，在有人試圖想要欺騙它的情況下，也得到高的正確率。</strong>e.g. 垃圾郵件分類</p><figure id="d4b80c0f-411e-49b7-8486-e5a3bef9d86c" class="image"><a href="09-Adversarial%20Attack/0.png"><img style="width:480px" src="09-Adversarial%20Attack/0.png"/></a></figure><p id="fcb499ad-807f-4ab7-b5f0-e461497ac623" class="">一張照片可以被看作是一個非常長的向量，在每一個維度都加入一個小小的雜訊，通常都小到肉眼看不出來，attacked image 丟到 network 裡面，輸出不可以是貓，要變成其他的東西<div class="indented"><ul id="61d924c2-95f7-4a15-a7d8-a2a52feb3c36" class="bulleted-list"><li style="list-style-type:disc"><strong>Benign Image</strong>：原始照片</li></ul><ul id="eee5fe79-9270-4f19-93e5-30d6e908126f" class="bulleted-list"><li style="list-style-type:disc"><strong>Attacked Image</strong>：被攻擊（加入雜訊）的照片</li></ul></div></p><h2 id="f53d4e21-c7e5-4d2e-9bd9-49d32113bb29" class="">1.1 <strong>Non-targeted &amp; Targeted</strong></h2><figure id="d96d5de6-df27-45dc-a43b-1113644377d0" class="image" style="text-align:center"><a href="09-Adversarial%20Attack/1.png"><img style="width:528px" src="09-Adversarial%20Attack/1.png"/></a></figure><ul id="8c2346dc-37d3-4b21-8254-52cd1698f983" class="bulleted-list"><li style="list-style-type:disc"><strong>Non-targeted</strong>：任何非預期的輸出都可以<p id="df533875-7fc3-48ec-bcf2-0c0928219abf" class="">具有雜訊的圖片 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi></mrow><annotation encoding="application/x-tex">x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span></span></span></span></span><span>﻿</span></span> 輸入進 network，希望產生的預測 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi></mrow><annotation encoding="application/x-tex">y</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span></span></span></span></span><span>﻿</span></span> 要跟實際答案 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover accent="true"><mi>y</mi><mo>^</mo></mover></mrow><annotation encoding="application/x-tex">\hat{y}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord accent"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.6944em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span></span><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="accent-body" style="left:-0.1944em;"><span class="mord">^</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.1944em;"><span></span></span></span></span></span></span></span></span></span><span>﻿</span></span> 差越遠越好，<style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>e</mi><mo stretchy="false">(</mo><mi>y</mi><mo separator="true">,</mo><mover accent="true"><mi>y</mi><mo>^</mo></mover><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">e(y,\hat{y})</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">e</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord accent"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.6944em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span></span><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="accent-body" style="left:-0.1944em;"><span class="mord">^</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.1944em;"><span></span></span></span></span></span><span class="mclose">)</span></span></span></span></span><span>﻿</span></span> 是 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi></mrow><annotation encoding="application/x-tex">y</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span></span></span></span></span><span>﻿</span></span> 和 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover accent="true"><mi>y</mi><mo>^</mo></mover></mrow><annotation encoding="application/x-tex">\hat{y}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord accent"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.6944em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span></span><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="accent-body" style="left:-0.1944em;"><span class="mord">^</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.1944em;"><span></span></span></span></span></span></span></span></span></span><span>﻿</span></span> 的 cross entropy，期望 cross entropy 越大越好，換句話說就是加一個負號 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>−</mo><mi>e</mi><mo stretchy="false">(</mo><mi>y</mi><mo separator="true">,</mo><mover accent="true"><mi>y</mi><mo>^</mo></mover><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">-e(y,\hat{y})</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">−</span><span class="mord mathnormal">e</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord accent"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.6944em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span></span><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="accent-body" style="left:-0.1944em;"><span class="mord">^</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.1944em;"><span></span></span></span></span></span><span class="mclose">)</span></span></span></span></span><span>﻿</span></span> 越小越好</p></li></ul><ul id="41a7c775-4eff-4b4a-9f6b-7a9de2d7ba81" class="bulleted-list"><li style="list-style-type:disc"><strong>Targeted</strong>：要求有特定輸出<p id="11233947-c7ed-4d24-a793-997aaaf4e723" class="">要求有一個特定輸出 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>y</mi><mrow><mi>t</mi><mi>a</mi><mi>r</mi><mi>g</mi><mi>e</mi><mi>t</mi></mrow></msup></mrow><annotation encoding="application/x-tex">y^{target}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.988em;vertical-align:-0.1944em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7936em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">t</span><span class="mord mathnormal mtight">a</span><span class="mord mathnormal mtight" style="margin-right:0.02778em;">r</span><span class="mord mathnormal mtight" style="margin-right:0.03588em;">g</span><span class="mord mathnormal mtight">e</span><span class="mord mathnormal mtight">t</span></span></span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span>，期望 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi></mrow><annotation encoding="application/x-tex">y</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span></span></span></span></span><span>﻿</span></span> 不只跟 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover accent="true"><mi>y</mi><mo>^</mo></mover></mrow><annotation encoding="application/x-tex">\hat{y}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord accent"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.6944em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span></span><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="accent-body" style="left:-0.1944em;"><span class="mord">^</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.1944em;"><span></span></span></span></span></span></span></span></span></span><span>﻿</span></span> 差越多越好，還要跟目標輸出 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>y</mi><mrow><mi>t</mi><mi>a</mi><mi>r</mi><mi>g</mi><mi>e</mi><mi>t</mi></mrow></msup></mrow><annotation encoding="application/x-tex">y^{target}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.988em;vertical-align:-0.1944em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7936em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">t</span><span class="mord mathnormal mtight">a</span><span class="mord mathnormal mtight" style="margin-right:0.02778em;">r</span><span class="mord mathnormal mtight" style="margin-right:0.03588em;">g</span><span class="mord mathnormal mtight">e</span><span class="mord mathnormal mtight">t</span></span></span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span> 越接近越好</p></li></ul><figure id="8932ef41-7e2f-4ff3-bc70-179e2c490f2b" class="image" style="text-align:center"><a href="09-Adversarial%20Attack/2.png"><img style="width:528px" src="09-Adversarial%20Attack/2.png"/></a></figure><p id="7e4bb09a-f4c9-4c3a-89d1-f57f6398a71c" class="">此外，期望加入雜訊後的圖片 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi></mrow><annotation encoding="application/x-tex">x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span></span></span></span></span><span>﻿</span></span> 要與原始圖片 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>x</mi><mn>0</mn></msup></mrow><annotation encoding="application/x-tex">x^0</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8141em;"></span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span> 越接近越好，所以會加入 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><mo stretchy="false">(</mo><msup><mi>x</mi><mn>0</mn></msup><mo separator="true">,</mo><mi>x</mi><mo stretchy="false">)</mo><mo>≤</mo><mi>ϵ</mi></mrow><annotation encoding="application/x-tex">d(x^0,x)≤\epsilon</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.0641em;vertical-align:-0.25em;"></span><span class="mord mathnormal">d</span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">x</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">ϵ</span></span></span></span></span><span>﻿</span></span> 的限制，讓兩張圖片的差距小於等於人類感知的極限</p><p id="976bcf61-e6df-4122-bcca-5e88f1b78abf" class=""><strong>如何計算</strong> <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><mo stretchy="false">(</mo><msup><mi>x</mi><mn>0</mn></msup><mo separator="true">,</mo><mi>x</mi><mo stretchy="false">)</mo><mo>≤</mo><mi>ϵ</mi></mrow><annotation encoding="application/x-tex">d(x^0,x)≤\epsilon</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.0641em;vertical-align:-0.25em;"></span><span class="mord mathnormal">d</span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">x</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">ϵ</span></span></span></span></span><span>﻿</span></span> <strong>：</strong></p><ol type="1" id="1ee76e14-197c-4cb3-bb31-e4ed354c360e" class="numbered-list" start="1"><li>L2-norm</li></ol><ol type="1" id="17f39b46-a02d-4e77-93a2-16a3b63126cc" class="numbered-list" start="2"><li>L-infinity</li></ol><ol type="1" id="708f2254-af61-4133-8d43-b8dd3f56b26d" class="numbered-list" start="3"><li>…</li></ol><p id="302feed5-3805-401a-9dc5-698ee1b052e8" class="">選擇哪一種計算方式要<strong>根據 domain knowledge</strong></p><h2 id="24bf4b67-e532-48b8-ac19-e14905c3f0ee" class="">1.2 <strong>白箱攻擊 &amp; 黑箱攻擊</strong></h2><ul id="042a3f57-b8a9-423d-8dec-7ea7bc2b8b61" class="bulleted-list"><li style="list-style-type:disc"><strong><a href="https://www.notion.so/09-Adversarial-Attack-b2cea886ebd94672872127b4db066b4d?pvs=21">白箱攻擊</a></strong><strong>（White Box Attack）</strong>：已知模型參數</li></ul><ul id="35439026-c9f6-415c-a0ee-962e041ff4a2" class="bulleted-list"><li style="list-style-type:disc"><strong><a href="https://www.notion.so/09-Adversarial-Attack-b2cea886ebd94672872127b4db066b4d?pvs=21">黑箱攻擊</a></strong><strong>（Black Box Attack）</strong>：未知模型參數</li></ul><h3 id="cf92f82f-1304-4cd2-aace-0999ad771803" class="">1.2.1 白箱攻擊</h3><p id="8b59a2f0-1738-4d8d-8148-078d781ef9f1" class="">本質上，就是解一個優化問題：<style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>x</mi><mo>∗</mo></msup><mo>=</mo><mi>a</mi><mi>r</mi><mi>g</mi><mtext> </mtext><munder><mrow><mi>min</mi><mo>⁡</mo></mrow><mrow><mi>d</mi><mo stretchy="false">(</mo><msup><mi>x</mi><mn>0</mn></msup><mo separator="true">,</mo><mi>x</mi><mo stretchy="false">)</mo><mo>≤</mo><mi>ϵ</mi></mrow></munder><mi>L</mi><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">x^*=arg\ \min\limits_{d(x^0,x)\le\epsilon}L(x)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6887em;"></span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.6887em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mbin mtight">∗</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.716em;vertical-align:-0.966em;"></span><span class="mord mathnormal">a</span><span class="mord mathnormal" style="margin-right:0.02778em;">r</span><span class="mord mathnormal" style="margin-right:0.03588em;">g</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop op-limits"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.6679em;"><span style="top:-2.309em;margin-left:0em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">d</span><span class="mopen mtight">(</span><span class="mord mtight"><span class="mord mathnormal mtight">x</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7463em;"><span style="top:-2.786em;margin-right:0.0714em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mtight">0</span></span></span></span></span></span></span></span><span class="mpunct mtight">,</span><span class="mord mathnormal mtight">x</span><span class="mclose mtight">)</span><span class="mrel mtight">≤</span><span class="mord mathnormal mtight">ϵ</span></span></span></span><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span><span class="mop">min</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.966em;"><span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">L</span><span class="mopen">(</span><span class="mord mathnormal">x</span><span class="mclose">)</span></span></span></span></span><span>﻿</span></span></p><p id="c7523875-fa48-441a-8e13-ee4c3f06972f" class=""><strong>暫不考慮 </strong><style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><mo stretchy="false">(</mo><msup><mi>x</mi><mn>0</mn></msup><mo separator="true">,</mo><mi>x</mi><mo stretchy="false">)</mo><mo>≤</mo><mi>ϵ</mi></mrow><annotation encoding="application/x-tex">d(x^0,x)\le\epsilon</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.0641em;vertical-align:-0.25em;"></span><span class="mord mathnormal">d</span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">x</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">ϵ</span></span></span></span></span><span>﻿</span></span><strong> 的限制：</strong></p><p id="e712d6b0-156f-4486-81ec-b69bb12c1ed4" class="">可以使用<strong>梯度下降</strong>方法實現。這裡需要優化的是圖片而不是網路模型的參數</p><figure id="245765e2-340f-4a7d-8e59-9897d67b121b" class="image"><a href="09-Adversarial%20Attack/3.png"><img style="width:576px" src="09-Adversarial%20Attack/3.png"/></a></figure><p id="0f705215-f67b-40ef-815e-d38b76ffc9c8" class="">初始化從<strong> </strong><style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>x</mi><mn>0</mn></msup></mrow><annotation encoding="application/x-tex">x^0</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8141em;"></span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span><strong> 開始</strong>，因為希望新找到的 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi></mrow><annotation encoding="application/x-tex">x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span></span></span></span></span><span>﻿</span></span> 要跟 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>x</mi><mn>0</mn></msup></mrow><annotation encoding="application/x-tex">x^0</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8141em;"></span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span> 越接近越好，隨後進行迭代，求偏微分更新圖片<strong> </strong><style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi></mrow><annotation encoding="application/x-tex">x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span></span></span></span></span><span>﻿</span></span></p><p id="b7fe106c-c3ce-408f-a9de-1796d931334a" class=""><strong>加入 </strong><style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><mo stretchy="false">(</mo><msup><mi>x</mi><mn>0</mn></msup><mo separator="true">,</mo><mi>x</mi><mo stretchy="false">)</mo><mo>≤</mo><mi>ϵ</mi></mrow><annotation encoding="application/x-tex">d(x^0,x)\le\epsilon</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.0641em;vertical-align:-0.25em;"></span><span class="mord mathnormal">d</span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">x</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">ϵ</span></span></span></span></span><span>﻿</span></span><strong> 限制：</strong></p><figure id="8c9f920d-f538-4151-b592-7f86f27d9504" class="image"><a href="09-Adversarial%20Attack/4.png"><img style="width:480px" src="09-Adversarial%20Attack/4.png"/></a></figure><p id="7fe62487-d524-4fbd-8985-3294c3e9b9ca" class="">當 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>x</mi><mi>t</mi></msup></mrow><annotation encoding="application/x-tex">x^t</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7936em;"></span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7936em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span><strong> 跟 </strong><style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>x</mi><mn>0</mn></msup></mrow><annotation encoding="application/x-tex">x^0</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8141em;"></span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span><strong> 的差距大於 ε，</strong>就做一個修改<strong>把 </strong><style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>x</mi><mi>t</mi></msup></mrow><annotation encoding="application/x-tex">x^t</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7936em;"></span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7936em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span><strong> 改回符合限制</strong></p><p id="d7404b3d-cf58-42aa-81ac-16978676e2b5" class="">假設使用 L-Infinity 方法，根據限制，<style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>x</mi><mi>t</mi></msup></mrow><annotation encoding="application/x-tex">x^t</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7936em;"></span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7936em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span> 只可以存在方框的範圍。當更新 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>x</mi><mi>t</mi></msup></mrow><annotation encoding="application/x-tex">x^t</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7936em;"></span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7936em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span> 後卻跑出方框，利用 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>x</mi><mi>t</mi></msup><mo>←</mo></mrow><annotation encoding="application/x-tex">x^t ← </annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7936em;"></span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7936em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">←</span></span></span></span></span><span>﻿</span></span><style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>f</mi><mi>i</mi><mi>x</mi><mo stretchy="false">(</mo><msup><mi>x</mi><mi>t</mi></msup><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">fix(x^t)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.0436em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.10764em;">f</span><span class="mord mathnormal">i</span><span class="mord mathnormal">x</span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7936em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span></span><span>﻿</span></span> 修正回限制內</p><p id="2e9dc8c2-5f0a-4cfe-9d4e-fd3455ef51ba" class=""><strong><a href="https://arxiv.org/abs/1412.6572">FGSM</a></strong><strong>（Fast Gradient Sign Method）：</strong></p><figure id="aa41af56-248b-4259-aa2c-701c441a9d6a" class="image"><a href="09-Adversarial%20Attack/5.png"><img style="width:480px" src="09-Adversarial%20Attack/5.png"/></a></figure><p id="09376541-f772-4cee-8664-4ef7e091afbf" class=""><strong>只更新參數一次</strong>，對梯度 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>g</mi></mrow><annotation encoding="application/x-tex">g</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">g</span></span></span></span></span><span>﻿</span></span> 每一維度使用<strong> </strong><style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>s</mi><mi>i</mi><mi>g</mi><mi>n</mi><mo stretchy="false">(</mo><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">sign()</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">s</span><span class="mord mathnormal">i</span><span class="mord mathnormal" style="margin-right:0.03588em;">g</span><span class="mord mathnormal">n</span><span class="mopen">(</span><span class="mclose">)</span></span></span></span></span><span>﻿</span></span><strong> 函數</strong>，保證其為 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>±</mo></mrow><annotation encoding="application/x-tex">\pm</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6667em;vertical-align:-0.0833em;"></span><span class="mord">±</span></span></span></span></span><span>﻿</span></span>1，並將 <strong>learning rate 設成 </strong><style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ϵ</mi></mrow><annotation encoding="application/x-tex">\epsilon</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">ϵ</span></span></span></span></span><span>﻿</span></span>，更新一次參數後，其值會<strong>變到正方形四個點之一</strong></p><p id="036b85ff-149f-41b9-936a-610e89cbceda" class=""><a href="https://arxiv.org/abs/1607.02533">Iterative FGSM</a>：</p><figure id="e8549199-ba5a-4d57-9021-fa7d546059ae" class="image"><a href="09-Adversarial%20Attack/6.png"><img style="width:480px" src="09-Adversarial%20Attack/6.png"/></a></figure><p id="cf95be9d-cca6-4d14-b68e-d99e09be2c36" class=""><strong>迭代版的 FGSM，更新不只一次參數，</strong>迭代過程中若超出限制則利用 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>x</mi><mi>t</mi></msup><mo>←</mo></mrow><annotation encoding="application/x-tex">x^t ← </annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7936em;"></span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7936em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">←</span></span></span></span></span><span>﻿</span></span><style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>f</mi><mi>i</mi><mi>x</mi><mo stretchy="false">(</mo><msup><mi>x</mi><mi>t</mi></msup><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">fix(x^t)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.0436em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.10764em;">f</span><span class="mord mathnormal">i</span><span class="mord mathnormal">x</span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7936em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span></span><span>﻿</span></span> 修正回限制內</p><h3 id="bdf0d3b2-f856-4f76-aab3-8d109d8d7e70" class="">1.2.2 黑箱攻擊</h3><p id="4e825ca8-e5c6-43f4-8527-2d357166de63" class="">線上服務的模型，一般來說都不知道模型的參數</p><figure id="faa919d2-18c2-4c25-a97b-381f7317ea76" class="image"><a href="09-Adversarial%20Attack/7.png"><img style="width:480px" src="09-Adversarial%20Attack/7.png"/></a></figure><p id="f78851c1-5b37-4858-8825-e947b2b0c5a7" class=""><strong>訓練一個 proxy network 來模仿被攻擊的對象</strong>。如果 proxy network 跟要被攻擊的對象有一定程度的相似的話，若<strong>拿 attacked image 對 proxy network 進行攻擊有效果</strong>，那麼拿去丟到不知道參數的 network 上攻擊一般來說也會成功</p><p id="24f95df1-d9ca-4c29-8476-fc32143fde62" class=""><strong>兩種狀況：</strong></p><ol type="1" id="380c8e71-a1ca-4365-895a-9b817a295fcd" class="numbered-list" start="1"><li><strong>有辦法</strong>取得 black network 的訓練資料：以此資料訓練 proxy network，如此它們就有一定程度的相似度</li></ol><ol type="1" id="392963ff-a003-40fb-8c3a-3ae799a6e265" class="numbered-list" start="2"><li><strong>沒辦法</strong>取得 black network 的訓練資料：對 black network 輸入資料得到輸出，再把輸入輸出的成對資料作為訓練資料拿去訓練模型，當做 proxy network 進行攻擊</li></ol><p id="7bdc370b-9020-4952-9faa-7ee762fab5a4" class=""><strong>舉例：</strong></p><figure id="e2988664-135c-4b5f-9f0f-3abbf594153b" class="image"><a href="09-Adversarial%20Attack/8.png"><img style="width:432px" src="09-Adversarial%20Attack/8.png"/></a></figure><p id="810419ca-b924-4d0a-8495-40d0a81e15c5" class=""><strong>對角線是白箱攻擊</strong>的部分，成功率是百分之百，也就是模型的正確率是 0 %</p><p id="e32393f7-8024-4f0f-bcb4-a7b76779f343" class=""><strong>非對角線是黑箱攻擊</strong>，比如拿 ResNet-152 當做是 proxy network，去攻擊 ResNet-50，得到的正確率是 18 %</p><ul id="17a62185-40f6-495d-a9fa-8e03409e3d27" class="bulleted-list"><li style="list-style-type:disc">黑箱攻擊模型，最終的正確率是比白箱攻擊還要高的，但是其實這些正確率也不高（低於 50 %），所以顯然黑箱攻擊也有可觀的成功可能性</li></ul><ul id="294dfc32-097c-4e76-a7b7-ec40eca86101" class="bulleted-list"><li style="list-style-type:disc">實際上黑箱攻擊是在 <strong>non-targeted attack 的時候比較容易成功</strong>，targeted attack 不太容易成功</li></ul><figure id="27407c24-926e-4e72-aca6-0b2d0b60cee7" class="image"><a href="09-Adversarial%20Attack/9.png"><img style="width:432px" src="09-Adversarial%20Attack/9.png"/></a></figure><p id="0a9a48cf-1c5b-49a7-98be-8fe2904c1255" class="">column 代表要被攻擊的 network，每一個 row 是 <strong>5 個模型都集合起來，但拿掉對應的模型，對角線屬於黑箱攻擊，使用除了該行以外的其他四種模型聚合</strong>得到的模型進行攻擊</p><p id="a6e36cd0-1d54-4d82-96ce-5efa1d3552a8" class="">當找一個 attacked image 可以成功騙過多個 network，要騙過一個不知道參數的 black network 也非常容易成功</p><h2 id="92535d09-f6d3-4592-894d-e21b1c6cbc12" class="">1.3 攻擊如此簡單的原因</h2><p id="1c5de4e1-1d73-42a8-badc-d900fd756619" class="">一張圖片是一個非常高維的向量，把這個高維向量往橫軸方向移動，和往縱軸方向移動</p><figure id="5a6e7730-c75d-412b-b65f-a3ca3637d6a4" class="image"><a href="09-Adversarial%20Attack/10.png"><img style="width:480px" src="09-Adversarial%20Attack/10.png"/></a></figure><p id="f47b1998-6c23-44ed-ae07-b304d40ed7ff" class="">根據 <em><a href="https://arxiv.org/pdf/1611.02770.pdf">Delving into transferable adversarial examples and black-box attacks</a></em> 這篇論文的研究發現，深藍色的區域是可以被辨識成小丑魚的範圍，可以看出：</p><ul id="14a59b00-8297-4ded-9c44-edd172e9d5ec" class="bulleted-list"><li style="list-style-type:disc">在 VGG-16 中，<strong>橫軸方向是可以攻擊成功的方向，而縱軸方向是一個隨機的方向</strong></li></ul><ul id="02c45111-26ae-47f8-b055-eef72ec209cc" class="bulleted-list"><li style="list-style-type:disc">往攻擊 VGG-16 的方向移動（橫軸），對於其他 <strong>network 也有蠻高的機率可以攻擊成功</strong></li></ul><p id="eac52a88-6592-4353-80ee-ef7cc72b2a9a" class="">有不只一篇論文表示攻擊會如此容易成功，<strong>原因可能是出現在資料上而不是模型上</strong>。在有限的資料上，機器學到的就是這樣子的結論，當我們有足夠的資料，也許就有機會避免 adversarial attack，可參考論文：<em><a href="https://arxiv.org/abs/1905.02175">Adversarial Example Are Not Bugs,They Are Features</a></em></p><p id="5ad8dd79-b8e6-46ab-9ebe-292bb97b84a6" class="">
+</p><h1 id="f4794658-d5ee-4fc5-8625-90411fc01cf7" class="">2. Attacked Cases</h1><h2 id="48c007cd-8506-4fb2-8037-d1c9de82c525" class="">2.1 <a href="https://arxiv.org/abs/1710.08864">One pixel attack</a></h2><p id="63c4ca80-2b45-4df2-9338-7640b47a671d" class="">只動了圖片中的一個 pixel，影像辨識系統的判斷就產生錯誤</p><figure id="d543d756-4e14-4d17-936f-5c7b217e1128" class="image"><a href="09-Adversarial%20Attack/11.png"><img style="width:480px" src="09-Adversarial%20Attack/11.png"/></a></figure><h2 id="627c3a16-325d-4ca5-b702-0a8d8eae65ea" class="">2.2 <strong><a href="https://arxiv.org/abs/1610.08401">Universal Adversarial Attack</a></strong></h2><p id="c953c319-52fd-45b4-9e33-79e03ad2cc4d" class="">只用一種 attacked signal 就成功攻擊所有的圖片，無需對每一張圖片進行客制化處理</p><figure id="31589a0f-0555-4251-81e3-df2d50a5021e" class="image"><a href="09-Adversarial%20Attack/12.png"><img style="width:480px" src="09-Adversarial%20Attack/12.png"/></a></figure><h2 id="69461d13-8f3f-4c6c-b29a-aa20f95cb97d" class="">2.3 Speech Processing：偵測一段聲音是否是被合成出來的</h2><p id="db8dc2cc-fedc-407f-961e-a7edb798a82c" class="">一段顯然的合成聲音訊號加上這個微小的雜訊以後，同一個偵測合成的系統會覺得剛才那段聲音是真實的聲音，而不是合成的聲音</p><figure id="30f8dc73-2884-4223-a332-2fa82721ed71" class="image"><a href="09-Adversarial%20Attack/13.png"><img style="width:528px" src="09-Adversarial%20Attack/13.png"/></a></figure><h2 id="6c50eeaa-7f3d-4d53-9f34-2ec789e64a9f" class="">2.4 Natural Language Processing：控制 QA 结果</h2><p id="054271ef-6034-48a4-a8c5-1a7e75276f6d" class="">在所有文章末尾加上 “Why How Because To Kill American People” 這段文字，接下來不管問機器什麼問題，它的答案都是 “To Kill American People”</p><figure id="2d90904c-9602-45f2-9945-bf3a5af26769" class="image"><a href="09-Adversarial%20Attack/14.png"><img style="width:528px" src="09-Adversarial%20Attack/14.png"/></a></figure><h2 id="7cad7b36-c058-46a1-8ceb-05a5508cd8de" class="">2.5 真實世界的攻擊</h2><h3 id="dcd1aa13-c0de-49af-acfe-2a10551b9188" class="">2.5.1 人臉識別</h3><p id="7d7a4c89-61d9-4118-aa02-73408156272c" class="">戴上一副特殊眼鏡後導致辨識錯誤</p><figure id="4e7f3307-5246-42da-a8ce-60a26b76d130" class="image"><a href="09-Adversarial%20Attack/15.png"><img style="width:480px" src="09-Adversarial%20Attack/15.png"/></a><figcaption>可參考：<em><a href="https://www.cs.cmu.edu/~sbhagava/papers/face-rec-ccs16.pdf">https://www.cs.cmu.edu/~sbhagava/papers/face-rec-ccs16.pdf</a></em></figcaption></figure><ul id="3ec6c929-6477-4766-9c3a-6d3fe60e6f90" class="bulleted-list"><li style="list-style-type:disc">多個角度都能攻擊</li></ul><ul id="b0b68655-0924-47eb-bee6-9df030038a11" class="bulleted-list"><li style="list-style-type:disc">攝像頭的有限像素也能夠解析出</li></ul><ul id="de62a383-2630-4158-9877-67d1d8ef47a7" class="bulleted-list"><li style="list-style-type:disc">避免使用打印後會出現偏差的顏色</li></ul><h3 id="f1cf43f4-5e1f-4fd5-90fe-007f713090ce" class="">2.5.2 號誌辨識</h3><p id="4582b538-b127-4f6d-81f4-856aa6390652" class="">在交通號誌上貼上貼紙導致辨識錯誤</p><figure id="d8c080a1-0353-4eb7-aff8-62204942cc64" class="image"><a href="09-Adversarial%20Attack/16.png"><img style="width:384px" src="09-Adversarial%20Attack/16.png"/></a></figure><h2 id="d8fda2d7-4f22-4380-a3ba-02783019b44a" class="">2.6 <strong>Adversarial Reprogramming</strong></h2><p id="a6dad780-3e5f-4ba8-aae0-258f6de2c5b6" class="">讓一個模型完成訓練任務之外的工作，如論文 <em><a href="https://arxiv.org/abs/1806.11146">Adversarial Reprogramming of Neural Networks</a></em><strong> </strong>利用圖像識別的系統進行數方格，將方格圖片嵌入到噪聲中</p><figure id="0b8f58e8-15a5-4594-9a97-32b994c07020" class="image"><a href="09-Adversarial%20Attack/17.png"><img style="width:432px" src="09-Adversarial%20Attack/17.png"/></a></figure><p id="32694d1f-861e-4b58-82d8-aea113e093b4" class="">
+</p><h2 id="81c39fcc-2c1b-46af-ad7d-bf46a565d418" class="">2.7 <strong>“Backdoor” in Model（在模型訓練時攻擊）</strong></h2><p id="12a5e9be-6e1a-4274-a313-22676c0f44a7" class=""><em><a href="https://arxiv.org/abs/1804.00792">Poison Frogs! Targeted Clean-Label Poisoning Attacks on Neural Networks</a></em> 這篇論文在訓練資料中加一些人看起來沒有問題，但對模型會有問題的資料。訓練完成後，模型就如同開了一個 “backdoor”，在測試階段只對某一張圖片辨識錯誤，而對其他圖片表現正常</p><figure id="e41eccea-bae2-4f0c-8679-563cd32502e7" class="image"><a href="09-Adversarial%20Attack/18.png"><img style="width:432px" src="09-Adversarial%20Attack/18.png"/></a></figure><p id="92b4703e-835d-47e9-9bc6-7856b618b099" class="">
+</p><h1 id="77b92c19-b4b6-4c4b-ae07-b61d3e046fc5" class="">3. Defense</h1><h2 id="ec2fe224-96ae-42c1-a0e4-7326a717d488" class="">3.1 被動防禦</h2><p id="1bdcc8f7-d909-49d6-913d-7a7b53c566b7" class="">在不改變模型的情況下，在模型前面加 filter 以削減 attack signal 的威力。例如把圖片稍微做一點模糊化，就可以達到的防禦效果</p><figure id="f62ebe47-fe19-4bd3-95d9-b88e67f4ffae" class="image"><a href="09-Adversarial%20Attack/19.png"><img style="width:432px" src="09-Adversarial%20Attack/19.png"/></a></figure><p id="182fbc6c-0028-4c4a-a394-049e5333fcc8" class=""><strong>解釋</strong>：</p><p id="d5138af7-3df4-4cdf-94a1-a51d564dabca" class="">attack signal 其實只有某一個方向上的某一種攻擊的訊號才能夠成功，並不是隨便 sample 一個 noise 都可以攻擊成功</p><p id="74a4ed95-2a38-4305-8a20-0f77e0ee2d28" class=""><strong>副作用：</strong></p><p id="36ba3ffb-dc9c-4e56-a23e-efe8403e4d2d" class="">confidence 分數會下降，圖片變模糊機器會比較不確定它看到圖片是甚麼</p><h3 id="eb8746d9-ef88-439a-a138-5dbd17a6e6cc" class="">3.1.1 <strong>其他方法</strong></h3><ul id="bef972da-4fba-4df7-a70d-2eebe2150449" class="bulleted-list"><li style="list-style-type:disc"><strong>對影像壓縮，再解壓縮</strong><p id="f4b9afab-bec5-4e8a-b0d5-e54ff98a80b9" class="">圖片存成 JPEG 檔以後會失真，可以降低被攻擊的圖片的 attack signal 威力</p></li></ul><ul id="d9c921bf-81ae-4e3a-a1d6-bd6b14158549" class="bulleted-list"><li style="list-style-type:disc"><strong>基於 generator 的方法</strong><p id="d91ee028-9651-4b40-bc32-d81fab693796" class="">把輸入的圖片用 generator 重新產生。圖片上加的微小雜訊對 generator 而言從來沒有看過，也就無法產生這些非常小的雜訊，利用 generator 重新產生圖片可以達到防禦的效果</p></li></ul><figure id="9eaa9ed4-45b7-4bd4-97fd-0e94581e5634" class="image"><a href="09-Adversarial%20Attack/20.png"><img style="width:480px" src="09-Adversarial%20Attack/20.png"/></a></figure><h3 id="81b2b3d8-fa08-41a8-b019-56b1ac0e2498" class="">3.1.2 弱點</h3><p id="3dbef2b6-1236-45de-bd5d-fe67b7d60dac" class="">可以把模糊化想成是 network 的第一層，攻擊者只需多加這一層放到攻擊的過程中，就可以產生一個 attacked signal 可以躲過模糊化這種防禦方式，所以<strong>一旦被知道採用哪種防禦方法，可能就沒有防禦的效果了</strong></p><h3 id="de5c1e0f-d3c1-40b2-be2a-510c8c4dd843" class="">3.1.3 隨機（Randomization）</h3><p id="c8063708-9be0-41e0-9181-33ffae6665cf" class="">使用隨機的方式選擇防禦的方法，改變的方式不能被別人知道</p><p id="b845714f-0bf5-4e03-a345-f50b9717d208" class=""><strong>問題：</strong></p><p id="9d435bb9-4a70-4c79-9854-f7af824248bf" class="">如果有人知道本身隨機的 distribution ，還是有可能攻破這種防禦的方式</p><h2 id="55684af3-050d-46cd-b9cb-046cbbe74645" class="">3.2 主動防禦</h2><p id="90b77946-a9eb-4aa1-9933-98b13d59d270" class="">Adversarial Training（Data Augmentation）會在每一輪訓練中，對每張訓練圖片找到被攻擊的圖片 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover accent="true"><mi>x</mi><mo>~</mo></mover></mrow><annotation encoding="application/x-tex">\tilde{x}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6679em;"></span><span class="mord accent"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.6679em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord mathnormal">x</span></span><span style="top:-3.35em;"><span class="pstrut" style="height:3em;"></span><span class="accent-body" style="left:-0.2222em;"><span class="mord">~</span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span>，對這些圖片標上正確的 label <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover accent="true"><mi>y</mi><mo>~</mo></mover></mrow><annotation encoding="application/x-tex">\tilde{y}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8623em;vertical-align:-0.1944em;"></span><span class="mord accent"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.6679em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span></span><span style="top:-3.35em;"><span class="pstrut" style="height:3em;"></span><span class="accent-body" style="left:-0.1944em;"><span class="mord">~</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.1944em;"><span></span></span></span></span></span></span></span></span></span><span>﻿</span></span> 後一起放入模型進行訓練，讓模型知道被攻擊過的圖片的真正 label</p><figure id="a642388d-f0cd-42db-b089-8b8c7a9a54fe" class="image"><a href="09-Adversarial%20Attack/21.png"><img style="width:480px" src="09-Adversarial%20Attack/21.png"/></a></figure><p id="c09cbd7a-64a1-4422-b789-4e07a00d02db" class="">此方法也可以<strong>增加模型的 robostic 能力</strong>，也可以利用 adversarial training 的方法強化模型，避免 overfitting 的狀況</p><p id="d73c0d2a-aa62-4da7-bb72-667afddfd2cc" class=""><strong>問題：</strong></p><ul id="1c4edeb0-61af-4101-af45-c9e765941d7f" class="bulleted-list"><li style="list-style-type:disc">不一定能擋得住所有攻擊方式，在訓練時沒有見過的攻擊方式可能沒有辦法抵擋</li></ul><ul id="f73566e7-4f13-4620-a768-d7fa1715eaaf" class="bulleted-list"><li style="list-style-type:disc">需要大量運算資源，進行圖片攻擊<ul id="7ed9956c-2627-4d2f-ac7a-8895bd6f3d29" class="bulleted-list"><li style="list-style-type:circle"><em><a href="https://arxiv.org/abs/1904.12843">Adversarial Training For Free</a></em> 這篇論文介紹了一個方法可以有 adversarial training 的效果，但不需大量的運算資源</li></ul><p id="086788ea-8d83-41c1-a54c-0cdfb375636b" class="">
+</p></li></ul></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>

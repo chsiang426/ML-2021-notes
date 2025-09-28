@@ -1,0 +1,771 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>10-Explainable ML</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 10px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.collection-content td {
+	white-space: pre-wrap;
+	word-break: break-word;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+	margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.callout img.notion-static-icon {
+	width: 1em;
+	height: 1em;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+blockquote.quote-large {
+	font-size: 1.25em;
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray {
+	color: rgba(128, 125, 120, 1);
+	fill: rgba(128, 125, 120, 1);
+}
+.highlight-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.highlight-orange {
+	color: rgba(204, 121, 47, 1);
+	fill: rgba(204, 121, 47, 1);
+}
+.highlight-yellow {
+	color: rgba(195, 148, 67, 1);
+	fill: rgba(195, 148, 67, 1);
+}
+.highlight-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.highlight-blue {
+	color: rgba(63, 126, 190, 1);
+	fill: rgba(63, 126, 190, 1);
+}
+.highlight-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.highlight-pink {
+	color: rgba(179, 84, 136, 1);
+	fill: rgba(179, 84, 136, 1);
+}
+.highlight-red {
+	color: rgba(201, 85, 73, 1);
+	fill: rgba(201, 85, 73, 1);
+}
+.highlight-default_background {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray_background {
+	background: rgba(42, 28, 0, 0.07);
+}
+.highlight-brown_background {
+	background: rgba(139, 46, 0, 0.086);
+}
+.highlight-orange_background {
+	background: rgba(224, 101, 1, 0.129);
+}
+.highlight-yellow_background {
+	background: rgba(211, 168, 0, 0.137);
+}
+.highlight-teal_background {
+	background: rgba(0, 100, 45, 0.09);
+}
+.highlight-blue_background {
+	background: rgba(0, 111, 200, 0.09);
+}
+.highlight-purple_background {
+	background: rgba(102, 0, 178, 0.078);
+}
+.highlight-pink_background {
+	background: rgba(197, 0, 93, 0.086);
+}
+.highlight-red_background {
+	background: rgba(223, 22, 0, 0.094);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(128, 125, 120, 1);
+	fill: rgba(128, 125, 120, 1);
+}
+.block-color-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.block-color-orange {
+	color: rgba(204, 121, 47, 1);
+	fill: rgba(204, 121, 47, 1);
+}
+.block-color-yellow {
+	color: rgba(195, 148, 67, 1);
+	fill: rgba(195, 148, 67, 1);
+}
+.block-color-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.block-color-blue {
+	color: rgba(63, 126, 190, 1);
+	fill: rgba(63, 126, 190, 1);
+}
+.block-color-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.block-color-pink {
+	color: rgba(179, 84, 136, 1);
+	fill: rgba(179, 84, 136, 1);
+}
+.block-color-red {
+	color: rgba(201, 85, 73, 1);
+	fill: rgba(201, 85, 73, 1);
+}
+.block-color-default_background {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray_background {
+	background: rgba(240, 239, 237, 1);
+}
+.block-color-brown_background {
+	background: rgba(245, 237, 233, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 235, 222, 1);
+}
+.block-color-yellow_background {
+	background: rgba(249, 243, 220, 1);
+}
+.block-color-teal_background {
+	background: rgba(232, 241, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(232, 242, 250, 1);
+}
+.block-color-purple_background {
+	background: rgba(243, 235, 249, 1);
+}
+.block-color-pink_background {
+	background: rgba(250, 233, 241, 1);
+}
+.block-color-red_background {
+	background: rgba(252, 233, 231, 1);
+}
+.select-value-color-default { background-color: rgba(42, 28, 0, 0.07); }
+.select-value-color-gray { background-color: rgba(28, 19, 1, 0.11); }
+.select-value-color-brown { background-color: rgba(127, 51, 0, 0.156); }
+.select-value-color-orange { background-color: rgba(196, 88, 0, 0.203); }
+.select-value-color-yellow { background-color: rgba(209, 156, 0, 0.282); }
+.select-value-color-green { background-color: rgba(0, 96, 38, 0.156); }
+.select-value-color-blue { background-color: rgba(0, 99, 174, 0.172); }
+.select-value-color-purple { background-color: rgba(92, 0, 163, 0.141); }
+.select-value-color-pink { background-color: rgba(183, 0, 78, 0.152); }
+.select-value-color-red { background-color: rgba(206, 24, 0, 0.164); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+
+
+/* Back-to-index button */
+.floating-button {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.4em;
+	padding: 0.55em 1.15em;
+	border-radius: 999px;
+	background: rgba(255, 255, 255, 0.92);
+	color: #1f2933;
+	font-size: 0.9rem;
+	font-weight: 500;
+	text-decoration: none;
+	border: 1px solid rgba(15, 23, 42, 0.12);
+	box-shadow: 0 8px 24px rgba(15, 23, 42, 0.12);
+	backdrop-filter: blur(12px);
+	transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+.floating-button:hover {
+	background: #1f2933;
+	color: #ffffff;
+	box-shadow: 0 12px 32px rgba(15, 23, 42, 0.18);
+	transform: translateY(-1px);
+}
+.floating-button:active {
+	transform: translateY(0);
+	box-shadow: 0 6px 18px rgba(15, 23, 42, 0.14);
+}
+.back-to-index {
+	position: fixed;
+	top: 20px;
+	left: 20px;
+	z-index: 1000;
+}
+.nav-controls {
+	position: fixed;
+	top: 20px;
+	right: 20px;
+	z-index: 1000;
+	display: inline-flex;
+	gap: 0.6em;
+	flex-wrap: wrap;
+	justify-content: flex-end;
+}
+@media (max-width: 600px) {
+	.back-to-index {
+		top: 16px;
+		left: 16px;
+	}
+	.nav-controls {
+		top: 16px;
+		right: 16px;
+		gap: 0.5em;
+	}
+	.floating-button {
+		padding: 0.45em 1em;
+		font-size: 0.85rem;
+	}
+}
+@media print {
+	.back-to-index,
+	.nav-controls {
+		display: none;
+	}
+}
+
+</style></head><body>
+<a class="floating-button back-to-index" href="../index.html">回到目錄</a>
+<div class="nav-controls">
+	<a class="floating-button nav-button" href="../09-Adversarial Attack/09-Adversarial Attack.html" title="上一節：09-Adversarial Attack">上一節</a>
+	<a class="floating-button nav-button" href="../11-Domain Adaptation/11-Domain Adaptation.html" title="下一節：11-Domain Adaptation">下一節</a>
+</div>
+<article id="d9b555b0-dddd-4ac5-be62-dacc0e42c39a" class="page sans"><header><div class="page-header-icon undefined"><img class="icon notion-static-icon" src="https://www.notion.so/icons/document_blue.svg"/></div><h1 class="page-title">10-Explainable ML</h1><p class="page-description"></p><table class="properties"><tbody></tbody></table></header><div class="page-body"><nav id="d35c2f36-4898-48d6-8a3d-04c7af334f49" class="block-color-gray table_of_contents"><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#f19ede60-ac49-4838-b21c-87bc52db0636">1. 什麼是 Explainable ML？</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#a6e3324a-e3d3-463f-a92c-3a468bf64c97">2. Interpretable vs Powerful</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#bb1da24a-ed76-4ef5-b99f-37d65fa05754">2.1 <strong>Interpretable &amp; Explainable</strong></a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#9f031348-1bfd-4c22-9838-5a3bc79edcfd">2.2 Decision Tree</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#e7ad4eb3-3b0a-47ff-9f47-19937bb296d3">3. Goal of Explainable ML</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#7e025f94-952c-4419-8054-67ba4d23902b">4. Local Explanation &amp; Global Explanation</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#335d040d-10d4-4492-88d1-4781b9cf5fa9">4.1 Local Explanation</a></div><div class="table_of_contents-item table_of_contents-indent-2"><a class="table_of_contents-link" href="#bf0a224e-ca13-4f13-a1f5-6c6b4398fa4c">4.1.1 <strong>Which component is critical？</strong></a></div><div class="table_of_contents-item table_of_contents-indent-2"><a class="table_of_contents-link" href="#5fbf2af0-0e6f-4fe2-b954-027d78124b53">4.1.2 <strong>Saliency Map：計算梯度</strong></a></div><div class="table_of_contents-item table_of_contents-indent-2"><a class="table_of_contents-link" href="#6bbe9a19-8d6e-47dc-a804-28fad3d251d8">4.1.3 Saliency Map 的局限性：Gradient Saturation</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#1e494ad2-c28e-42e6-9173-d9de71992e43">4.2 <strong>How a network processes the input data？</strong></a></div><div class="table_of_contents-item table_of_contents-indent-2"><a class="table_of_contents-link" href="#8a46ac9c-74f9-41d1-b5d9-62c5bd922fe0">4.2.1 <strong>可視化分析</strong></a></div><div class="table_of_contents-item table_of_contents-indent-2"><a class="table_of_contents-link" href="#b8654e98-b1f9-41af-8491-c32ed0274658">4.2.2 Probing</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#4e53b32b-7020-4540-ab5d-9583704998b2">4.3 Global Explanation</a></div><div class="table_of_contents-item table_of_contents-indent-2"><a class="table_of_contents-link" href="#0cbe047e-33ed-4058-ab0e-8b5410eda355">4.3.1 CNN Filter</a></div><div class="table_of_contents-item table_of_contents-indent-2"><a class="table_of_contents-link" href="#528a93b1-9295-49e9-a4a7-9a7e7fd736a4">4.3.2 <strong>Filter visualization</strong></a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#a4462a35-3f03-47de-81e1-bc83f9a0e500">5. Outlook</a></div></nav><h1 id="f19ede60-ac49-4838-b21c-87bc52db0636" class="">1. 什麼是 Explainable ML？</h1><p id="f8dbf563-094d-435b-8df8-f61039da4b14" class="">要機器給我們它得到答案的<strong>理由</strong></p><ul id="c3019ced-53ea-43f4-8061-2bc9880939c7" class="bulleted-list"><li style="list-style-type:disc">銀行判斷要不要貸款給某一個客戶，但是根據法律規定，銀行作用機器學習模型來做自動的判斷，它必須要給出一個理由</li></ul><ul id="b7811d14-583f-4577-8009-0fd2f7643829" class="bulleted-list"><li style="list-style-type:disc">機器學習未來也會被用在醫療診斷上，醫療診斷人命關天的事情，也必須給出診斷的理由</li></ul><ul id="dae10052-2234-4034-b0e5-33771732f321" class="bulleted-list"><li style="list-style-type:disc">機器學習模型幫助法官判案，幫助法官自動判案一個犯人能不能夠被假釋</li></ul><ul id="8e019eb7-4f07-40e9-b19f-e323fc6636a4" class="bulleted-list"><li style="list-style-type:disc">自駕車突然急剎時，需要了解它急剎的理由</li></ul><p id="d2ee2eef-14c2-40b4-9278-193e49672871" class=""><strong>藉著機器解釋的結果，再去修正模型</strong></p><p id="93b64aa7-31d2-4054-9041-bb577de0f27f" class="">
+</p><h1 id="a6e3324a-e3d3-463f-a92c-3a468bf64c97" class="">2. Interpretable vs Powerful</h1><p id="e092e9a8-0296-4abd-a97e-ad5458deac72" class="">不使用深度學習的模型，改<strong>採用其他比較容易解釋的模型</strong>，比如採用 linear model，它的解釋的能力是比較強的。根據一個 linear model 中每一個 feature 的 weight，知道 linear model 在做什麽事</p><p id="2f30a2db-eea6-43dc-b9c0-d0abd3fb2152" class=""><strong>缺點：</strong></p><p id="62cde645-b146-4275-b03a-875294cfd582" class="">雖然比較容易解釋，但 linear model 功能不強大，有很多限制</p><h2 id="bb1da24a-ed76-4ef5-b99f-37d65fa05754" class="">2.1 <strong>Interpretable &amp; Explainable</strong></h2><ul id="65991f47-afba-4bb4-a83b-6a6e319013ec" class="bulleted-list"><li style="list-style-type:disc"><strong>Interpretable：</strong>指模型<strong>不是黑箱，</strong>我們可以容易知道它的內容</li></ul><ul id="e607104e-fde6-45cd-942f-20cfe8bf63de" class="bulleted-list"><li style="list-style-type:disc"><strong>Explainable：</strong>指模型<strong>是黑箱</strong>，所以必須想辦法賦予它解釋的能力</li></ul><h2 id="9f031348-1bfd-4c22-9838-5a3bc79edcfd" class="">2.2 Decision Tree</h2><p id="5c15181c-edd0-4e71-9739-bc9730d57f35" class="">decision tree 相較於 linear 的 model，它是<strong>更強大的模型</strong>，且相較於 deep learning，它<strong>非常地 interpretable</strong></p><p id="179ab43d-4217-477e-aa35-e2564bc16c74" class=""><strong>問題：</strong></p><p id="9f393779-b18e-424c-a003-2a27c0ffbc1e" class="">光 decision tree 的模型可能不夠強大，一般都是使用數棵 decision tree，也就是 random forest，如此就難以看出其到底如何作出判斷</p><p id="6c7bb441-74b0-4d29-be51-3c1201062b3e" class="">
+</p><h1 id="e7ad4eb3-3b0a-47ff-9f47-19937bb296d3" class="">3. Goal of Explainable ML</h1><p id="e2f73e30-db10-4e7f-af23-c07c5e80c5da" class="">好的 explanation 就是人能接受的 explanation，人就是需要一個理由</p><figure id="32dfe254-a615-4698-bb70-7d07f0dea5e3" class="image"><a href="10-Explainable%20ML/0.png"><img style="width:480px" src="10-Explainable%20ML/0.png"/></a></figure><h1 id="7e025f94-952c-4419-8054-67ba4d23902b" class="">4. Local Explanation &amp; Global Explanation</h1><figure id="52e535aa-dabc-4556-9db0-fc6f77d763b0" class="image"><a href="10-Explainable%20ML/1.png"><img style="width:480px" src="10-Explainable%20ML/1.png"/></a></figure><ul id="74921f9b-d3c8-4631-8d5d-47543778f4eb" class="bulleted-list"><li style="list-style-type:disc"><strong><a href="https://www.notion.so/10-Explainable-ML-d9b555b0dddd4ac5be62dacc0e42c39a?pvs=21">Local Explanation</a></strong><strong>：</strong>根據某一個輸入樣本進行回答<p id="50e1b935-62dc-4287-a35f-55bbb22a051e" class="">給模型一張圖片，模型判斷是一只貓，問模型為什麼覺得這張圖片是一只貓</p></li></ul><ul id="d58ebb29-092b-4181-8499-0c057bc605b5" class="bulleted-list"><li style="list-style-type:disc"><strong><a href="https://www.notion.so/10-Explainable-ML-d9b555b0dddd4ac5be62dacc0e42c39a?pvs=21">Glabal Explanation</a></strong><strong>：</strong>根據模型參數本身分析原因<p id="031b3b0b-09a8-4d3b-9bfe-6e8441a1f123" class="">並未給模型任何特定圖片，對具有一堆參數的模型而言，什麼樣的東西叫作一只貓</p></li></ul><h2 id="335d040d-10d4-4492-88d1-4781b9cf5fa9" class="">4.1 Local Explanation</h2><h3 id="bf0a224e-ca13-4f13-a1f5-6c6b4398fa4c" class="">4.1.1 <strong>Which component is critical？</strong></h3><p id="48e302bf-b684-4fdc-a767-e78a4567d3cc" class="">component 可以是圖片的像素、文章的詞匯等等，對每一個 component 做變化、或刪除，如果 network 的輸出有了巨大的變化，就表示該 component 很重要</p><figure id="c4f1a4db-d852-4c30-8dd6-585f8a7c1223" class="image"><a href="10-Explainable%20ML/2.png"><img style="width:432px" src="10-Explainable%20ML/2.png"/></a></figure><p id="ca26a9e9-7986-422f-97ab-c36fd293b420" class="">在圖片<strong>不同的位置放上灰色的方塊，</strong>當這個方塊放在不同的地方時，network 會輸出不同的結果</p><figure id="610b917b-ea33-4f1c-9610-2dd46720f112" class="image"><a href="10-Explainable%20ML/3.png"><img style="width:432px" src="10-Explainable%20ML/3.png"/></a></figure><p id="61de2254-9e29-47c9-a855-7b6a9868617c" class="">灰色方塊放在紅色區域對輸出結果影響較小，輸出原類別的機率高；但放在藍色區域對輸出結果影響較大，輸出原類別的機率低</p><h3 id="5fbf2af0-0e6f-4fe2-b954-027d78124b53" class="">4.1.2 <strong>Saliency Map：計算梯度</strong></h3><p id="2da0deaa-9b67-4a3d-8c8c-b0931774a0c7" class="">每一個 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi></mrow><annotation encoding="application/x-tex">x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span></span></span></span></span><span>﻿</span></span> 代表一個 pixel，<style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>e</mi></mrow><annotation encoding="application/x-tex">e</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">e</span></span></span></span></span><span>﻿</span></span> 是模型輸出的結果跟正確答案的 cross entropy。要考察某一個像素的重要性，可將該像素改變 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">Δ</mi><mi>x</mi></mrow><annotation encoding="application/x-tex">\Delta{x}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord">Δ</span><span class="mord"><span class="mord mathnormal">x</span></span></span></span></span></span><span>﻿</span></span>，此時 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>e</mi></mrow><annotation encoding="application/x-tex">e</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">e</span></span></span></span></span><span>﻿</span></span> 也會發生改變 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">Δ</mi><mi>e</mi></mrow><annotation encoding="application/x-tex">\Delta{e}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord">Δ</span><span class="mord"><span class="mord mathnormal">e</span></span></span></span></span></span><span>﻿</span></span></p><figure id="7b092250-baef-46cf-8411-d2008ad7f20e" class="image"><a href="10-Explainable%20ML/4.png"><img style="width:528px" src="10-Explainable%20ML/4.png"/></a></figure><p id="5108d2b1-6bd0-4045-b5a9-8ccf818e5bb6" class=""><strong>比值 </strong><style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mfrac><mrow><mi mathvariant="normal">Δ</mi><mi>e</mi></mrow><mrow><mi mathvariant="normal">Δ</mi><mi>x</mi></mrow></mfrac></mrow><annotation encoding="application/x-tex">\frac{\Delta{e}}{\Delta{x}}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.2173em;vertical-align:-0.345em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8723em;"><span style="top:-2.655em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">Δ</span><span class="mord mtight"><span class="mord mathnormal mtight">x</span></span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.394em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">Δ</span><span class="mord mtight"><span class="mord mathnormal mtight">e</span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.345em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></span><span>﻿</span></span><strong> 表示該像素發生改變時，對圖片識別結果的影響，也就是該像素的重要性</strong></p><p id="b2be4c88-5a05-489b-8df0-e20f9cb6602d" class="">對每一像素 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi></mrow><annotation encoding="application/x-tex">x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span></span></span></span></span><span>﻿</span></span> 求偏微分得到的比值都算出來得到 <strong>Saliency Map</strong></p><p id="dbd67b4a-8b37-4f45-980c-94489ec41b3f" class=""><strong>舉例：</strong></p><p id="5758141a-fd37-4379-985f-0dc77d72a5b7" class="">對寶可夢和數碼寶貝圖片繪制 Saliency Map，可以看出關注點都是集中在背景，並非物體本身，解釋了 explainable ML 是一個重要技術</p><div id="b4cec60d-c199-412e-b255-3828c89fa10a" class="column-list"><div id="e2b8326d-61ea-4c21-b168-748ffac8a025" style="width:50%" class="column"><figure id="ef9fa652-540c-431f-95d7-d22943a7e55b" class="image"><a href="10-Explainable%20ML/5.png"><img style="width:480px" src="10-Explainable%20ML/5.png"/></a></figure></div><div id="a186718a-13e0-42de-8ff8-d7e69910e266" style="width:50%" class="column"><figure id="63c05a32-8381-4b97-bb2c-e1ee76f7dce7" class="image"><a href="10-Explainable%20ML/6.png"><img style="width:480px" src="10-Explainable%20ML/6.png"/></a></figure></div></div><p id="8761bbbd-9d45-4fe0-9e06-71359d4cd2d3" class=""><strong>改進 Saliency Map：</strong><strong><a href="https://arxiv.org/abs/1706.03825">SmoothGrad</a></strong></p><p id="afda3a92-2179-4855-ac59-39708fe70667" class="">在某一圖片上面加上各種不同的雜訊，得到各種不同的圖片後，對每一張圖片計算 Saliency Map，平均起來得到 SmoothGrad 的結果，如結果往往能夠更加集中在被偵測的物體上</p><figure id="fbbac0ab-b86b-4086-9a4c-055aa79ecb68" class="image"><a href="10-Explainable%20ML/7.png"><img style="width:480px" src="10-Explainable%20ML/7.png"/></a></figure><h3 id="6bbe9a19-8d6e-47dc-a804-28fad3d251d8" class="">4.1.3 Saliency Map 的局限性：Gradient Saturation</h3><p id="252a089b-841b-4d3b-b145-bbf0ea412d28" class="">當大象鼻子的長度長到一個程度後，就算更長也不會變得更像大象，此時的<strong>偏微分為 0</strong></p><figure id="4d2e07dd-ca79-4649-b173-c6286668970a" class="image"><a href="10-Explainable%20ML/8.png"><img style="width:480px" src="10-Explainable%20ML/8.png"/></a></figure><p id="9626c324-fb8b-4b4f-8f2e-ea2b79e8550e" class=""><strong>所以光看 gradient 得到的 Saliency Map 就會有錯誤的結論</strong>：鼻子的長度，對是不是大象這件事情是不重要的</p><p id="4bcc0dbe-8b19-4b64-9aea-b5647f831ea7" class=""><strong>解決：</strong><a href="https://arxiv.org/abs/1611.02639">Integrated Gradient</a></p><h2 id="1e494ad2-c28e-42e6-9173-d9de71992e43" class="">4.2 <strong>How a network processes the input data？</strong></h2><h3 id="8a46ac9c-74f9-41d1-b5d9-62c5bd922fe0" class="">4.2.1 <strong>可視化分析</strong></h3><p id="2d323fab-4597-496b-b4b2-5755c48150c8" class=""><strong>Neural Network：</strong></p><figure id="a1c71ffd-80ea-4f1e-a7bb-ca395ce8fc1b" class="image"><a href="10-Explainable%20ML/9.png"><img style="width:480px" src="10-Explainable%20ML/9.png"/></a></figure><figure id="208d7332-5f1d-4c96-925c-b0653bf35cf6" class="image"><a href="10-Explainable%20ML/10.png"><img style="width:480px" src="10-Explainable%20ML/10.png"/></a></figure><p id="d13d8fd7-8a17-4c33-a65e-3224e970ba4c" class="">對於語音識別問題，取出模型 hidden layer 中的向量作<strong>降維可視化</strong>。每種顏色代表一個 speaker，可以看到每一個條帶有不同顏色的向量，說明不同 speaker 說類似的話會<strong>被聚攏到空間中的接近位置</strong></p><p id="d03b4d92-4be0-481d-8424-403ccc9632e5" class=""><strong>Attention：</strong></p><figure id="13d64390-b6c2-46ad-b978-b65217e82cd6" class="image"><a href="10-Explainable%20ML/11.png"><img style="width:480px" src="10-Explainable%20ML/11.png"/></a></figure><h3 id="b8654e98-b1f9-41af-8491-c32ed0274658" class="">4.2.2 Probing</h3><p id="3ce7d295-0c1b-47f0-b0fd-625e4152acec" class="">探測某一層 layer 是否學到了東西</p><figure id="23d00688-349a-43e6-b66f-69bf2972cfdf" class="image"><a href="10-Explainable%20ML/12.png"><img style="width:432px" src="10-Explainable%20ML/12.png"/></a></figure><p id="e255ce71-a046-48f1-b5fc-49be00bc1573" class=""><strong>舉例：</strong></p><ol type="1" id="f547b96e-9730-45e1-b503-de86275c319d" class="numbered-list" start="1"><li>對 BERT 進行探測：<p id="6e373027-e8ff-4bda-bfa5-d9a74b15e3d8" class="">訓練 <strong>classifier</strong>，利用模型中的某些層的輸出向量進行一些分類任務，如 POS、NER，正確率高，說明 embedding 有相關信息，反之則無</p><p id="5029c100-7a56-4463-93c5-c0190ba3e7c6" class=""><strong>注意：</strong></p><p id="594ea242-403a-49b6-ba77-86cddae1610b" class="">控制 classifier 的強度。classifier 沒有訓練好，會有可能得出 embedding 沒有相關信息的錯誤結論</p></li></ol><ol type="1" id="3edf2620-d98f-4282-9d3f-f1b3456803e4" class="numbered-list" start="2"><li>對於語音轉文字模型進行探測：<p id="47039f63-4ed6-445e-af26-724d8bdcc9f7" class=""><strong>使用 Text-to-Speech 模型</strong>，對某一 layer 的向量進行 <strong>reconstruction<br/></strong>假設這個 network 做的事是把語者的資訊去掉， layer 2 的輸出沒有任何語者的資訊，這個 TTS 的模型無論怎麽努力，都無法還原語者的特徵，只留下語音的“內容”</p></li></ol><figure id="32652ee5-91da-49b0-9b93-64d42c4557f0" class="image"><a href="10-Explainable%20ML/13.png"><img style="width:528px" src="10-Explainable%20ML/13.png"/></a></figure><h2 id="4e53b32b-7020-4540-ab5d-9583704998b2" class="">4.3 Global Explanation</h2><h3 id="0cbe047e-33ed-4058-ab0e-8b5410eda355" class="">4.3.1 CNN Filter</h3><ul id="82e5d2eb-449d-412e-9515-f8c22e9677de" class="bulleted-list"><li style="list-style-type:disc"><strong>Filter activation：</strong>挑幾張圖片出來，看看圖片中哪些位置會 activate 該 filter</li></ul><ul id="973fccac-c6d9-440a-be08-158eda0a20cd" class="bulleted-list"><li style="list-style-type:disc"><strong><a href="https://www.notion.so/10-Explainable-ML-d9b555b0dddd4ac5be62dacc0e42c39a?pvs=21">Filter visualization</a></strong><strong>：</strong>怎樣的 image 可以最大程度地 activate 該 filter</li></ul><h3 id="528a93b1-9295-49e9-a4a7-9a7e7fd736a4" class="">4.3.2 <strong>Filter visualization</strong></h3><p id="1c81d67b-e182-45ae-9a57-55380b6dad5b" class="">以矩陣 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>X</mi></mrow><annotation encoding="application/x-tex">X</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.07847em;">X</span></span></span></span></span><span>﻿</span></span> 代表一張圖片，將其當作要學習的參數，解 optimization problem 找出 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>X</mi><mo>∗</mo></msup></mrow><annotation encoding="application/x-tex">X^*</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6887em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.07847em;">X</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.6887em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mbin mtight">∗</span></span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span></p><figure id="0e011381-d8db-46e7-a295-aa8e898d8c76" class="image"><a href="10-Explainable%20ML/14.png"><img style="width:432px" src="10-Explainable%20ML/14.png"/></a></figure><p id="6c25a7b1-b4f6-452f-982d-7aeaa00dadda" class=""><strong>方法：</strong></p><p id="955f0fa1-9c9b-48a3-8918-49f1dabd841e" class="">使用 <strong>gradient ascent</strong></p><p id="c0e82343-58ba-4ed9-98c7-646b6c73c79a" class="">要模型針對每一個 filter 找出一個 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>X</mi><mo>∗</mo></msup></mrow><annotation encoding="application/x-tex">X^*</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6887em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.07847em;">X</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.6887em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mbin mtight">∗</span></span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span>，將它輸入進已經 train 好的 CNN convolutional layer，可以使針對該 filter 輸出的 feature map 中的值越大，說明此 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>X</mi><mo>∗</mo></msup></mrow><annotation encoding="application/x-tex">X^*</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6887em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.07847em;">X</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.6887em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mbin mtight">∗</span></span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span><strong> 滿足該 filter 想要偵測的 pattern 的部分越多</strong>，由此<strong>可以將此 filter 所偵測的 patterns 可視化</strong></p><p id="f92f7306-8a33-4c2a-a6ce-578ba8cf8bb4" class=""><strong>舉例：</strong></p><p id="b7c7ae9a-042c-425a-846a-d64b0a7fb8f3" class="">使用 MNIST 手寫辨識資料集。考慮 filter，找出針對每一個 filter 的 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>X</mi><mo>∗</mo></msup></mrow><annotation encoding="application/x-tex">X^*</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6887em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.07847em;">X</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.6887em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mbin mtight">∗</span></span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span>，並將其可視化</p><figure id="76d781b9-6909-4d70-9670-8e18e392a284" class="image"><a href="10-Explainable%20ML/15.png"><img style="width:432px" src="10-Explainable%20ML/15.png"/></a></figure><p id="828f0263-de52-4f0e-b5d7-0f4618276046" class="">下圖不考慮 filter，而是考慮 image classifier 的最終輸出，期望找出一張圖片 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>X</mi></mrow><annotation encoding="application/x-tex">X</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.07847em;">X</span></span></span></span></span><span>﻿</span></span> 輸入進模型後，產生的最終輸出可以讓某一類別的分數越高越好</p><p id="b5f5ed0a-659e-4089-ad43-4cb9a78b565f" class="">實驗結果卻是一堆雜訊，沒有辦法看到確切的數字。間接說明了 adversial attack 中，只需要一些雜訊就能攻擊成功讓模型誤判</p><figure id="91a39ed8-cf90-49d3-b0d3-e018b66adc62" class="image"><a href="10-Explainable%20ML/16.png"><img style="width:480px" src="10-Explainable%20ML/16.png"/></a></figure><p id="1185bb16-3a4c-4e7c-8b8a-0d86631912f1" class="">針對上述方法的 optimization problem 加上一個<strong>限制 </strong><style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>R</mi><mo stretchy="false">(</mo><mi>X</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">R(X)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.00773em;">R</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.07847em;">X</span><span class="mclose">)</span></span></span></span></span><span>﻿</span></span>，不只希望輸出的某一類別分數 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>y</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">y_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.0359em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span> 要最高，還要考慮 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>X</mi></mrow><annotation encoding="application/x-tex">X</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.07847em;">X</span></span></span></span></span><span>﻿</span></span> 多像一個數字，產生的結果可能會好一點</p><figure id="44ab5786-51ad-4469-9abf-39b94fac9c0d" class="image"><a href="10-Explainable%20ML/17.png"><img style="width:480px" src="10-Explainable%20ML/17.png"/></a></figure><p id="0852aade-6f28-44de-be34-24066e5ffd2f" class="">或者利用 <strong>generator 加上限制</strong>，找出 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>z</mi><mo>∗</mo></msup></mrow><annotation encoding="application/x-tex">z^*</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6887em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.04398em;">z</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.6887em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mbin mtight">∗</span></span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span> 可以使 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>y</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">y_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.0359em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span> 最大化，<style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>X</mi><mo>∗</mo></msup><mo>=</mo><mi>G</mi><mo stretchy="false">(</mo><msup><mi>z</mi><mo>∗</mo></msup><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">X^* = G(z^*)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6887em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.07847em;">X</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.6887em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mbin mtight">∗</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">G</span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.04398em;">z</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.6887em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mbin mtight">∗</span></span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span></span><span>﻿</span></span></p><figure id="61df19e0-f169-44b7-9505-01cfea1a08af" class="image"><a href="10-Explainable%20ML/18.png"><img style="width:480px" src="10-Explainable%20ML/18.png"/></a></figure><p id="5128b928-6528-41a8-8857-ccabc9b26932" class="">將 image generator 跟 Image classifier 接在一起，image generator 的輸入 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>z</mi></mrow><annotation encoding="application/x-tex">z</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.04398em;">z</span></span></span></span></span><span>﻿</span></span> 是從高斯分布採樣得來，輸出是圖片 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>X</mi></mrow><annotation encoding="application/x-tex">X</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.07847em;">X</span></span></span></span></span><span>﻿</span></span>，image classifier 以 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>X</mi></mrow><annotation encoding="application/x-tex">X</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.07847em;">X</span></span></span></span></span><span>﻿</span></span> 作為輸入，然後輸出分類的結果 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi></mrow><annotation encoding="application/x-tex">y</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span></span></span></span></span><span>﻿</span></span>，期望 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi></mrow><annotation encoding="application/x-tex">y</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span></span></span></span></span><span>﻿</span></span> 對應的某一個類別的分數越大越好</p><h1 id="a4462a35-3f03-47de-81e1-bc83f9a0e500" class="">5. Outlook</h1><p id="a3759cb7-1fc3-4b16-a449-95b47d7d4587" class="">用一個簡單的可解釋模型模仿一個複雜的不可解釋模型</p><figure id="3a4e54d8-d9a8-484a-9c37-fd0e94f9aa0f" class="image"><a href="10-Explainable%20ML/19.png"><img style="width:480px" src="10-Explainable%20ML/19.png"/></a></figure><p id="d1cd3794-9a28-4c8e-9bf8-7001bccde481" class="">用線性模型來模仿一個黑盒子模型。由於 linear model 能力有限，不可能模仿整個 neural network 的行為，但可以讓它模仿 neural network 一小個區域的行為，以此解讀那一小個區域裡面發生的事情</p><p id="e2703bb1-732c-4b81-ab4b-9e913b0e4c3b" class=""><strong>方法：</strong></p><p id="abed9cb8-9eae-4e71-9185-2367af3d3def" class=""><em>Local Interpretable Model-Agnostic Explanations（LIME）<br/></em><a href="https://youtu.be/K1mWgthGS-A">https://youtu.be/K1mWgthGS-A<br/></a><a href="https://youtu.be/OjqIVSwly4k">https://youtu.be/OjqIVSwly4k</a></p></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>

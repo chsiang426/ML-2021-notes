@@ -1,0 +1,774 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>05-Transformer</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 10px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.collection-content td {
+	white-space: pre-wrap;
+	word-break: break-word;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+	margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.callout img.notion-static-icon {
+	width: 1em;
+	height: 1em;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+blockquote.quote-large {
+	font-size: 1.25em;
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray {
+	color: rgba(128, 125, 120, 1);
+	fill: rgba(128, 125, 120, 1);
+}
+.highlight-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.highlight-orange {
+	color: rgba(204, 121, 47, 1);
+	fill: rgba(204, 121, 47, 1);
+}
+.highlight-yellow {
+	color: rgba(195, 148, 67, 1);
+	fill: rgba(195, 148, 67, 1);
+}
+.highlight-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.highlight-blue {
+	color: rgba(63, 126, 190, 1);
+	fill: rgba(63, 126, 190, 1);
+}
+.highlight-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.highlight-pink {
+	color: rgba(179, 84, 136, 1);
+	fill: rgba(179, 84, 136, 1);
+}
+.highlight-red {
+	color: rgba(201, 85, 73, 1);
+	fill: rgba(201, 85, 73, 1);
+}
+.highlight-default_background {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray_background {
+	background: rgba(42, 28, 0, 0.07);
+}
+.highlight-brown_background {
+	background: rgba(139, 46, 0, 0.086);
+}
+.highlight-orange_background {
+	background: rgba(224, 101, 1, 0.129);
+}
+.highlight-yellow_background {
+	background: rgba(211, 168, 0, 0.137);
+}
+.highlight-teal_background {
+	background: rgba(0, 100, 45, 0.09);
+}
+.highlight-blue_background {
+	background: rgba(0, 111, 200, 0.09);
+}
+.highlight-purple_background {
+	background: rgba(102, 0, 178, 0.078);
+}
+.highlight-pink_background {
+	background: rgba(197, 0, 93, 0.086);
+}
+.highlight-red_background {
+	background: rgba(223, 22, 0, 0.094);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(128, 125, 120, 1);
+	fill: rgba(128, 125, 120, 1);
+}
+.block-color-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.block-color-orange {
+	color: rgba(204, 121, 47, 1);
+	fill: rgba(204, 121, 47, 1);
+}
+.block-color-yellow {
+	color: rgba(195, 148, 67, 1);
+	fill: rgba(195, 148, 67, 1);
+}
+.block-color-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.block-color-blue {
+	color: rgba(63, 126, 190, 1);
+	fill: rgba(63, 126, 190, 1);
+}
+.block-color-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.block-color-pink {
+	color: rgba(179, 84, 136, 1);
+	fill: rgba(179, 84, 136, 1);
+}
+.block-color-red {
+	color: rgba(201, 85, 73, 1);
+	fill: rgba(201, 85, 73, 1);
+}
+.block-color-default_background {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray_background {
+	background: rgba(240, 239, 237, 1);
+}
+.block-color-brown_background {
+	background: rgba(245, 237, 233, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 235, 222, 1);
+}
+.block-color-yellow_background {
+	background: rgba(249, 243, 220, 1);
+}
+.block-color-teal_background {
+	background: rgba(232, 241, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(232, 242, 250, 1);
+}
+.block-color-purple_background {
+	background: rgba(243, 235, 249, 1);
+}
+.block-color-pink_background {
+	background: rgba(250, 233, 241, 1);
+}
+.block-color-red_background {
+	background: rgba(252, 233, 231, 1);
+}
+.select-value-color-default { background-color: rgba(42, 28, 0, 0.07); }
+.select-value-color-gray { background-color: rgba(28, 19, 1, 0.11); }
+.select-value-color-brown { background-color: rgba(127, 51, 0, 0.156); }
+.select-value-color-orange { background-color: rgba(196, 88, 0, 0.203); }
+.select-value-color-yellow { background-color: rgba(209, 156, 0, 0.282); }
+.select-value-color-green { background-color: rgba(0, 96, 38, 0.156); }
+.select-value-color-blue { background-color: rgba(0, 99, 174, 0.172); }
+.select-value-color-purple { background-color: rgba(92, 0, 163, 0.141); }
+.select-value-color-pink { background-color: rgba(183, 0, 78, 0.152); }
+.select-value-color-red { background-color: rgba(206, 24, 0, 0.164); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+
+
+/* Back-to-index button */
+.floating-button {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.4em;
+	padding: 0.55em 1.15em;
+	border-radius: 999px;
+	background: rgba(255, 255, 255, 0.92);
+	color: #1f2933;
+	font-size: 0.9rem;
+	font-weight: 500;
+	text-decoration: none;
+	border: 1px solid rgba(15, 23, 42, 0.12);
+	box-shadow: 0 8px 24px rgba(15, 23, 42, 0.12);
+	backdrop-filter: blur(12px);
+	transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+.floating-button:hover {
+	background: #1f2933;
+	color: #ffffff;
+	box-shadow: 0 12px 32px rgba(15, 23, 42, 0.18);
+	transform: translateY(-1px);
+}
+.floating-button:active {
+	transform: translateY(0);
+	box-shadow: 0 6px 18px rgba(15, 23, 42, 0.14);
+}
+.back-to-index {
+	position: fixed;
+	top: 20px;
+	left: 20px;
+	z-index: 1000;
+}
+.nav-controls {
+	position: fixed;
+	top: 20px;
+	right: 20px;
+	z-index: 1000;
+	display: inline-flex;
+	gap: 0.6em;
+	flex-wrap: wrap;
+	justify-content: flex-end;
+}
+@media (max-width: 600px) {
+	.back-to-index {
+		top: 16px;
+		left: 16px;
+	}
+	.nav-controls {
+		top: 16px;
+		right: 16px;
+		gap: 0.5em;
+	}
+	.floating-button {
+		padding: 0.45em 1em;
+		font-size: 0.85rem;
+	}
+}
+@media print {
+	.back-to-index,
+	.nav-controls {
+		display: none;
+	}
+}
+
+</style></head><body>
+<a class="floating-button back-to-index" href="../index.html">回到目錄</a>
+<div class="nav-controls">
+	<a class="floating-button nav-button" href="../04-Self-attention/04-Self-attention.html" title="上一節：04-Self-attention">上一節</a>
+	<a class="floating-button nav-button" href="../06-Generative Adversarial Network（GAN）/06-Generative Adversarial Network（GAN）.html" title="下一節：06-Generative Adversarial Network（GAN）">下一節</a>
+</div>
+<article id="b6d1aa6c-f794-4806-b058-1ae5b667f66c" class="page sans"><header><div class="page-header-icon undefined"><img class="icon notion-static-icon" src="https://www.notion.so/icons/document_blue.svg"/></div><h1 class="page-title">05-Transformer</h1><p class="page-description"></p><table class="properties"><tbody></tbody></table></header><div class="page-body"><nav id="21c41a1e-2333-406e-8434-847ec328a018" class="block-color-gray table_of_contents"><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#02c5260c-b528-4f3b-9a43-b7442ed4120c">1. Seq2Seq 模型</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#2a5ab9a2-0521-4a9a-a0e8-ee82429014d5">2. 應用</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#7f794801-ffc4-486d-aab6-4faa9d8865d3">2.1 語音識別</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#f1111cab-ff36-4305-a1e9-a2f1dbb86123">2.2 機器翻譯</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#336f7d31-14ee-4e8e-9171-ba87d4ef0ede">2.3 語音翻譯</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#d2d636cd-bfc7-4ea1-8fc9-d9f95d19e103">2.4 語音合成</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#b1c0072a-c14b-4794-9afc-66bae60e493f">2.5 聊天機器人</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#55edb5e7-0436-4b9d-8aac-e44b29d465b8">2.6 QA 任務</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#2607be98-de48-4b6f-bbef-5236f53dd918">2.7 文法剖析</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#dad46b02-28ee-4836-a9e1-ec260c66110d">2.8 多標籤（Multi-label）分類</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#7d26a2d4-95fc-4b84-8587-b2173f441a60">3. Transformer 架構</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#1c99beb9-72bf-480b-8bef-a02968a38ba5">3.1 Encoder</a></div><div class="table_of_contents-item table_of_contents-indent-2"><a class="table_of_contents-link" href="#3fed9c16-4db8-4884-9536-178cb2efc6cb">3.1.1 內部剖析</a></div><div class="table_of_contents-item table_of_contents-indent-2"><a class="table_of_contents-link" href="#34820401-2049-4bd3-8e47-c7048871019e">3.1.2 Transformer 的 Encoder</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#71559b18-1fb6-490c-9928-631130474c39">3.2 Decoder</a></div><div class="table_of_contents-item table_of_contents-indent-2"><a class="table_of_contents-link" href="#f7d6b0d1-8b43-4e0c-ae0b-8fd5ec47105a">3.2.1 autoregressive（AT）</a></div><div class="table_of_contents-item table_of_contents-indent-2"><a class="table_of_contents-link" href="#2c9e834e-f0ab-4b79-85ab-a582366632b3">3.2.2 Transformer 的 decoder</a></div><div class="table_of_contents-item table_of_contents-indent-2"><a class="table_of_contents-link" href="#5a056943-ecbe-4519-8657-90295f9aaf42">3.2.3 non-autoregressive（NAT）</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#86b612e3-e490-4b66-ab5d-c190e48aed75">3.3 Encoder-Decoder 的 CrossAttention</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#dc23af58-d038-4fc9-b996-20ff18befb43">4. Transformer 訓練過程</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#67577209-6ce4-4f3f-84b7-caeef233e67a">5. Seq2Seq 模型訓練技巧</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#34d5f8ec-d585-4e8d-af9f-545f2faac9b2">5.1 Copy Mechanism</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#f8206727-21f4-4a5a-af0d-b67001b2ae9c">5.2 Guided Attention</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#c44c41d7-2fa6-4364-a056-90f46739910a">5.3 Beam Search</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#2debfd7a-bcb0-4224-b3f5-ffed29ae3954">5.4 加入 Noise</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#30b925f6-629b-4062-b373-e73460a33ab5">5.5 Scheduled Sampling</a></div></nav><h1 id="02c5260c-b528-4f3b-9a43-b7442ed4120c" class="">1. Seq2Seq 模型</h1><p id="f8015706-bf25-4ee2-a929-5ea98931e920" class="">Transformer 是一個序列到序列（Sequence-to-Sequence，Seq2Seq）的模型。序列到序列模型<strong>輸入和輸出都是一個序列</strong>，輸入與輸出序列長度之間的關係有兩種情況：一是<strong>輸入跟輸出的長度一樣</strong>；二是<strong>機器自行決定輸出的長度</strong>。</p><h1 id="2a5ab9a2-0521-4a9a-a0e8-ee82429014d5" class="">2. 應用</h1><h2 id="7f794801-ffc4-486d-aab6-4faa9d8865d3" class="">2.1 語音識別</h2><p id="d1f19c1f-5cb0-401e-8930-df8f90a1b21f" class="">輸入是聲音訊號的一串的 vector，輸出是語音辨識的結果，也就是輸出的這段聲音訊號，所對應的文字 ⇒ <strong>輸出的長度由機器自己決定</strong></p><figure id="71a18938-5df7-4955-839b-984863ab2538" class="image"><a href="05-Transformer/0.png"><img style="width:517.951416015625px" src="05-Transformer/0.png"/></a></figure><h2 id="f1111cab-ff36-4305-a1e9-a2f1dbb86123" class="">2.2 機器翻譯</h2><p id="f901c450-6817-4fed-b41f-9c4e683538be" class="">機器讀一個語言的句子，輸出另外一個語言的句子，輸入的文字的長度是 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi></mrow><annotation encoding="application/x-tex">N</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.10903em;">N</span></span></span></span></span><span>﻿</span></span>，輸出的句子的長度是 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>N</mi><mo mathvariant="normal" lspace="0em" rspace="0em">′</mo></msup></mrow><annotation encoding="application/x-tex">N&#x27;</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7519em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.10903em;">N</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7519em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">′</span></span></span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span>，<style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi></mrow><annotation encoding="application/x-tex">N</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.10903em;">N</span></span></span></span></span><span>﻿</span></span> 跟 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>N</mi><mo mathvariant="normal" lspace="0em" rspace="0em">′</mo></msup></mrow><annotation encoding="application/x-tex">N&#x27;</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7519em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.10903em;">N</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7519em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">′</span></span></span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span> 之間的關係也<strong>由機器自己來決定</strong></p><figure id="5d14463b-44c1-4c3e-a866-5da967fe6aeb" class="image"><a href="05-Transformer/1.png"><img style="width:528px" src="05-Transformer/1.png"/></a></figure><h2 id="336f7d31-14ee-4e8e-9171-ba87d4ef0ede" class="">2.3 語音翻譯</h2><p id="c5d2322a-b41c-4a6b-a2f3-8a49112e05fa" class="">將聽到的英文的聲音訊號翻譯成中文文字</p><figure id="10bc34fa-5f87-4784-8e1b-3b0f8d807f92" class="image"><a href="05-Transformer/2.png"><img style="width:528px" src="05-Transformer/2.png"/></a></figure><p id="c2ee766a-a9ef-4046-a0ba-bb0c91479f25" class=""><strong>問題：</strong></p><p id="1a293ea3-261f-42db-b818-aa7f77a923e1" class="">把語音識別系統跟機器翻譯系統接起來就直接是語音翻譯，為何還需獨立出語音翻譯？<br/>因為世界上很多語言沒有文字，無法做語音識別。因此需要對這些語言做語音翻譯，直接把它翻譯成文字</p><h2 id="d2d636cd-bfc7-4ea1-8fc9-d9f95d19e103" class="">2.4 語音合成</h2><p id="f8f05a80-c479-424a-baee-25be39841981" class="">輸入文字、輸出聲音信號就是<strong>語音合成（Text-To-Speech，TTS）</strong></p><p id="28321a12-9f76-4573-92be-f5203a31fad6" class="">現在還沒有真的做端到端（end-to-end）的模型，以閩南語的語音合成為例，其使用的模型還是分成兩階，首先模型會先把中文的文字轉成閩南語的拼音，再把閩南語的拼音轉成聲音信號</p><figure id="b8abe5b9-8a21-48d9-a8b9-399c8a2494e5" class="image"><a href="05-Transformer/3.png"><img style="width:480px" src="05-Transformer/3.png"/></a></figure><h2 id="b1c0072a-c14b-4794-9afc-66bae60e493f" class="">2.5 聊天機器人</h2><p id="c51b5573-b1d5-476d-8237-f3fd0b9fbfef" class="">因為聊天機器人的輸入輸出都是文字，文字是一個向量序列，所以可用序列到序列的模型來做一個聊天機器人</p><figure id="55b803cf-65f1-4fb6-a60a-e48f43cc7d30" class="image"><a href="05-Transformer/4.png"><img style="width:480px" src="05-Transformer/4.png"/></a></figure><h2 id="55edb5e7-0436-4b9d-8aac-e44b29d465b8" class="">2.6 QA 任務</h2><p id="671f3e4f-fb4d-465a-8a0a-720986d1b561" class="">很多自然語言處理的任務都可以想成是<strong>問答（Question Answering，QA）</strong>的任務，如：</p><ul id="fc2f41a4-9f92-4593-87fc-85b739728c8d" class="bulleted-list"><li style="list-style-type:disc">翻譯</li></ul><ul id="f460d4bc-c71b-4a51-a578-1ba33966f784" class="bulleted-list"><li style="list-style-type:disc">自動摘要</li></ul><ul id="3238291b-83fd-486a-9754-493011de9c85" class="bulleted-list"><li style="list-style-type:disc">情感分析</li></ul><figure id="ffa428aa-6963-4c92-8607-35c89be44a80" class="image"><a href="05-Transformer/5.png"><img style="width:480px" src="05-Transformer/5.png"/></a></figure><p id="8e1675f9-456f-417f-9e80-3120f50d2ae9" class="">各種 NLP 問題都能用  Seq2seq 模型來解，但對多數 NLP 任務而言，<strong>為各種不同的任務客制化模型往往比只用 Seq2seq 模型的模型更好</strong>。例如 Pixel 4 手機用於語音識別的模型不是 Seq2seq 模型，而是 RNN-Transducer 模型，這種模型是為了語音的某些特性所設計的表現更好</p><p id="d978b4c4-50c9-426b-99f4-fb900d7d2742" class=""><strong>學習更多：</strong><strong><a href="https://speech.ee.ntu.edu.tw/~hylee/dlhlp/2020-spring.html">https://speech.ee.ntu.edu.tw/~hylee/dlhlp/2020-spring.html</a></strong></p><h2 id="2607be98-de48-4b6f-bbef-5236f53dd918" class="">2.7 文法剖析</h2><p id="d5380f7f-75a3-4f23-bdcb-da37217780ae" class="">文法剖析任務中，<strong>輸入是一段文字，輸出是一個樹狀的結構</strong>，而一個樹狀的結構可以看成一個序列，該序列代表了這個樹的結構</p><div id="80bdcd61-e9ed-47c1-b343-8dc204bb5403" class="column-list"><div id="ce30564c-f1bb-488e-bdf1-4395b355002f" style="width:56.25%" class="column"><figure id="e6cd5258-a5e5-4c91-bba6-546098fb97a0" class="image"><a href="05-Transformer/6.png"><img style="width:371.2916564941406px" src="05-Transformer/6.png"/></a></figure></div><div id="dc588315-071b-43f5-af43-9308667bf7a0" style="width:43.75%" class="column"><figure id="4ff0a7af-d6cb-4243-894e-fc8bafbdfc38" class="image"><a href="05-Transformer/7.png"><img style="width:288.77777099609375px" src="05-Transformer/7.png"/></a></figure></div></div><p id="838ed05f-2ff4-44df-86f1-a3baf5217669" class="">把樹的結構轉成一個序列以後，就可以用 Seq2seq 模型來做文法剖析，具體可參考論文：<em><a href="https://arxiv.org/">Grammar as a Foreign Language</a></em></p><h2 id="dad46b02-28ee-4836-a9e1-ec260c66110d" class="">2.8 多標籤（Multi-label）分類</h2><p id="da5573b2-cf7e-4304-84a1-d35b2817ffdf" class=""><strong>區分：</strong></p><ul id="099d209a-98b0-4b4c-bccd-f64c01ae5f19" class="bulleted-list"><li style="list-style-type:disc">Multi-class：從數個 class 裡面選擇某一個 class</li></ul><ul id="2d8fabba-27bb-4a47-834a-060171f89ccc" class="bulleted-list"><li style="list-style-type:disc">Multi-label：同一個 sample 可以屬於多個 class</li></ul><figure id="ca0f1abe-b022-481e-98d4-924ac21f4f1d" class="image"><a href="05-Transformer/8.png"><img style="width:480px" src="05-Transformer/8.png"/></a></figure><p id="5cc956df-2849-4388-943a-a1e88ee44253" class="">多標簽分類（multi-label classification）問題<strong>不能直接把它當作一個多分類問題的問題來解</strong>。就算取一個 threshold，只輸出分數最高的前三名，但因 sample 對應的類別的數量可能根本不一樣，因此需要用 Seq2seq 模型，讓機器自己決定輸出類別的數量。<br/>可參考論文：<em><a href="https://arxiv.org/abs/2005.12872">End-to-End Object Detection with Transformers</a></em></p><p id="07108a6b-8517-42d6-b29e-8a3e1e12c4c4" class="">
+</p><h1 id="7d26a2d4-95fc-4b84-8587-b2173f441a60" class="">3. Transformer 架構</h1><p id="3e450d12-94c9-47bb-bada-cbbfe4bfdcca" class="">一般的 Seq2Seq 模型會分成 <strong>encoder</strong> 和 <strong>decoder</strong>，encoder 負責處理輸入的序列，再把處理好的結果給 decoder 決定要輸出的序列</p><figure id="104f667f-29ac-42e3-9879-724b44dd6a80" class="image"><a href="05-Transformer/9.png"><img style="width:384px" src="05-Transformer/9.png"/></a></figure><h2 id="1c99beb9-72bf-480b-8bef-a02968a38ba5" class="">3.1 Encoder</h2><p id="9a3a5faf-029e-4c26-b8fb-1db1b2a4d2d3" class="">編碼器要做的事情就是給一排向量，輸出另外一排向量。自注意力、循環神經網絡（Recurrent Neural Network，RNN）、卷積神經網路都能輸入一排向量，輸出一排向量。<strong>Transformer 的編碼器使用的是自注意力</strong>，輸入一排向量，輸出另外一個同樣長度的向量</p><figure id="c097afb3-50db-4de0-b8eb-2ba3816b160a" class="image"><a href="05-Transformer/10.png"><img style="width:432px" src="05-Transformer/10.png"/></a></figure><h3 id="3fed9c16-4db8-4884-9536-178cb2efc6cb" class="">3.1.1 內部剖析</h3><p id="b20757a2-2bb9-4b47-aea5-92c8e2f4e56d" class="">Encoder 中會分成很多的 block，每一個 block 都是輸入一排向量，輸出一排向量。最後一個 block 會輸出最終的向量序列</p><figure id="f7b3fe39-1c21-4861-9a53-4a8eb48a8710" class="image"><a href="05-Transformer/11.png"><img style="width:432px" src="05-Transformer/11.png"/></a></figure><p id="377ad160-6189-4d99-a47e-4f4d32e47b4e" class="">Encoder 的每個 block 並不是神經網路的一層，在每個 block 中，輸入一排向量後做 Self-attention，考慮整個序列的訊息，輸出另外一排向量。接下來這排向量會進到 FC，輸出另外一排向量，這一排向量就是一個 block<strong> </strong>的輸出</p><h3 id="34820401-2049-4bd3-8e47-c7048871019e" class="">3.1.2 Transformer 的 Encoder</h3><p id="635d462e-6203-4417-8f8a-aa828be62050" class="">Transformer 做的事情是更複雜的，因 Transformer 加入了 <strong>residual connection</strong> 和 <strong>layer normalization </strong>的設計</p><p id="f6b01762-2d86-4479-951d-77f9d8990619" class=""><strong>步驟：</strong></p><ol type="1" id="2852c864-96e0-45fb-a0a9-ac6155f08ae1" class="numbered-list" start="1"><li>考慮全部向量經由 Self-attention 得到輸出向量 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>a</mi></mrow><annotation encoding="application/x-tex">a</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">a</span></span></span></span></span><span>﻿</span></span>，向量 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>a</mi></mrow><annotation encoding="application/x-tex">a</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">a</span></span></span></span></span><span>﻿</span></span> 加上其輸入向量 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>b</mi></mrow><annotation encoding="application/x-tex">b</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal">b</span></span></span></span></span><span>﻿</span></span> 得到新的輸出，稱為 residual connection</li></ol><ol type="1" id="4551f1be-30f5-49e6-9851-b4b254ed6464" class="numbered-list" start="2"><li>計算輸入向量 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>a</mi><mo>+</mo><mi>b</mi></mrow><annotation encoding="application/x-tex">a+b</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6667em;vertical-align:-0.0833em;"></span><span class="mord mathnormal">a</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal">b</span></span></span></span></span><span>﻿</span></span> 的 mean 和 standard deviation，做 layer normalization</li></ol><ol type="1" id="67dec1f8-2cb6-4210-b18a-a8adf40f9724" class="numbered-list" start="3"><li>得到的輸出作為 FC 的輸入，FC 輸出結果和原輸入做 residual connection，再做一次 layer normalization 得到的輸出就是 Transformer Encoder 中一個 block 的一個輸出向量</li></ol><figure id="4a9c6b36-b9ae-4972-bbc5-2ae3fa9a186e" class="image"><a href="05-Transformer/12.png"><img style="width:432px" src="05-Transformer/12.png"/></a></figure><p id="08336d01-3164-44b9-9203-2b034b9f7608" class="">N 表示 N 個 block。首先在輸入需要加上 positional encoding。Multi-head attention 就屬 Self-attention。過後再做 residual connection 和 layer normalization，接下來還要經過 FC，接著再做一次 residual connection 和 layer normalization。如此是一個 block 的輸出，總共會重覆 N 次</p><figure id="47695ef1-7f3f-4d70-bd6a-9aaa2ea812eb" class="image"><a href="05-Transformer/13.png"><img style="width:432px" src="05-Transformer/13.png"/></a></figure><h2 id="71559b18-1fb6-490c-9928-631130474c39" class="">3.2 Decoder</h2><h3 id="f7d6b0d1-8b43-4e0c-ae0b-8fd5ec47105a" class="">3.2.1 autoregressive（AT）</h3><p id="0e3f4760-b3e2-4910-897b-c17c275a4758" class="">以 encoder 的向量為輸入，並加上特殊的 token 符號 &lt;BOS&gt;（Begin Of Sequence）。在 NLP 中，每一個 token 都可以用一個 one-hot vector 表示，其中一維是 1，剩餘都是 0</p><figure id="4732ab43-a5f5-41cb-91b2-6dffe81f9e98" class="image"><a href="05-Transformer/14.png"><img style="width:432px" src="05-Transformer/14.png"/></a></figure><p id="7a0620e3-7cd3-40b9-95da-fd4008c3092b" class=""><strong>步驟：</strong></p><ol type="1" id="4ec3f299-0ce8-4e6b-9ded-c04650ded562" class="numbered-list" start="1"><li>向 decoder 輸入 encoder 產生的向量</li></ol><ol type="1" id="ef2e241e-f78d-4f6c-9623-a5d31d9d08b3" class="numbered-list" start="2"><li>在 decoder 可能產生的文字裡面加上特殊 token &lt;BOS&gt;</li></ol><ol type="1" id="5724ecc1-bc48-4423-8126-af465cd627a5" class="numbered-list" start="3"><li>decoder 輸出一個向量（長度與 vocabulary size 一樣），隨後通過 softmax，挑選分數最高的一個字作為最終的輸出</li></ol><blockquote id="56228f4b-e0b1-4faa-93ca-770602d1a0ea" class="">v<strong>ocabulary size：取決於輸出的單位。比如輸出中文，則 size 是中文方塊字的數目</strong></blockquote><ol type="1" id="dca171a2-063b-4b8b-828e-9682fde37c07" class="numbered-list" start="4"><li>將 3. 的輸出作為 decoder 新的輸入</li></ol><ol type="1" id="46ce2d2a-f162-4cbf-8d47-3887e5c0c6dd" class="numbered-list" start="5"><li>重複步驟 3. 和 4.</li></ol><ol type="1" id="69b8e1e9-da0f-4d20-a2b8-0877bef155c6" class="numbered-list" start="6"><li>從 vocabulary 中挑到 &lt;EOS&gt; token，讓 decoder 停止</li></ol><figure id="14c279f7-2626-4c84-a0bf-f0cac2585aca" class="image"><a href="05-Transformer/15.png"><img style="width:432px" src="05-Transformer/15.png"/></a></figure><p id="ad2ae1e5-05d1-431a-9d8d-ee4d61a62455" class="">decoder 的輸入是它在前一個時間點的輸出，其會把自己的輸出當做接下來的輸入，因此當 decoder 產生一個句子時，有可能看到錯誤的東西，造成 <strong>error propgation</strong></p><h3 id="2c9e834e-f0ab-4b79-85ab-a582366632b3" class="">3.2.2 Transformer 的 decoder</h3><figure id="3574a763-7f6f-485c-9343-a478b4cb9c8c" class="image"><a href="05-Transformer/16.png"><img style="width:432px" src="05-Transformer/16.png"/></a></figure><p id="da5a11f1-a135-47aa-87d4-ec999061d668" class="">除了中間的部分，encoder 跟 decoder，並沒有甚麼差別。最後會再做一個 softmax，使得它的輸出變成一個機率分布，最主要差別是 decoder 的第一個 self-attention 是使用 <strong>masked multi-head attention</strong></p><p id="b16e6a68-3427-4734-a321-904e0c5c2c08" class="">M<strong>asked Multi-Head Attention：</strong></p><p id="3ff7df12-751c-4349-af91-d1dd3cc40320" class="">產生的<strong>輸出並不考慮”右邊“的部分</strong>，原因是因為 decoder 輸出原理是順次產生</p><figure id="b5586518-c7be-4b88-b230-22ebcb23a71c" class="image"><a href="05-Transformer/17.png"><img style="width:432px" src="05-Transformer/17.png"/></a></figure><p id="0cec0715-fb62-419d-b9ba-09b9c3567b7a" class="">
+</p><h3 id="5a056943-ecbe-4519-8657-90295f9aaf42" class="">3.2.3 non-autoregressive（NAT）</h3><p id="3630f6ea-d9ae-4ac4-bd64-4391e2a8455c" class="">NAT 不是依次產生，而是一次吃一整排的 &lt;BOS&gt; Token，把整個句子一次性產生出來</p><figure id="444ddc5d-acb1-4641-8af2-24b29c3a50e5" class="image"><a href="05-Transformer/18.png"><img style="width:432px" src="05-Transformer/18.png"/></a></figure><p id="1e30f69c-ff49-4218-9138-6b7107fdfd66" class=""><strong>問題：如何確定 &lt;BOS&gt; 的個數？</strong></p><ul id="a40154a4-1566-4659-9173-6ba8145824ec" class="bulleted-list"><li style="list-style-type:disc"><strong>另外訓練一個 classifier，</strong>吃 Encoder 的輸入，輸出一個數字，代表 decoder 應該要輸出的長度</li></ul><ul id="6b1268cd-fe78-47a2-a0df-4be0fb2acdda" class="bulleted-list"><li style="list-style-type:disc"><strong>給很多個 &lt;BOS&gt; 的 token</strong>，例如 300 個 <strong>&lt;</strong>BOS<strong>&gt; </strong>然後就會輸出 300 個字。<strong>什麼地方輸出 &lt;EOS&gt; 表示這個句子結束的點</strong></li></ul><p id="e33dfa96-6f2c-412f-9011-c74307cd60af" class=""><strong>NAT 的好處：</strong></p><ul id="cd98cf9a-6a0d-482d-8fa8-eeec2468cd29" class="bulleted-list"><li style="list-style-type:disc">平行化：<br/>NAT 的 decoder 不管句子的長度如何，都是一個步驟就產生出完整的句子，所以在速度上 NAT 的 decoder 比 AT 的 decoder 要快</li></ul><ul id="6540bbec-09b1-485f-85c0-203861e52c53" class="bulleted-list"><li style="list-style-type:disc">容易控制輸出長度：<br/>例如語音合成有一個 classifier 決定 NAT 的 decoder 應該輸出的長度，並以此調整語音的速度。如果要讓系統講快一點，那就把 classifier 的 output 除以二，如此講話速度就變兩倍快</li></ul><p id="e80512a1-9e11-460b-845d-78ca75861f05" class=""><strong>NAT 的 decoder 的 performance 往往都比 AT 還差</strong>，原因：<strong><a href="https://youtu.be/jvyKmU4OM3c">Multi-Modality</a></strong></p><h2 id="86b612e3-e490-4b66-ab5d-c190e48aed75" class="">3.3 Encoder-Decoder 的 CrossAttention</h2><figure id="012e596d-2e4b-4a6b-9780-1906548c9800" class="image"><a href="05-Transformer/19.png"><img style="width:432px" src="05-Transformer/19.png"/></a></figure><p id="f310e619-ad2d-4b30-a353-96d7a65e5cd0" class="">兩個輸入來自 Encoder（Encoder 提供兩個箭頭）， Decoder 提供了一個箭頭</p><p id="2296fbb2-d525-4c48-8117-14c7be7cd263" class=""><strong>細節：</strong></p><div id="7051af1b-2a37-4d86-aae6-08ee634fe624" class="column-list"><div id="83a5d949-fa1a-4817-8f40-9ec290cbe5c2" style="width:50%" class="column"><figure id="dc872651-2439-45dc-ba5b-f31973f1ca42" class="image"><a href="05-Transformer/20.png"><img style="width:330.0416564941406px" src="05-Transformer/20.png"/></a></figure></div><div id="bd875f8f-0f3a-46a4-81b0-a5efc678f241" style="width:49.99999999999999%" class="column"><figure id="47c7aae7-7acc-4d9f-8b96-5961ecbbb039" class="image"><a href="05-Transformer/21.png"><img style="width:330.0416564941406px" src="05-Transformer/21.png"/></a></figure></div></div><ol type="1" id="93892cd2-76fe-4fa4-9682-78fe9efa695a" class="numbered-list" start="1"><li>encoder 輸入一排向量，輸出一排向量 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>a</mi><mn>1</mn></msup><mo separator="true">,</mo><msup><mi>a</mi><mn>2</mn></msup><mo separator="true">,</mo><msup><mi>a</mi><mn>3</mn></msup></mrow><annotation encoding="application/x-tex">a^1,a^2,a^3</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.0085em;vertical-align:-0.1944em;"></span><span class="mord"><span class="mord mathnormal">a</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal">a</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal">a</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">3</span></span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span>，產生 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>k</mi><mn>1</mn></msup><mo separator="true">,</mo><msup><mi>k</mi><mn>2</mn></msup><mo separator="true">,</mo><msup><mi>k</mi><mn>3</mn></msup></mrow><annotation encoding="application/x-tex">k^1,k^2,k^3</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.0085em;vertical-align:-0.1944em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03148em;">k</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03148em;">k</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03148em;">k</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">3</span></span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span> 及 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>v</mi><mn>1</mn></msup><mo separator="true">,</mo><msup><mi>v</mi><mn>2</mn></msup><mo separator="true">,</mo><msup><mi>v</mi><mn>3</mn></msup></mrow><annotation encoding="application/x-tex">v^1,v^2,v^3</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.0085em;vertical-align:-0.1944em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">v</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">v</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">v</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">3</span></span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span>，</li></ol><ol type="1" id="9f5aacd4-1d31-42f0-add0-a4b08dc814fb" class="numbered-list" start="2"><li>decoder 輸入 &lt;BOS&gt; 經過 self-attention（masked） 得到一个向量，乘上一個矩陣得到 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>q</mi></mrow><annotation encoding="application/x-tex">q</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">q</span></span></span></span></span><span>﻿</span></span></li></ol><ol type="1" id="eddb19e1-028d-49d2-a6c9-9773b154a1dc" class="numbered-list" start="3"><li>利用 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>q</mi><mo separator="true">,</mo><mi>k</mi></mrow><annotation encoding="application/x-tex">q,k</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">q</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.03148em;">k</span></span></span></span></span><span>﻿</span></span> 計算 attention 的分數，並做 normalization，得到 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mi>α</mi><mn>1</mn><mo mathvariant="normal" lspace="0em" rspace="0em">′</mo></msubsup><mo separator="true">,</mo><msubsup><mi>α</mi><mn>2</mn><mo mathvariant="normal" lspace="0em" rspace="0em">′</mo></msubsup><mo separator="true">,</mo><msubsup><mi>α</mi><mn>3</mn><mo mathvariant="normal" lspace="0em" rspace="0em">′</mo></msubsup></mrow><annotation encoding="application/x-tex">\alpha_1&#x27;,\alpha_2&#x27;,\alpha_3&#x27;</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.2481em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0037em;">α</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.7519em;"><span style="top:-2.4519em;margin-left:-0.0037em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">′</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2481em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0037em;">α</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.7519em;"><span style="top:-2.4519em;margin-left:-0.0037em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">′</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2481em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0037em;">α</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.7519em;"><span style="top:-2.4519em;margin-left:-0.0037em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">3</span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">′</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2481em;"><span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span></li></ol><ol type="1" id="eb44320a-7c4d-4839-84f4-8ce1be78edab" class="numbered-list" start="4"><li> <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mi>α</mi><mn>1</mn><mo mathvariant="normal" lspace="0em" rspace="0em">′</mo></msubsup><mo separator="true">,</mo><msubsup><mi>α</mi><mn>2</mn><mo mathvariant="normal" lspace="0em" rspace="0em">′</mo></msubsup><mo separator="true">,</mo><msubsup><mi>α</mi><mn>3</mn><mo mathvariant="normal" lspace="0em" rspace="0em">′</mo></msubsup></mrow><annotation encoding="application/x-tex">\alpha_1&#x27;,\alpha_2&#x27;,\alpha_3&#x27;</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.2481em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0037em;">α</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.7519em;"><span style="top:-2.4519em;margin-left:-0.0037em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">′</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2481em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0037em;">α</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.7519em;"><span style="top:-2.4519em;margin-left:-0.0037em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">′</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2481em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0037em;">α</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.7519em;"><span style="top:-2.4519em;margin-left:-0.0037em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">3</span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">′</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2481em;"><span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span> 與  <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>v</mi><mn>1</mn></msup><mo separator="true">,</mo><msup><mi>v</mi><mn>2</mn></msup><mo separator="true">,</mo><msup><mi>v</mi><mn>3</mn></msup></mrow><annotation encoding="application/x-tex">v^1,v^2,v^3</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.0085em;vertical-align:-0.1944em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">v</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">v</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">v</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">3</span></span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span> 做 weighted sum 得到 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>v</mi></mrow><annotation encoding="application/x-tex">v</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">v</span></span></span></span></span><span>﻿</span></span></li></ol><ol type="1" id="11f894c9-fdb6-4757-9c34-3255dc0b5a8b" class="numbered-list" start="5"><li>將 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>v</mi></mrow><annotation encoding="application/x-tex">v</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">v</span></span></span></span></span><span>﻿</span></span> 輸入至 FC 做接下來的任務</li></ol><p id="d575238b-cad6-49c2-a827-7e3fe826bc66" class=""><strong>總而言之，decoder 就是產生一個 </strong><style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>q</mi></mrow><annotation encoding="application/x-tex">q</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">q</span></span></span></span></span><span>﻿</span></span><strong>，去 encoder 抽取訊息出來當做接下來 decoder 的 FC 的 Input</strong></p><p id="e0e877c3-90b3-405c-8ac8-fd5e7fe6cd58" class="">
+</p><figure id="895d6d9a-0af5-4593-9264-b106eadfa8ce" class="image"><a href="05-Transformer/22.png"><img style="width:672px" src="05-Transformer/22.png"/></a></figure><p id="90e44583-200f-41b8-b58c-a06bf7f663be" class="">decoder 可以看 encoder 中的許多層而不一定只是最後一層：<em><a href="https://arxiv.org/abs/2005.08081">Rethinking and Improving Natural Language Generation with Layer-Wise Multi-View Decoding</a></em></p><p id="0dec726d-8375-41ad-a24f-3087355ca334" class="">
+</p><h1 id="dc23af58-d038-4fc9-b996-20ff18befb43" class="">4. Transformer 訓練過程</h1><figure id="2a87611b-1d7f-4175-a7e1-a9ddb904fe90" class="image"><a href="05-Transformer/23.png"><img style="width:384px" src="05-Transformer/23.png"/></a></figure><p id="f7997dfe-4e03-46b7-bdbe-7523d3fba280" class="">訓練資料：一段音頻與對應的文字，文字為 one-hot encoding 的向量</p><p id="4cd39232-9716-4903-81b5-8b9ef0dc6eae" class="">訓練過程：decoder 輸出的是機率分布，可以通過輸出的機率分布與 ground truth 之間的計算 cross entropy 並求梯度實現優化，使 cross entropy 的值越小越好</p><figure id="5e173055-ead9-4c3d-9792-7ee2de26b08b" class="image"><a href="05-Transformer/24.png"><img style="width:384px" src="05-Transformer/24.png"/></a></figure><p id="7ea78ed1-da70-4c84-a21d-7119d4422c21" class=""><strong>注意：</strong></p><p id="1dba4b6b-5730-4667-b296-e3c6037b9651" class="">在訓練 decoder 時，輸入的是<strong>正確答案</strong>（ground truth）而不是自己產生的答案，稱作 <strong>Teacher Forcing</strong></p><p id="19205ec2-490a-4d31-8391-0ad0c0b10281" class="">
+</p><h1 id="67577209-6ce4-4f3f-84b7-caeef233e67a" class="">5. Seq2Seq 模型訓練技巧</h1><h3 id="34d5f8ec-d585-4e8d-af9f-545f2faac9b2" class="">5.1 Copy Mechanism</h3><p id="e080951c-2f3a-4d8e-8a13-58e24999238d" class="">decoder 沒有必要自己創造輸出，它需要做的事情是從輸入的資料中複製一些東西出來，而不是“創造詞彙”</p><p id="e5e241f3-35ea-4c85-a344-28807a073432" class=""><strong>舉例：</strong></p><div id="69eba98a-2039-4a70-b954-4b4475822f71" class="column-list"><div id="0b60bd13-3ed2-4584-b493-f20430ffab05" style="width:50%" class="column"><ol type="1" id="45f0c504-54bf-4deb-b93d-3531415f92ab" class="numbered-list" start="1"><li>Chatbot<figure id="4fff6be0-4c93-4b98-b113-52a781804c4a" class="image"><a href="05-Transformer/25.png"><img style="width:432px" src="05-Transformer/25.png"/></a></figure></li></ol></div><div id="a27864f4-ebb1-40ba-9d1a-41eac95e8c84" style="width:50%" class="column"><ol type="1" id="f4db1f57-51c0-4882-bbfd-ff2ef49c09df" class="numbered-list" start="2"><li>Summarization<figure id="099c649e-40f4-4cca-93d6-77199c9ff69b" class="image"><a href="05-Transformer/26.png"><img style="width:302.02777099609375px" src="05-Transformer/26.png"/></a></figure></li></ol></div></div><h3 id="f8206727-21f4-4a5a-af0d-b67001b2ae9c" class="">5.2 Guided Attention</h3><p id="cfa15a2b-f198-4a8a-a588-20e5dbb7fc1e" class=""><strong>目的：</strong></p><p id="41f4afa5-a523-499b-abdc-22759537e7fa" class="">強迫模型一定要把輸入的每一個東西通通看過（如 TTS），強迫 attention 要有固定的方式</p><figure id="d88f49cf-8ddc-435b-89bc-7aa502c42375" class="image"><a href="05-Transformer/27.png"><img style="width:432px" src="05-Transformer/27.png"/></a></figure><p id="80c166fd-ad20-4212-91ec-3de1004cd0cb" class=""><strong>動機：</strong></p><p id="fb6d6df7-1bd3-46df-96f3-5c41d0a0faae" class="">Seq2Seq Model 有時候 Train 會產生莫名其妙的結果，比如漏字，例如：對語音合成或者是語音辨識來說，我們想像中的 attention，應該要由左向右如上方的圖，但有可能模型跳著看，就如上方的圖</p><p id="d16069c6-e9e1-4ef6-8534-f027df22ed6b" class=""><strong>更多資訊：Monotonic Attention、Location-aware Attention</strong></p><h2 id="c44c41d7-2fa6-4364-a056-90f46739910a" class="">5.3 Beam Search</h2><p id="f77a4254-60a4-43f2-ad97-1afc6412fc20" class="">每次找分數最高的詞元來當做輸出的方法稱為 greedy decoding。紅色路徑就是通過 greedy decoding 得到的路徑。 但貪心搜索不一定是最好的方法，紅色路徑第一步好，綠色路徑一開始比較差，但最終結果是綠色路徑比較好</p><figure id="f381369d-e01c-43b0-8534-047f8f9680ec" class="image"><a href="05-Transformer/28.png"><img style="width:480px" src="05-Transformer/28.png"/></a></figure><p id="143bd50f-9966-4c72-97fe-7f2ee61604e5" class="">beam search 用比較有效的方法找一個估測的 solution、一個不是完全精準的 solution，這個方法有時候有用，有時候沒有用，因為找出分數最高的路不見得比較好，取決於任務本身的特性</p><p id="ad033c64-c539-42e0-8890-be43e42c05d8" class="">假設任務的答案非常明確，比如語音識別，說一句話，識別的結果就只有一個可能。對這種任務而言，通常 beam search 就會比較有幫助；但如果<strong>任務需要模型發揮一點創造力，beam search 可能比較沒有幫助</strong></p><h2 id="2debfd7a-bcb0-4224-b3f5-ffed29ae3954" class="">5.4 加入 Noise</h2><p id="86cf3a31-59b3-4d2c-b6cc-ab23a3bd2d43" class="">語音合成模型訓練好以後，測試時要<strong>加入一些 noise。</strong>用正常的解碼的方法產生出來的聲音聽不太出來是人聲，產生出比較好的聲音是需要一些隨機性的，所以加入一些隨機性的結果反而會比較好</p><h2 id="30b925f6-629b-4062-b373-e73460a33ab5" class="">5.5 Scheduled Sampling</h2><p id="29e05238-2058-44f4-b255-8720f68fefbf" class="">測試時，decoder 看到的是自己的輸出，因此它會看到一些錯誤的東西。但是在訓練的時候，decoder 看到的是完全正確的，這種不一致的現象叫做 <strong>exposure bias</strong></p><figure id="7bcf64e6-d9c7-4bd5-a4ef-6965da217921" class="image"><a href="05-Transformer/29.png"><img style="width:432px" src="05-Transformer/29.png"/></a></figure><p id="603d698b-ab64-4f14-9d53-6172f6eab7c8" class=""><strong>問題：</strong></p><p id="78b28543-6011-44da-9982-a12885f11b79" class="">因為 decoder 從來沒有看過錯的東西，它看到錯的東西會非常的驚奇，接下來它產生的結果可能都會錯掉，導致一步錯步步錯</p><p id="b38647d3-722f-46af-9ddb-6a022953599c" class=""><strong>解決：</strong></p><p id="7af5e757-5bab-4e2b-b2ea-60f50261e9ef" class="">給 decoder 的輸入加一些錯誤的東西，模型反而會學得更好 ⇒ <strong>Scheduled Sampling</strong></p></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>

@@ -1,0 +1,777 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>01-機器學習基本概念簡介</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 10px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.collection-content td {
+	white-space: pre-wrap;
+	word-break: break-word;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+	margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.callout img.notion-static-icon {
+	width: 1em;
+	height: 1em;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+blockquote.quote-large {
+	font-size: 1.25em;
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray {
+	color: rgba(128, 125, 120, 1);
+	fill: rgba(128, 125, 120, 1);
+}
+.highlight-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.highlight-orange {
+	color: rgba(204, 121, 47, 1);
+	fill: rgba(204, 121, 47, 1);
+}
+.highlight-yellow {
+	color: rgba(195, 148, 67, 1);
+	fill: rgba(195, 148, 67, 1);
+}
+.highlight-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.highlight-blue {
+	color: rgba(63, 126, 190, 1);
+	fill: rgba(63, 126, 190, 1);
+}
+.highlight-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.highlight-pink {
+	color: rgba(179, 84, 136, 1);
+	fill: rgba(179, 84, 136, 1);
+}
+.highlight-red {
+	color: rgba(201, 85, 73, 1);
+	fill: rgba(201, 85, 73, 1);
+}
+.highlight-default_background {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray_background {
+	background: rgba(42, 28, 0, 0.07);
+}
+.highlight-brown_background {
+	background: rgba(139, 46, 0, 0.086);
+}
+.highlight-orange_background {
+	background: rgba(224, 101, 1, 0.129);
+}
+.highlight-yellow_background {
+	background: rgba(211, 168, 0, 0.137);
+}
+.highlight-teal_background {
+	background: rgba(0, 100, 45, 0.09);
+}
+.highlight-blue_background {
+	background: rgba(0, 111, 200, 0.09);
+}
+.highlight-purple_background {
+	background: rgba(102, 0, 178, 0.078);
+}
+.highlight-pink_background {
+	background: rgba(197, 0, 93, 0.086);
+}
+.highlight-red_background {
+	background: rgba(223, 22, 0, 0.094);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(128, 125, 120, 1);
+	fill: rgba(128, 125, 120, 1);
+}
+.block-color-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.block-color-orange {
+	color: rgba(204, 121, 47, 1);
+	fill: rgba(204, 121, 47, 1);
+}
+.block-color-yellow {
+	color: rgba(195, 148, 67, 1);
+	fill: rgba(195, 148, 67, 1);
+}
+.block-color-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.block-color-blue {
+	color: rgba(63, 126, 190, 1);
+	fill: rgba(63, 126, 190, 1);
+}
+.block-color-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.block-color-pink {
+	color: rgba(179, 84, 136, 1);
+	fill: rgba(179, 84, 136, 1);
+}
+.block-color-red {
+	color: rgba(201, 85, 73, 1);
+	fill: rgba(201, 85, 73, 1);
+}
+.block-color-default_background {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray_background {
+	background: rgba(240, 239, 237, 1);
+}
+.block-color-brown_background {
+	background: rgba(245, 237, 233, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 235, 222, 1);
+}
+.block-color-yellow_background {
+	background: rgba(249, 243, 220, 1);
+}
+.block-color-teal_background {
+	background: rgba(232, 241, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(232, 242, 250, 1);
+}
+.block-color-purple_background {
+	background: rgba(243, 235, 249, 1);
+}
+.block-color-pink_background {
+	background: rgba(250, 233, 241, 1);
+}
+.block-color-red_background {
+	background: rgba(252, 233, 231, 1);
+}
+.select-value-color-default { background-color: rgba(42, 28, 0, 0.07); }
+.select-value-color-gray { background-color: rgba(28, 19, 1, 0.11); }
+.select-value-color-brown { background-color: rgba(127, 51, 0, 0.156); }
+.select-value-color-orange { background-color: rgba(196, 88, 0, 0.203); }
+.select-value-color-yellow { background-color: rgba(209, 156, 0, 0.282); }
+.select-value-color-green { background-color: rgba(0, 96, 38, 0.156); }
+.select-value-color-blue { background-color: rgba(0, 99, 174, 0.172); }
+.select-value-color-purple { background-color: rgba(92, 0, 163, 0.141); }
+.select-value-color-pink { background-color: rgba(183, 0, 78, 0.152); }
+.select-value-color-red { background-color: rgba(206, 24, 0, 0.164); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+
+
+/* Back-to-index button */
+.floating-button {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.4em;
+	padding: 0.55em 1.15em;
+	border-radius: 999px;
+	background: rgba(255, 255, 255, 0.92);
+	color: #1f2933;
+	font-size: 0.9rem;
+	font-weight: 500;
+	text-decoration: none;
+	border: 1px solid rgba(15, 23, 42, 0.12);
+	box-shadow: 0 8px 24px rgba(15, 23, 42, 0.12);
+	backdrop-filter: blur(12px);
+	transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+.floating-button:hover {
+	background: #1f2933;
+	color: #ffffff;
+	box-shadow: 0 12px 32px rgba(15, 23, 42, 0.18);
+	transform: translateY(-1px);
+}
+.floating-button:active {
+	transform: translateY(0);
+	box-shadow: 0 6px 18px rgba(15, 23, 42, 0.14);
+}
+.back-to-index {
+	position: fixed;
+	top: 20px;
+	left: 20px;
+	z-index: 1000;
+}
+.nav-controls {
+	position: fixed;
+	top: 20px;
+	right: 20px;
+	z-index: 1000;
+	display: inline-flex;
+	gap: 0.6em;
+	flex-wrap: wrap;
+	justify-content: flex-end;
+}
+@media (max-width: 600px) {
+	.back-to-index {
+		top: 16px;
+		left: 16px;
+	}
+	.nav-controls {
+		top: 16px;
+		right: 16px;
+		gap: 0.5em;
+	}
+	.floating-button {
+		padding: 0.45em 1em;
+		font-size: 0.85rem;
+	}
+}
+@media print {
+	.back-to-index,
+	.nav-controls {
+		display: none;
+	}
+}
+
+</style></head><body>
+<a class="floating-button back-to-index" href="../index.html">回到目錄</a>
+<div class="nav-controls">
+	<a class="floating-button nav-button" href="../02.1-DeepLearning-General Guidance/02.1-DeepLearning-General Guidance.html" title="下一節：02.1-DeepLearning-General Guidance">下一節</a>
+</div>
+<article id="b6979cc5-ba9b-4e28-87d2-b5e86c174897" class="page sans"><header><div class="page-header-icon undefined"><img class="icon notion-static-icon" src="https://www.notion.so/icons/document_blue.svg"/></div><h1 class="page-title">01-<strong>機器學習基本概念簡介</strong></h1><p class="page-description"></p><table class="properties"><tbody></tbody></table></header><div class="page-body"><nav id="3a4e314c-9d23-43c8-af3c-724c5dbcd967" class="block-color-gray table_of_contents"><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#471ed422-c9cd-4e21-87de-4cc767da1a95">1. 機器學習的不同類型</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#975f2bd5-96c2-4974-9f5c-f499134bac41">1.1 Regression</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#82e7ffd1-b1b5-4ae8-a722-1f9e0378ce92">1.2 Classification</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#0f632c10-367f-4c04-88fd-5026ccc990cb">1.3 Structured Learning</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#bc684157-fad7-4dc3-8cfd-11bc80a963aa">2. Case Study：預測頻道流量</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#62e04a6a-43dd-4176-a4c1-26f216dc3a98">2.1 訓練三步驟</a></div><div class="table_of_contents-item table_of_contents-indent-2"><a class="table_of_contents-link" href="#20e4b9d9-b26a-43d6-ad64-222e5fd3a90f">Step 1：Function with Unknown Parameters</a></div><div class="table_of_contents-item table_of_contents-indent-2"><a class="table_of_contents-link" href="#17f6d6be-7544-40b1-a533-3f328c1ce5be">Step 2：Define Loss from Training Data</a></div><div class="table_of_contents-item table_of_contents-indent-2"><a class="table_of_contents-link" href="#0f26c415-62a8-4e76-9310-b24b394975ac">Step 3：Optimization</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#ab809cbe-dd3a-4d2b-b2e0-f82ecbb8014a">2.2 Linear Model</a></div><div class="table_of_contents-item table_of_contents-indent-2"><a class="table_of_contents-link" href="#723cd126-b691-4314-920b-a5c85452385a">2.2.1 Model Bias</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#cc87a04b-cac9-43b7-893d-5d0f541554ac">2.3 Piecewise Linear Curves（Sigmoid）</a></div><div class="table_of_contents-item table_of_contents-indent-2"><a class="table_of_contents-link" href="#f472ebef-afb7-4e78-a934-5d9834576c76">2.3.1 模型定義</a></div><div class="table_of_contents-item table_of_contents-indent-2"><a class="table_of_contents-link" href="#51c1e9b6-2485-42dd-92dd-0bf3796f3824">2.3.2 Sigmoid 函數</a></div><div class="table_of_contents-item table_of_contents-indent-2"><a class="table_of_contents-link" href="#01fdce81-ed68-4807-b310-c51f2924dc0c">2.3.3 Loss 函數</a></div><div class="table_of_contents-item table_of_contents-indent-2"><a class="table_of_contents-link" href="#bd064f7d-3f71-40a3-a7b1-e155a2bdf2b5">2.3.4 優化過程</a></div><div class="table_of_contents-item table_of_contents-indent-2"><a class="table_of_contents-link" href="#c4c6bdaf-65c8-441f-a3e1-587124044b71">▲ Batch training</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#51375c3b-d5f2-4ee5-8387-a936e728c4e9">2.4 ReLU</a></div><div class="table_of_contents-item table_of_contents-indent-2"><a class="table_of_contents-link" href="#838fb68a-8e74-443c-837d-e77c595fec6b">▲ 模型變型 ⇒ 多加幾層</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#fcdd40f4-8e31-4d07-88ca-45fed7032df4">3. <strong>引入 Deep Learning</strong></a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#fb970944-8b1b-49b2-99e6-dcffa3a4a22d">4. Learn More</a></div></nav><h1 id="471ed422-c9cd-4e21-87de-4cc767da1a95" class="">1. 機器學習的不同類型</h1><p id="0fabfc77-8e1d-4a2a-a26f-3e618823f72e" class="">機器學習就是讓機器具備找一個函式的能力</p><figure id="05d253d6-fab7-46f6-ac91-efbfe7eee434" class="image"><a href="01-%E6%A9%9F%E5%99%A8%E5%AD%B8%E7%BF%92%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E7%B0%A1%E4%BB%8B/0.png"><img style="width:432px" src="01-%E6%A9%9F%E5%99%A8%E5%AD%B8%E7%BF%92%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E7%B0%A1%E4%BB%8B/0.png"/></a></figure><h2 id="975f2bd5-96c2-4974-9f5c-f499134bac41" class="">1.1 Regression</h2><p id="319f9342-4a3d-4419-9e12-1d0e6d84f4f2" class="">要找的函式，其輸出是一個數值</p><h2 id="82e7ffd1-b1b5-4ae8-a722-1f9e0378ce92" class="">1.2 Classification</h2><p id="e9731417-9491-41e9-89a9-6462386db8be" class="">函式的輸出，就是從設定好的選項裡選擇一個當作輸出</p><h2 id="0f632c10-367f-4c04-88fd-5026ccc990cb" class="">1.3 Structured Learning</h2><p id="f8ba43cf-d1dc-497b-9a13-9d77619f4dc5" class="">機器產生有結構的東西的問題，學會創造</p><p id="9f9e4eeb-b731-426d-88bf-0534663b1936" class="">
+</p><h1 id="bc684157-fad7-4dc3-8cfd-11bc80a963aa" class="">2. Case Study：預測頻道流量</h1><h2 id="62e04a6a-43dd-4176-a4c1-26f216dc3a98" class="">2.1 訓練三步驟</h2><h3 id="20e4b9d9-b26a-43d6-ad64-222e5fd3a90f" class="">Step 1：Function with Unknown Parameters</h3><figure id="96b95c86-3619-4ce5-a640-08be1680eb77" class="image"><a href="01-%E6%A9%9F%E5%99%A8%E5%AD%B8%E7%BF%92%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E7%B0%A1%E4%BB%8B/1.png"><img style="width:432px" src="01-%E6%A9%9F%E5%99%A8%E5%AD%B8%E7%BF%92%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E7%B0%A1%E4%BB%8B/1.png"/></a></figure><ul id="e94f82d4-9b3d-499c-b2ac-2b4f64b1c987" class="bulleted-list"><li style="list-style-type:disc">  <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi></mrow><annotation encoding="application/x-tex">y</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span></span></span></span></span><span>﻿</span></span> <strong>是要預測的東西</strong></li></ul><ul id="5ea27860-7543-4626-b823-6a8d991aa7db" class="bulleted-list"><li style="list-style-type:disc"> <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>x</mi><mn>1</mn></msub></mrow><annotation encoding="application/x-tex">x_1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.5806em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span> <strong>是頻道前一天總觀看人數，</strong>跟 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi></mrow><annotation encoding="application/x-tex">y</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span></span></span></span></span><span>﻿</span></span> 一樣都是數值</li></ul><ul id="115f0d63-47c1-4661-ac39-bc4176c0d93e" class="bulleted-list"><li style="list-style-type:disc"><style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>b</mi></mrow><annotation encoding="application/x-tex">b</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal">b</span></span></span></span></span><span>﻿</span></span> 跟 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>w</mi></mrow><annotation encoding="application/x-tex">w</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.02691em;">w</span></span></span></span></span><span>﻿</span></span> 是<strong>未知的參數</strong>，透過準備資料找出最適合的參數<p id="1a5f8cfe-0ca7-4d57-a8a5-8f36f2d490ed" class=""><strong>猜測：</strong></p><p id="c64501fc-0161-4b10-957a-035a9b2880aa" class=""><strong>未來點閱次數的函式</strong> <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>f</mi></mrow><annotation encoding="application/x-tex">f</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.10764em;">f</span></span></span></span></span><span>﻿</span></span>，是前一天的點閱次數乘上 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>w</mi></mrow><annotation encoding="application/x-tex">w</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.02691em;">w</span></span></span></span></span><span>﻿</span></span> 再加上 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>b</mi></mrow><annotation encoding="application/x-tex">b</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal">b</span></span></span></span></span><span>﻿</span></span>。猜測往往是對問題本質上的了解，是 <strong>domain knowledge</strong></p></li></ul><p id="0b7b3515-8b88-42bf-ae80-0fcdc6a5964a" class=""><strong>名詞定義：</strong></p><ul id="eafca98b-8c4a-41fd-a591-63d1a4bd6ea0" class="bulleted-list"><li style="list-style-type:disc"><strong>Feature：</strong>function 中已知的訊息（<style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>x</mi><mn>1</mn></msub></mrow><annotation encoding="application/x-tex">x_1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.5806em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span>）</li></ul><ul id="4f78048b-00c2-4e71-90d9-0c5e2b1d37a8" class="bulleted-list"><li style="list-style-type:disc"><strong>Weight：</strong>未知參數，與 feature 直接相乘</li></ul><ul id="e93300f6-684d-4b17-a0be-b93f68581b55" class="bulleted-list"><li style="list-style-type:disc"><strong>Bias：</strong>未知參數，直接相加</li></ul><h3 id="17f6d6be-7544-40b1-a533-3f328c1ce5be" class="">Step 2：Define Loss from Training Data</h3><p id="2f575b80-378b-429a-b380-219914947fcc" class="">loss 也是一個 function，它的輸入是 model 中的參數（<style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>w</mi><mo separator="true">,</mo><mi>b</mi></mrow><annotation encoding="application/x-tex">w,b</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.02691em;">w</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">b</span></span></span></span></span><span>﻿</span></span>）</p><ul id="f725bbfe-611a-4f49-b8c1-2a8d44adc219" class="bulleted-list"><li style="list-style-type:disc"><strong>物理意義：function 輸出的值代表，如果把這一組未知的參數設定某一個數值時，這筆數值好還是不好</strong><p id="7d9044e4-a49b-4980-a849-6dc2c3d3bad4" class=""><strong>L 越大，代表一組參數越不好，L 越小，代表現在這一組參數越好</strong></p></li></ul><ul id="c4249829-5c81-4dcf-af01-e98db2334780" class="bulleted-list"><li style="list-style-type:disc"><strong>計算方法：求取估測的值跟實際的值（label） 之間的差距</strong><ul id="7501f2fd-2a6b-4ea6-b048-9550d6f22606" class="bulleted-list"><li style="list-style-type:circle">MAE（mean absolute error）</li></ul><ul id="5d5900f9-1d17-4388-b9fe-1d07a34e51db" class="bulleted-list"><li style="list-style-type:circle">MSE（mean square error）</li></ul><ul id="69ea197a-a8ce-48be-8551-6412e87b485a" class="bulleted-list"><li style="list-style-type:circle">Cross-entropy：計算<strong>機率分布</strong>之間的差距</li></ul></li></ul><figure id="348f55da-b23d-4f63-a95b-055d4ec61b10" class="image"><a href="01-%E6%A9%9F%E5%99%A8%E5%AD%B8%E7%BF%92%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E7%B0%A1%E4%BB%8B/2.png"><img style="width:432px" src="01-%E6%A9%9F%E5%99%A8%E5%AD%B8%E7%BF%92%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E7%B0%A1%E4%BB%8B/2.png"/></a></figure><p id="7fc9687a-7b58-4c49-b8e9-dcf234721834" class=""><strong>Error Surface：</strong></p><p id="3949943e-b730-47c9-85b8-8295ed30bf1c" class="">試<strong>不同的參數</strong>，然後<strong>計算 loss 所畫出來的等高線圖</strong></p><h3 id="0f26c415-62a8-4e76-9310-b24b394975ac" class="">Step 3：Optimization</h3><p id="7d467b56-fed3-4764-bb82-d7e8016fea64" class="">找到能讓損失函數值最小的參數</p><p id="f88b16db-adce-4790-b9fd-4367258e1df5" class=""><strong>方法：</strong></p><p id="4bebd236-1356-4618-93ad-479a04ecbc1e" class=""><strong>Gradient Descent（梯度下降）</strong></p><figure id="ca307bc7-0856-4fd3-b913-fad614b4ad0c" class="image"><a href="01-%E6%A9%9F%E5%99%A8%E5%AD%B8%E7%BF%92%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E7%B0%A1%E4%BB%8B/3.png"><img style="width:432px" src="01-%E6%A9%9F%E5%99%A8%E5%AD%B8%E7%BF%92%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E7%B0%A1%E4%BB%8B/3.png"/></a></figure><p id="e10824d9-988e-4fb3-b4ee-03c0df53c42a" class=""><strong>步驟：</strong></p><ol type="1" id="b558cd7b-0bed-4d3a-a0d3-cf9a6b325e9d" class="numbered-list" start="1"><li>隨機選取初始值 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>w</mi><mn>0</mn></msub></mrow><annotation encoding="application/x-tex">w_0</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.5806em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02691em;">w</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:-0.0269em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span></li></ol><ol type="1" id="d536d8f1-b919-491c-ba72-ad04c88f1b1f" class="numbered-list" start="2"><li>計算 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>w</mi><mo>=</mo><msub><mi>w</mi><mn>0</mn></msub></mrow><annotation encoding="application/x-tex">w=w_0</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.02691em;">w</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.5806em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02691em;">w</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:-0.0269em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span> 時，<em><style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>w</mi></mrow><annotation encoding="application/x-tex">w</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.02691em;">w</span></span></span></span></span><span>﻿</span></span></em><em> </em>對 loss 的微分是多少</li></ol><ol type="1" id="206c5e9f-8b4c-43bf-9132-09a27c392154" class="numbered-list" start="3"><li>根據微分（梯度）的方向，改變參數的值<p id="09c12abc-c9fc-46a0-b4da-c60ed3d6c649" class=""><strong>改變的大小取決於：</strong></p><ul id="91fd43bb-3aa9-49d5-a76c-0f6a2d2f72c2" class="bulleted-list"><li style="list-style-type:disc">斜率的大小</li></ul><ul id="503d7b9f-fca8-430a-84a6-feb9c614efe7" class="bulleted-list"><li style="list-style-type:disc">學習率的大小<strong>（超參數）</strong></li></ul></li></ol><ol type="1" id="fe3f7e1a-1d62-410b-bf74-e20075edf463" class="numbered-list" start="4"><li>什麽時候停下來？<ol type="a" id="078cd49d-0f43-4b5e-9ab9-4af6d0e176a6" class="numbered-list" start="1"><li>自己設置上限<strong>（超參數）</strong></li></ol><ol type="a" id="e902bedd-2006-4656-b2d8-7fa36f246e20" class="numbered-list" start="2"><li>理想情況：微分值為 0（極小值點），不會再更新 ⇒ <strong>有可能陷入局部最小值</strong>，不能找到全局最小值<br/><strong>事實上：局部最小值不是真正的問題！！！</strong></li></ol></li></ol><p id="65b47b00-ff5d-4aae-b1ce-7cd2fc2ee8a8" class=""><strong>推廣到多個參數：</strong></p><div id="c41c3ede-4cfd-4477-a2dc-1758675b2ccd" class="column-list"><div id="778f71da-bbb5-4e46-9128-269fc99656c5" style="width:50%" class="column"><figure id="d9b36a77-c89c-4184-9042-0b902ece3c21" class="image"><a href="01-%E6%A9%9F%E5%99%A8%E5%AD%B8%E7%BF%92%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E7%B0%A1%E4%BB%8B/4.png"><img style="width:336px" src="01-%E6%A9%9F%E5%99%A8%E5%AD%B8%E7%BF%92%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E7%B0%A1%E4%BB%8B/4.png"/></a></figure></div><div id="4bda921d-9c8a-453a-aac3-fb65b536fc22" style="width:50%" class="column"><figure id="831317d6-a4e5-448f-a058-1957f2e52a58" class="image"><a href="01-%E6%A9%9F%E5%99%A8%E5%AD%B8%E7%BF%92%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E7%B0%A1%E4%BB%8B/5.png"><img style="width:336px" src="01-%E6%A9%9F%E5%99%A8%E5%AD%B8%E7%BF%92%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E7%B0%A1%E4%BB%8B/5.png"/></a></figure></div></div><h2 id="ab809cbe-dd3a-4d2b-b2e0-f82ecbb8014a" class="">2.2 Linear Model</h2><p id="7f7b6400-9530-4541-9654-1cabd5d00b47" class="">根據周期性修改模型，考慮<strong>前7天，甚至更多天</strong>的值</p><figure id="967534f7-7537-4d10-9142-3936c4314ad1" class="image"><a href="01-%E6%A9%9F%E5%99%A8%E5%AD%B8%E7%BF%92%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E7%B0%A1%E4%BB%8B/6.png"><img style="width:432px" src="01-%E6%A9%9F%E5%99%A8%E5%AD%B8%E7%BF%92%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E7%B0%A1%E4%BB%8B/6.png"/></a></figure><h3 id="723cd126-b691-4314-920b-a5c85452385a" class="">2.2.1 Model Bias</h3><p id="ab9194bb-2d16-4187-a810-f498e3114fb8" class=""><strong>問題：</strong></p><p id="a45bff34-5b64-40e0-b961-24e87f729430" class="">模型遇到無法模擬或描述真實情況的狀況</p><p id="69d6f0fd-494f-43c9-a035-1c6933ca8aaa" class=""><strong>解決：</strong></p><p id="3794584c-1f5c-4f56-a490-13aa13127165" class="">需要一個更複雜的、更有彈性的、有未知參數的 function</p><h2 id="cc87a04b-cac9-43b7-893d-5d0f541554ac" class="">2.3 Piecewise Linear Curves（Sigmoid）</h2><h3 id="f472ebef-afb7-4e78-a934-5d9834576c76" class="">2.3.1 模型定義</h3><p id="1a6f75f0-3003-4b6f-896f-5a0a114049c8" class=""><strong>定義：</strong></p><p id="7827b3a2-d684-4896-a988-3325ccc2ab61" class="">由多段鋸齒狀的線段所組成的線，可以看作是一個常數，再加上若干個藍色的 function<strong>（Hard Sigmoid）</strong></p><figure id="66eff658-5cd4-411f-804f-7200b0718202" class="equation"><style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><div class="equation-container"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>y</mi><mo>=</mo><mi>b</mi><mo>+</mo><munder><mo>∑</mo><mi>i</mi></munder><mi>s</mi><mi>i</mi><mi>g</mi><mi>m</mi><mi>o</mi><mi>i</mi><mi>d</mi><mo stretchy="false">(</mo><msub><mi>b</mi><mi>i</mi></msub><mo>+</mo><msub><mi>w</mi><mi>i</mi></msub><msub><mi>x</mi><mi>i</mi></msub><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">y=b+\sum_isigmoid(b_i+w_ix_i)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.7778em;vertical-align:-0.0833em;"></span><span class="mord mathnormal">b</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:2.3277em;vertical-align:-1.2777em;"></span><span class="mop op-limits"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.05em;"><span style="top:-1.8723em;margin-left:0em;"><span class="pstrut" style="height:3.05em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span><span style="top:-3.05em;"><span class="pstrut" style="height:3.05em;"></span><span><span class="mop op-symbol large-op">∑</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.2777em;"><span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">s</span><span class="mord mathnormal">i</span><span class="mord mathnormal" style="margin-right:0.03588em;">g</span><span class="mord mathnormal">m</span><span class="mord mathnormal">o</span><span class="mord mathnormal">i</span><span class="mord mathnormal">d</span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal">b</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02691em;">w</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.0269em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span></span></div></figure><figure id="69e879be-32ce-4e1a-bdae-25c4c35c15c5" class="image"><a href="01-%E6%A9%9F%E5%99%A8%E5%AD%B8%E7%BF%92%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E7%B0%A1%E4%BB%8B/7.png"><img style="width:384px" src="01-%E6%A9%9F%E5%99%A8%E5%AD%B8%E7%BF%92%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E7%B0%A1%E4%BB%8B/7.png"/></a></figure><p id="4d7b1ceb-60bf-4941-8b25-826993c78bb1" class="">用一條曲線來近似描述這條藍色的曲線：<strong>Sigmoid 函數（S 型的 function）</strong></p><p id="ed6fcb5b-cc82-415f-982d-367fde7f0907" class="">事實上，sigmoid 的個數就是神經網絡中的一層的 neuron 節點數（使用幾個 sigmoid 是<strong>超參數</strong>）</p><p id="efdec295-ddff-4b45-af69-3154878731ac" class=""><strong>結論：</strong><div class="indented"><ol type="1" id="c4a39d39-fcf7-428b-bc0b-f1606ad91e83" class="numbered-list" start="1"><li>可以用 <strong>Piecewise Linear 的 Curves</strong>，去<strong>逼近任何的連續的曲線</strong></li></ol><ol type="1" id="6eb11176-8960-471c-9c21-09e344056faa" class="numbered-list" start="2"><li>每一個 <strong>Piecewise Linear 的 Curves</strong>，都可以用<strong>一大堆藍色的 Function 加上一個常量組合</strong>起來得到</li></ol><ol type="1" id="0f7287d2-5039-4596-b064-a70d3f802ec9" class="numbered-list" start="3"><li>只要有<strong>足夠的藍色 Function</strong> 把它加起來，就可以變成任何連續的曲線</li></ol></div></p><h3 id="51c1e9b6-2485-42dd-92dd-0bf3796f3824" class="">2.3.2 Sigmoid 函數</h3><figure id="f9facb39-3d2c-4ab6-9d38-4e54b6f0eeb3" class="equation"><style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><div class="equation-container"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>S</mi><mi>i</mi><mi>g</mi><mi>m</mi><mi>o</mi><mi>i</mi><mi>d</mi><mtext>：</mtext><mi>y</mi><mo>=</mo><mi>c</mi><mfrac><mn>1</mn><mrow><mn>1</mn><mo>+</mo><msup><mi>e</mi><mrow><mo>−</mo><mo stretchy="false">(</mo><mi>b</mi><mo>+</mo><mi>w</mi><msub><mi>x</mi><mn>1</mn></msub><mo stretchy="false">)</mo></mrow></msup></mrow></mfrac></mrow><annotation encoding="application/x-tex">Sigmoid：y = c\frac{1}{{1+e^{-(b+wx_1)}}}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.05764em;">S</span><span class="mord mathnormal">i</span><span class="mord mathnormal" style="margin-right:0.03588em;">g</span><span class="mord mathnormal">m</span><span class="mord mathnormal">o</span><span class="mord mathnormal">i</span><span class="mord mathnormal">d</span><span class="mord cjk_fallback">：</span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:2.1088em;vertical-align:-0.7873em;"></span><span class="mord mathnormal">c</span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3214em;"><span style="top:-2.296em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord">1</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord"><span class="mord mathnormal">e</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.814em;"><span style="top:-2.989em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">−</span><span class="mopen mtight">(</span><span class="mord mathnormal mtight">b</span><span class="mbin mtight">+</span><span class="mord mathnormal mtight" style="margin-right:0.02691em;">w</span><span class="mord mtight"><span class="mord mathnormal mtight">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3173em;"><span style="top:-2.357em;margin-left:0em;margin-right:0.0714em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.143em;"><span></span></span></span></span></span></span><span class="mclose mtight">)</span></span></span></span></span></span></span></span></span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.7873em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></span></div></figure><figure id="5ef02d36-ee2c-452b-bea5-e551743a5745" class="image"><a href="01-%E6%A9%9F%E5%99%A8%E5%AD%B8%E7%BF%92%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E7%B0%A1%E4%BB%8B/8.png"><img style="width:384px" src="01-%E6%A9%9F%E5%99%A8%E5%AD%B8%E7%BF%92%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E7%B0%A1%E4%BB%8B/8.png"/></a></figure><ul id="e992dde1-c9ca-47d4-bb41-b7fccf3396d8" class="bulleted-list"><li style="list-style-type:disc"> <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>x</mi><mn>1</mn></msub></mrow><annotation encoding="application/x-tex">x_1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.5806em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span> 趨近於正無窮大 ⇒ 收斂於高度 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>c</mi></mrow><annotation encoding="application/x-tex">c</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">c</span></span></span></span></span><span>﻿</span></span></li></ul><ul id="8724bf4f-7cc9-417c-a156-b0f13c072be4" class="bulleted-list"><li style="list-style-type:disc"> <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>x</mi><mn>1</mn></msub></mrow><annotation encoding="application/x-tex">x_1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.5806em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span> 負非常大，分母就會非常大 ⇒ <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi></mrow><annotation encoding="application/x-tex">y</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span></span></span></span></span><span>﻿</span></span> 值趨近於 0</li></ul><p id="575ae765-8246-4bd7-b721-1a5cea20ca2b" class="">調整<strong> </strong><style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>w</mi><mo separator="true">,</mo><mi>b</mi><mo separator="true">,</mo><mi>c</mi></mrow><annotation encoding="application/x-tex">w,b,c</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.02691em;">w</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">b</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">c</span></span></span></span></span><span>﻿</span></span><strong> ，可以得到各種不同的 sigmiod 來逼近”藍色function“，通過求和，最終近似各種不同的 continuous function</strong></p><figure id="681ca3f8-6985-4e42-b4d5-c64a3549aef7" class="image"><a href="01-%E6%A9%9F%E5%99%A8%E5%AD%B8%E7%BF%92%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E7%B0%A1%E4%BB%8B/9.png"><img style="width:432px" src="01-%E6%A9%9F%E5%99%A8%E5%AD%B8%E7%BF%92%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E7%B0%A1%E4%BB%8B/9.png"/></a></figure><ul id="4cc7bc14-75e5-47cf-9a7e-89697528a742" class="bulleted-list"><li style="list-style-type:disc">如果改 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>w</mi></mrow><annotation encoding="application/x-tex">w</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.02691em;">w</span></span></span></span></span><span>﻿</span></span>，就會改變<strong>斜率</strong>，改變斜坡的坡度</li></ul><ul id="6670af5c-1eef-437d-af07-95d2735a6f92" class="bulleted-list"><li style="list-style-type:disc">如果改 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>b</mi></mrow><annotation encoding="application/x-tex">b</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal">b</span></span></span></span></span><span>﻿</span></span>，就可以把 sigmoid function 左右移動</li></ul><ul id="e3263c5e-13b4-4dbd-aa53-74495512d577" class="bulleted-list"><li style="list-style-type:disc">如果改 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>c</mi></mrow><annotation encoding="application/x-tex">c</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">c</span></span></span></span></span><span>﻿</span></span>，就可以改變它的高度</li></ul><p id="57961e5d-e151-46d5-b7b0-1ea843ff4f30" class=""><strong>總結：</strong></p><p id="21ab8731-780d-4ef9-890d-274ec3d8431c" class="">利用若干個具有不同 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>w</mi><mo separator="true">,</mo><mi>b</mi><mo separator="true">,</mo><mi>c</mi></mrow><annotation encoding="application/x-tex">w,b,c</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.02691em;">w</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">b</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">c</span></span></span></span></span><span>﻿</span></span> 的 Sigmoid 函數與一個常數參數的組合，可以模擬任何一個連續的曲線（非線性函數）</p><p id="271fe4b5-2dcd-48ed-8ec8-4162a1a23560" class=""><strong>擴展到多個特徵：</strong></p><figure id="95d39fdc-b89f-4cac-8937-c6baae689a04" class="image"><a href="01-%E6%A9%9F%E5%99%A8%E5%AD%B8%E7%BF%92%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E7%B0%A1%E4%BB%8B/10.png"><img style="width:384px" src="01-%E6%A9%9F%E5%99%A8%E5%AD%B8%E7%BF%92%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E7%B0%A1%E4%BB%8B/10.png"/></a></figure><figure id="33e253c8-bbb1-4250-bcf1-767a63b2d8ae" class="equation"><style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><div class="equation-container"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>y</mi><mo>=</mo><mi>b</mi><mo>+</mo><munder><mo>∑</mo><mi>i</mi></munder><mi>s</mi><mi>i</mi><mi>g</mi><mi>m</mi><mi>o</mi><mi>i</mi><mi>d</mi><mo stretchy="false">(</mo><msub><mi>b</mi><mi>i</mi></msub><mo>+</mo><munder><mo>∑</mo><mi>j</mi></munder><mo stretchy="false">(</mo><msub><mi>w</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><msub><mi>x</mi><mi>j</mi></msub><mo stretchy="false">)</mo><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">y=b+\sum_isigmoid(b_i+\sum_j(w_{ij}x_j))</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.7778em;vertical-align:-0.0833em;"></span><span class="mord mathnormal">b</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:2.3277em;vertical-align:-1.2777em;"></span><span class="mop op-limits"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.05em;"><span style="top:-1.8723em;margin-left:0em;"><span class="pstrut" style="height:3.05em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span><span style="top:-3.05em;"><span class="pstrut" style="height:3.05em;"></span><span><span class="mop op-symbol large-op">∑</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.2777em;"><span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">s</span><span class="mord mathnormal">i</span><span class="mord mathnormal" style="margin-right:0.03588em;">g</span><span class="mord mathnormal">m</span><span class="mord mathnormal">o</span><span class="mord mathnormal">i</span><span class="mord mathnormal">d</span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal">b</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:2.4638em;vertical-align:-1.4138em;"></span><span class="mop op-limits"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.05em;"><span style="top:-1.8723em;margin-left:0em;"><span class="pstrut" style="height:3.05em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.05724em;">j</span></span></span><span style="top:-3.05em;"><span class="pstrut" style="height:3.05em;"></span><span><span class="mop op-symbol large-op">∑</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.4138em;"><span></span></span></span></span></span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02691em;">w</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.0269em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.05724em;">ij</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.05724em;">j</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mclose">))</span></span></span></span></span></div></figure><figure id="0b2a6be0-5bc8-4eea-873b-7116295165bf" class="image"><a href="01-%E6%A9%9F%E5%99%A8%E5%AD%B8%E7%BF%92%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E7%B0%A1%E4%BB%8B/11.png"><img style="width:384px" src="01-%E6%A9%9F%E5%99%A8%E5%AD%B8%E7%BF%92%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E7%B0%A1%E4%BB%8B/11.png"/></a></figure><ul id="32522ba6-feb9-4741-b597-b1f1e03e0b15" class="bulleted-list"><li style="list-style-type:disc"> <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>j</mi></mrow><annotation encoding="application/x-tex">j</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.854em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.05724em;">j</span></span></span></span></span><span>﻿</span></span> 等於 1 2 3，<style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>x</mi><mn>1</mn></msub></mrow><annotation encoding="application/x-tex">x_1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.5806em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span><strong> 代表前一天的觀看人數，</strong><style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>x</mi><mn>2</mn></msub></mrow><annotation encoding="application/x-tex">x_2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.5806em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span><strong> 兩天前觀看人數，</strong><style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>x</mi><mn>3</mn></msub></mrow><annotation encoding="application/x-tex">x_3</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.5806em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">3</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span><strong> 三天前的觀看人數</strong></li></ul><ul id="b7380522-8d84-4f48-90fe-4b00e5bb6ed0" class="bulleted-list"><li style="list-style-type:disc">每一個 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi></mrow><annotation encoding="application/x-tex">i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6595em;"></span><span class="mord mathnormal">i</span></span></span></span></span><span>﻿</span></span><strong> 就代表了一個藍色的 function</strong>，現在每一個藍色的 function 都用一個 sigmoid function 來近似它</li></ul><ul id="918ca41c-16c3-4b2c-8170-9e0642f1a506" class="bulleted-list"><li style="list-style-type:disc"> <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>w</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub></mrow><annotation encoding="application/x-tex">w_{ij}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7167em;vertical-align:-0.2861em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02691em;">w</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.0269em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.05724em;">ij</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span> 第 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi></mrow><annotation encoding="application/x-tex">i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6595em;"></span><span class="mord mathnormal">i</span></span></span></span></span><span>﻿</span></span> 個 sigmoid 給第 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>j</mi></mrow><annotation encoding="application/x-tex">j</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.854em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.05724em;">j</span></span></span></span></span><span>﻿</span></span> 個 feature 的權重</li></ul><p id="b83afa54-2652-4abb-821b-baf1664a8fc2" class="">轉化為矩陣計算 + 激勵函數形式：</p><figure id="491f58cd-1c9a-4235-a813-de17f015c933" class="image"><a href="01-%E6%A9%9F%E5%99%A8%E5%AD%B8%E7%BF%92%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E7%B0%A1%E4%BB%8B/12.png"><img style="width:384px" src="01-%E6%A9%9F%E5%99%A8%E5%AD%B8%E7%BF%92%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E7%B0%A1%E4%BB%8B/12.png"/></a></figure><figure id="16f91f8d-0060-425a-9bb2-ba4a2a48c73b" class="image"><a href="01-%E6%A9%9F%E5%99%A8%E5%AD%B8%E7%BF%92%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E7%B0%A1%E4%BB%8B/13.png"><img style="width:384px" src="01-%E6%A9%9F%E5%99%A8%E5%AD%B8%E7%BF%92%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E7%B0%A1%E4%BB%8B/13.png"/></a></figure><figure id="4b2b2619-b3c7-40af-9f80-9b91614e5104" class="image"><a href="01-%E6%A9%9F%E5%99%A8%E5%AD%B8%E7%BF%92%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E7%B0%A1%E4%BB%8B/14.png"><img style="width:384px" src="01-%E6%A9%9F%E5%99%A8%E5%AD%B8%E7%BF%92%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E7%B0%A1%E4%BB%8B/14.png"/></a></figure><figure id="af684242-7eed-4645-8619-643248441aec" class="image"><a href="01-%E6%A9%9F%E5%99%A8%E5%AD%B8%E7%BF%92%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E7%B0%A1%E4%BB%8B/15.png"><img style="width:384px" src="01-%E6%A9%9F%E5%99%A8%E5%AD%B8%E7%BF%92%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E7%B0%A1%E4%BB%8B/15.png"/></a></figure><p id="bb098e20-35bd-4bec-87a0-27df86e49a17" class="">總之<strong>：</strong></p><figure id="e19c9807-0be7-4a65-9a0f-745ddcffc8c5" class="image"><a href="01-%E6%A9%9F%E5%99%A8%E5%AD%B8%E7%BF%92%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E7%B0%A1%E4%BB%8B/16.png"><img style="width:384px" src="01-%E6%A9%9F%E5%99%A8%E5%AD%B8%E7%BF%92%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E7%B0%A1%E4%BB%8B/16.png"/></a></figure><p id="5d0f2534-bbc2-48c5-81dc-ae5abc284338" class="">一般來說，將所有參數統稱為 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>θ</mi></mrow><annotation encoding="application/x-tex">\theta</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">θ</span></span></span></span></span><span>﻿</span></span>（包含 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>W</mi><mo separator="true">,</mo><mover accent="true"><mi>b</mi><mo>⃗</mo></mover><mo separator="true">,</mo><mi>b</mi></mrow><annotation encoding="application/x-tex">W,\vec{b} ,b</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.1719em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.13889em;">W</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord accent"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.9774em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord mathnormal">b</span></span><span style="top:-3.2634em;"><span class="pstrut" style="height:3em;"></span><span class="accent-body" style="left:-0.2355em;"><span class="overlay" style="height:0.714em;width:0.471em;"><svg xmlns="http://www.w3.org/2000/svg" width='0.471em' height='0.714em' style='width:0.471em' viewBox='0 0 471 714' preserveAspectRatio='xMinYMin'><path d='M377 20c0-5.333 1.833-10 5.5-14S391 0 397 0c4.667 0 8.667 1.667 12 5
+3.333 2.667 6.667 9 10 19 6.667 24.667 20.333 43.667 41 57 7.333 4.667 11
+10.667 11 18 0 6-1 10-3 12s-6.667 5-14 9c-28.667 14.667-53.667 35.667-75 63
+-1.333 1.333-3.167 3.5-5.5 6.5s-4 4.833-5 5.5c-1 .667-2.5 1.333-4.5 2s-4.333 1
+-7 1c-4.667 0-9.167-1.833-13.5-5.5S337 184 337 178c0-12.667 15.667-32.333 47-59
+H213l-171-1c-8.667-6-13-12.333-13-19 0-4.667 4.333-11.333 13-20h359
+c-16-25.333-24-45-24-59z'/></svg></span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">b</span></span></span></span></span><span>﻿</span></span>...)</p><h3 id="01fdce81-ed68-4807-b310-c51f2924dc0c" class="">2.3.3 Loss 函數</h3><p id="408994ea-23f7-4005-aefc-6fcbb0a35339" class="">因為所有參數統稱為 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>θ</mi></mrow><annotation encoding="application/x-tex">\theta</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">θ</span></span></span></span></span><span>﻿</span></span>，loss 表示為 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>L</mi><mo stretchy="false">(</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">L(\theta)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">L</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.02778em;">θ</span><span class="mclose">)</span></span></span></span></span><span>﻿</span></span></p><h3 id="bd064f7d-3f71-40a3-a7b1-e155a2bdf2b5" class="">2.3.4 優化過程</h3><p id="0e62962f-960a-49dd-83fc-7e18f706f881" class="">仍是梯度下降</p><p id="f30bf5db-19d9-445e-a8b3-212e126b9ff2" class="">（1）選定<strong>初始參數值</strong>（向量） <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>θ</mi><mn>0</mn></msub></mrow><annotation encoding="application/x-tex">\theta_0</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8444em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02778em;">θ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:-0.0278em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span></p><p id="87eaca93-8202-4f7a-a9e2-6951b02b0cca" class="">（2）對每個參數求<strong>偏微分</strong></p><p id="4adc3e1b-d463-455b-a144-2bc11dfd224a" class="">（3）更新參數，直至設定的次數</p><figure id="90dd355f-c37e-4a2d-8a14-721fdd2089fa" class="image"><a href="01-%E6%A9%9F%E5%99%A8%E5%AD%B8%E7%BF%92%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E7%B0%A1%E4%BB%8B/17.png"><img style="width:384px" src="01-%E6%A9%9F%E5%99%A8%E5%AD%B8%E7%BF%92%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E7%B0%A1%E4%BB%8B/17.png"/></a></figure><figure id="9d1d0a96-2ad0-43d9-b918-cdd6f74584f4" class="image"><a href="01-%E6%A9%9F%E5%99%A8%E5%AD%B8%E7%BF%92%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E7%B0%A1%E4%BB%8B/18.png"><img style="width:384px" src="01-%E6%A9%9F%E5%99%A8%E5%AD%B8%E7%BF%92%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E7%B0%A1%E4%BB%8B/18.png"/></a></figure><h3 id="c4c6bdaf-65c8-441f-a3e1-587124044b71" class="">▲ Batch training</h3><p id="dbf7bc00-af04-4ea3-bdc3-db76dd7f149d" class="">每次更新參數時，只使用 <strong>1 個 batch</strong> 裡的資料計算 loss，求取梯度，更新參數</p><blockquote id="d0f3d9ed-d9d6-4bbe-8ab7-a491d5c7a714" class="">batch 大小也是<strong>超參數</strong></blockquote><figure id="5ac49f01-2271-4ba9-8faf-8532d8fa4770" class="image"><a href="01-%E6%A9%9F%E5%99%A8%E5%AD%B8%E7%BF%92%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E7%B0%A1%E4%BB%8B/19.png"><img style="width:384px" src="01-%E6%A9%9F%E5%99%A8%E5%AD%B8%E7%BF%92%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E7%B0%A1%E4%BB%8B/19.png"/></a></figure><p id="84beffd6-0b29-44f8-ad34-1b7cbb39e9a7" class=""><strong>Update：每次更新一次參數叫做一次 Update</strong></p><p id="53b0b47c-acba-43f3-8522-7a181b965c08" class=""><strong>Epoch：把所有 batch 都看過一遍叫做一個 Epoch</strong></p><h2 id="51375c3b-d5f2-4ee5-8387-a936e728c4e9" class="">2.4 ReLU</h2><p id="1878a874-09e8-4815-b4a0-641146488967" class="">把兩個 ReLU 疊起來就等於 <strong>hard sigmoid</strong></p><figure id="5ace7fe7-8957-44ab-8587-87bee753ff9a" class="equation"><style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><div class="equation-container"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>y</mi><mo>=</mo><mi>b</mi><mo>+</mo><munder><mo>∑</mo><mi>i</mi></munder><mi>m</mi><mi>a</mi><mi>x</mi><mo stretchy="false">(</mo><mn>0</mn><mo separator="true">,</mo><msub><mi>b</mi><mi>i</mi></msub><mo>+</mo><msub><mi>w</mi><mi>i</mi></msub><msub><mi>x</mi><mi>i</mi></msub><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">y=b+\sum_imax(0, b_i+w_ix_i)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.7778em;vertical-align:-0.0833em;"></span><span class="mord mathnormal">b</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:2.3277em;vertical-align:-1.2777em;"></span><span class="mop op-limits"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.05em;"><span style="top:-1.8723em;margin-left:0em;"><span class="pstrut" style="height:3.05em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span><span style="top:-3.05em;"><span class="pstrut" style="height:3.05em;"></span><span><span class="mop op-symbol large-op">∑</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.2777em;"><span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">ma</span><span class="mord mathnormal">x</span><span class="mopen">(</span><span class="mord">0</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal">b</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02691em;">w</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.0269em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span></span></div></figure><div id="46a269d9-4920-40b6-a7d2-15f688212933" class="column-list"><div id="fe22d8c2-8492-4777-b8f2-4920c90c9368" style="width:50%" class="column"><figure id="6dbca936-e673-4282-af2a-10ca6b74a3af" class="image" style="text-align:right"><a href="01-%E6%A9%9F%E5%99%A8%E5%AD%B8%E7%BF%92%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E7%B0%A1%E4%BB%8B/20.png"><img style="width:288px" src="01-%E6%A9%9F%E5%99%A8%E5%AD%B8%E7%BF%92%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E7%B0%A1%E4%BB%8B/20.png"/></a><figcaption>兩個 ReLU 可以合成一個 hard sigmoid</figcaption></figure></div><div id="339f4cb5-fc76-4183-8e16-b45328c3574b" style="width:50%" class="column"><figure id="b5105c59-51bc-4f07-b400-d570ab15b89b" class="image" style="text-align:center"><a href="01-%E6%A9%9F%E5%99%A8%E5%AD%B8%E7%BF%92%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E7%B0%A1%E4%BB%8B/21.png"><img style="width:288px" src="01-%E6%A9%9F%E5%99%A8%E5%AD%B8%E7%BF%92%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E7%B0%A1%E4%BB%8B/21.png"/></a></figure></div></div><p id="58bf373b-5e9c-4663-8283-44d425d5c960" class="">Sigmoid 和 ReLU 都屬於激勵函數<strong>（Activation Function）</strong></p><h3 id="838fb68a-8e74-443c-837d-e77c595fec6b" class="">▲ 模型變型 ⇒ 多加幾層</h3><figure id="33957cbb-ec34-4dda-bb75-c9e18b07bd0e" class="image"><a href="01-%E6%A9%9F%E5%99%A8%E5%AD%B8%E7%BF%92%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E7%B0%A1%E4%BB%8B/22.png"><img style="width:384px" src="01-%E6%A9%9F%E5%99%A8%E5%AD%B8%E7%BF%92%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E7%B0%A1%E4%BB%8B/22.png"/></a><figcaption>函數的函數的函數…的函數</figcaption></figure><h1 id="fcdd40f4-8e31-4d07-88ca-45fed7032df4" class="">3. <strong>引入 Deep Learning</strong></h1><figure id="89747e68-78c9-4107-bb20-2fd93a38fa54" class="image"><a href="01-%E6%A9%9F%E5%99%A8%E5%AD%B8%E7%BF%92%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E7%B0%A1%E4%BB%8B/23.png"><img style="width:384px" src="01-%E6%A9%9F%E5%99%A8%E5%AD%B8%E7%BF%92%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E7%B0%A1%E4%BB%8B/23.png"/></a></figure><p id="bf86d60f-025d-4eef-adaa-ea62008257aa" class=""><strong>問題：</strong></p><p id="d3c3252d-ac10-44d8-bd22-030a8eef523e" class="">為什麽要“深”，而不“胖”？</p><figure id="23d6d9fb-da36-4046-9a20-7feed22c8aa9" class="image"><a href="01-%E6%A9%9F%E5%99%A8%E5%AD%B8%E7%BF%92%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E7%B0%A1%E4%BB%8B/24.png"><img style="width:432px" src="01-%E6%A9%9F%E5%99%A8%E5%AD%B8%E7%BF%92%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E7%B0%A1%E4%BB%8B/24.png"/></a></figure><p id="c0cd6d5f-f0ff-4064-a460-ecf4b8d29b2b" class=""><strong>Overfitting：在訓練資料上有變好，但是在沒看過的資料上沒有變好</strong></p><p id="6e4ed21a-8f0a-4490-8eaf-95729267e54d" class="">
+</p><h1 id="fb970944-8b1b-49b2-99e6-dcffa3a4a22d" class="">4. Learn More</h1><figure id="490f80bb-3759-409f-9799-b5b45e7ecf09" class="image"><a href="01-%E6%A9%9F%E5%99%A8%E5%AD%B8%E7%BF%92%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E7%B0%A1%E4%BB%8B/25.png"><img style="width:432px" src="01-%E6%A9%9F%E5%99%A8%E5%AD%B8%E7%BF%92%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E7%B0%A1%E4%BB%8B/25.png"/></a></figure><p id="380f8adf-1c33-4cb9-afd3-bbc690e73cd3" class="">
+</p></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>
