@@ -120,8 +120,8 @@
     </tr>
     <tr>
       <td align="center">14</td>
-      <td align="center">Nerwork Compression</td>
-      <td align="center"><a href="https://chsiang.notion.site/14-Nerwork-Compression-4bae9dc82e1c4e06938d3637e6e966f9">Notion</a> / <a href="https://chsiang426.github.io/ML-2021-notes/14-Nerwork%20Compression/14-Nerwork%20Compression.html">Website</a> / <a href="https://github.com/chsiang426/ML-2021-notes/blob/main/PDF/14-Nerwork_Compression.pdf">PDF</a></td>
+      <td align="center">Network Compression</td>
+      <td align="center"><a href="https://chsiang.notion.site/14-Network-Compression-4bae9dc82e1c4e06938d3637e6e966f9">Notion</a> / <a href="https://chsiang426.github.io/ML-2021-notes/14-Network%20Compression/14-Network%20Compression.html">Website</a> / <a href="https://github.com/chsiang426/ML-2021-notes/blob/main/PDF/14-Network_Compression.pdf">PDF</a></td>
       <td align="center"><a href="https://youtu.be/utk3EnAUh-g">video 1</a>, <a href="https://youtu.be/xrlbLPaq_Og">video 2</a></td>
     </tr>
     <tr>
