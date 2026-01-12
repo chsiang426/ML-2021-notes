@@ -1,771 +1,1533 @@
-<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>11-Domain Adaptation</title><style>
-/* cspell:disable-file */
-/* webkit printing magic: print all background colors */
-html {
-	-webkit-print-color-adjust: exact;
-}
-* {
-	box-sizing: border-box;
-	-webkit-print-color-adjust: exact;
-}
-
-html,
-body {
-	margin: 0;
-	padding: 0;
-}
-@media only screen {
-	body {
-		margin: 2em auto;
-		max-width: 900px;
-		color: rgb(55, 53, 47);
-	}
-}
-
-body {
-	line-height: 1.5;
-	white-space: pre-wrap;
-}
-
-a,
-a.visited {
-	color: inherit;
-	text-decoration: underline;
-}
-
-.pdf-relative-link-path {
-	font-size: 80%;
-	color: #444;
-}
-
-h1,
-h2,
-h3 {
-	letter-spacing: -0.01em;
-	line-height: 1.2;
-	font-weight: 600;
-	margin-bottom: 0;
-}
-
-.page-title {
-	font-size: 2.5rem;
-	font-weight: 700;
-	margin-top: 0;
-	margin-bottom: 0.75em;
-}
-
-h1 {
-	font-size: 1.875rem;
-	margin-top: 1.875rem;
-}
-
-h2 {
-	font-size: 1.5rem;
-	margin-top: 1.5rem;
-}
-
-h3 {
-	font-size: 1.25rem;
-	margin-top: 1.25rem;
-}
-
-.source {
-	border: 1px solid #ddd;
-	border-radius: 3px;
-	padding: 1.5em;
-	word-break: break-all;
-}
-
-.callout {
-	border-radius: 10px;
-	padding: 1rem;
-}
-
-figure {
-	margin: 1.25em 0;
-	page-break-inside: avoid;
-}
-
-figcaption {
-	opacity: 0.5;
-	font-size: 85%;
-	margin-top: 0.5em;
-}
-
-mark {
-	background-color: transparent;
-}
-
-.indented {
-	padding-left: 1.5em;
-}
-
-hr {
-	background: transparent;
-	display: block;
-	width: 100%;
-	height: 1px;
-	visibility: visible;
-	border: none;
-	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
-}
-
-img {
-	max-width: 100%;
-}
-
-@media only print {
-	img {
-		max-height: 100vh;
-		object-fit: contain;
-	}
-}
-
-@page {
-	margin: 1in;
-}
-
-.collection-content {
-	font-size: 0.875rem;
-}
-
-.collection-content td {
-	white-space: pre-wrap;
-	word-break: break-word;
-}
-
-.column-list {
-	display: flex;
-	justify-content: space-between;
-}
-
-.column {
-	padding: 0 1em;
-}
-
-.column:first-child {
-	padding-left: 0;
-}
-
-.column:last-child {
-	padding-right: 0;
-}
-
-.table_of_contents-item {
-	display: block;
-	font-size: 0.875rem;
-	line-height: 1.3;
-	padding: 0.125rem;
-}
-
-.table_of_contents-indent-1 {
-	margin-left: 1.5rem;
-}
-
-.table_of_contents-indent-2 {
-	margin-left: 3rem;
-}
-
-.table_of_contents-indent-3 {
-	margin-left: 4.5rem;
-}
-
-.table_of_contents-link {
-	text-decoration: none;
-	opacity: 0.7;
-	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
-}
-
-table,
-th,
-td {
-	border: 1px solid rgba(55, 53, 47, 0.09);
-	border-collapse: collapse;
-}
-
-table {
-	border-left: none;
-	border-right: none;
-}
-
-th,
-td {
-	font-weight: normal;
-	padding: 0.25em 0.5em;
-	line-height: 1.5;
-	min-height: 1.5em;
-	text-align: left;
-}
-
-th {
-	color: rgba(55, 53, 47, 0.6);
-}
-
-ol,
-ul {
-	margin: 0;
-	margin-block-start: 0.6em;
-	margin-block-end: 0.6em;
-}
-
-li > ol:first-child,
-li > ul:first-child {
-	margin-block-start: 0.6em;
-}
-
-ul > li {
-	list-style: disc;
-}
-
-ul.to-do-list {
-	padding-inline-start: 0;
-}
-
-ul.to-do-list > li {
-	list-style: none;
-}
-
-.to-do-children-checked {
-	text-decoration: line-through;
-	opacity: 0.375;
-}
-
-ul.toggle > li {
-	list-style: none;
-}
-
-ul {
-	padding-inline-start: 1.7em;
-}
-
-ul > li {
-	padding-left: 0.1em;
-}
-
-ol {
-	padding-inline-start: 1.6em;
-}
-
-ol > li {
-	padding-left: 0.2em;
-}
-
-.mono ol {
-	padding-inline-start: 2em;
-}
-
-.mono ol > li {
-	text-indent: -0.4em;
-}
-
-.toggle {
-	padding-inline-start: 0em;
-	list-style-type: none;
-}
-
-/* Indent toggle children */
-.toggle > li > details {
-	padding-left: 1.7em;
-}
-
-.toggle > li > details > summary {
-	margin-left: -1.1em;
-}
-
-.selected-value {
-	display: inline-block;
-	padding: 0 0.5em;
-	background: rgba(206, 205, 202, 0.5);
-	border-radius: 3px;
-	margin-right: 0.5em;
-	margin-top: 0.3em;
-	margin-bottom: 0.3em;
-	white-space: nowrap;
-}
-
-.collection-title {
-	display: inline-block;
-	margin-right: 1em;
-}
-
-.page-description {
-	margin-bottom: 2em;
-}
-
-.simple-table {
-	margin-top: 1em;
-	font-size: 0.875rem;
-	empty-cells: show;
-}
-.simple-table td {
-	height: 29px;
-	min-width: 120px;
-}
-
-.simple-table th {
-	height: 29px;
-	min-width: 120px;
-}
-
-.simple-table-header-color {
-	background: rgb(247, 246, 243);
-	color: black;
-}
-.simple-table-header {
-	font-weight: 500;
-}
-
-time {
-	opacity: 0.5;
-}
-
-.icon {
-	display: inline-flex;
-	align-items: center;
-	justify-content: center;
-	max-width: 1.2em;
-	max-height: 1.2em;
-	text-decoration: none;
-	vertical-align: text-bottom;
-	margin-right: 0.5em;
-}
-
-img.icon {
-	border-radius: 3px;
-}
-
-.callout img.notion-static-icon {
-	width: 1em;
-	height: 1em;
-}
-
-.user-icon {
-	width: 1.5em;
-	height: 1.5em;
-	border-radius: 100%;
-	margin-right: 0.5rem;
-}
-
-.user-icon-inner {
-	font-size: 0.8em;
-}
-
-.text-icon {
-	border: 1px solid #000;
-	text-align: center;
-}
-
-.page-cover-image {
-	display: block;
-	object-fit: cover;
-	width: 100%;
-	max-height: 30vh;
-}
-
-.page-header-icon {
-	font-size: 3rem;
-	margin-bottom: 1rem;
-}
-
-.page-header-icon-with-cover {
-	margin-top: -0.72em;
-	margin-left: 0.07em;
-}
-
-.page-header-icon img {
-	border-radius: 3px;
-}
-
-.link-to-page {
-	margin: 1em 0;
-	padding: 0;
-	border: none;
-	font-weight: 500;
-}
-
-p > .user {
-	opacity: 0.5;
-}
-
-td > .user,
-td > time {
-	white-space: nowrap;
-}
-
-input[type="checkbox"] {
-	transform: scale(1.5);
-	margin-right: 0.6em;
-	vertical-align: middle;
-}
-
-p {
-	margin-top: 0.5em;
-	margin-bottom: 0.5em;
-}
-
-.image {
-	border: none;
-	margin: 1.5em 0;
-	padding: 0;
-	border-radius: 0;
-	text-align: center;
-}
-
-.code,
-code {
-	background: rgba(135, 131, 120, 0.15);
-	border-radius: 3px;
-	padding: 0.2em 0.4em;
-	border-radius: 3px;
-	font-size: 85%;
-	tab-size: 2;
-}
-
-code {
-	color: #eb5757;
-}
-
-.code {
-	padding: 1.5em 1em;
-}
-
-.code-wrap {
-	white-space: pre-wrap;
-	word-break: break-all;
-}
-
-.code > code {
-	background: none;
-	padding: 0;
-	font-size: 100%;
-	color: inherit;
-}
-
-blockquote {
-	font-size: 1em;
-	margin: 1em 0;
-	padding-left: 1em;
-	border-left: 3px solid rgb(55, 53, 47);
-}
-
-blockquote.quote-large {
-	font-size: 1.25em;
-}
-
-.bookmark {
-	text-decoration: none;
-	max-height: 8em;
-	padding: 0;
-	display: flex;
-	width: 100%;
-	align-items: stretch;
-}
-
-.bookmark-title {
-	font-size: 0.85em;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	height: 1.75em;
-	white-space: nowrap;
-}
-
-.bookmark-text {
-	display: flex;
-	flex-direction: column;
-}
-
-.bookmark-info {
-	flex: 4 1 180px;
-	padding: 12px 14px 14px;
-	display: flex;
-	flex-direction: column;
-	justify-content: space-between;
-}
-
-.bookmark-image {
-	width: 33%;
-	flex: 1 1 180px;
-	display: block;
-	position: relative;
-	object-fit: cover;
-	border-radius: 1px;
-}
-
-.bookmark-description {
-	color: rgba(55, 53, 47, 0.6);
-	font-size: 0.75em;
-	overflow: hidden;
-	max-height: 4.5em;
-	word-break: break-word;
-}
-
-.bookmark-href {
-	font-size: 0.75em;
-	margin-top: 0.25em;
-}
-
-.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
-.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
-.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
-.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
-.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
-.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
-.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
-.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
-.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
-.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
-.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
-.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
-.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
-.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
-.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
-.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
-.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
-.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
-.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
-.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
-.highlight-default {
-	color: rgba(44, 44, 43, 1);
-}
-.highlight-gray {
-	color: rgba(128, 125, 120, 1);
-	fill: rgba(128, 125, 120, 1);
-}
-.highlight-brown {
-	color: rgba(159, 118, 90, 1);
-	fill: rgba(159, 118, 90, 1);
-}
-.highlight-orange {
-	color: rgba(204, 121, 47, 1);
-	fill: rgba(204, 121, 47, 1);
-}
-.highlight-yellow {
-	color: rgba(195, 148, 67, 1);
-	fill: rgba(195, 148, 67, 1);
-}
-.highlight-teal {
-	color: rgba(80, 148, 110, 1);
-	fill: rgba(80, 148, 110, 1);
-}
-.highlight-blue {
-	color: rgba(63, 126, 190, 1);
-	fill: rgba(63, 126, 190, 1);
-}
-.highlight-purple {
-	color: rgba(154, 107, 180, 1);
-	fill: rgba(154, 107, 180, 1);
-}
-.highlight-pink {
-	color: rgba(179, 84, 136, 1);
-	fill: rgba(179, 84, 136, 1);
-}
-.highlight-red {
-	color: rgba(201, 85, 73, 1);
-	fill: rgba(201, 85, 73, 1);
-}
-.highlight-default_background {
-	color: rgba(44, 44, 43, 1);
-}
-.highlight-gray_background {
-	background: rgba(42, 28, 0, 0.07);
-}
-.highlight-brown_background {
-	background: rgba(139, 46, 0, 0.086);
-}
-.highlight-orange_background {
-	background: rgba(224, 101, 1, 0.129);
-}
-.highlight-yellow_background {
-	background: rgba(211, 168, 0, 0.137);
-}
-.highlight-teal_background {
-	background: rgba(0, 100, 45, 0.09);
-}
-.highlight-blue_background {
-	background: rgba(0, 111, 200, 0.09);
-}
-.highlight-purple_background {
-	background: rgba(102, 0, 178, 0.078);
-}
-.highlight-pink_background {
-	background: rgba(197, 0, 93, 0.086);
-}
-.highlight-red_background {
-	background: rgba(223, 22, 0, 0.094);
-}
-.block-color-default {
-	color: inherit;
-	fill: inherit;
-}
-.block-color-gray {
-	color: rgba(128, 125, 120, 1);
-	fill: rgba(128, 125, 120, 1);
-}
-.block-color-brown {
-	color: rgba(159, 118, 90, 1);
-	fill: rgba(159, 118, 90, 1);
-}
-.block-color-orange {
-	color: rgba(204, 121, 47, 1);
-	fill: rgba(204, 121, 47, 1);
-}
-.block-color-yellow {
-	color: rgba(195, 148, 67, 1);
-	fill: rgba(195, 148, 67, 1);
-}
-.block-color-teal {
-	color: rgba(80, 148, 110, 1);
-	fill: rgba(80, 148, 110, 1);
-}
-.block-color-blue {
-	color: rgba(63, 126, 190, 1);
-	fill: rgba(63, 126, 190, 1);
-}
-.block-color-purple {
-	color: rgba(154, 107, 180, 1);
-	fill: rgba(154, 107, 180, 1);
-}
-.block-color-pink {
-	color: rgba(179, 84, 136, 1);
-	fill: rgba(179, 84, 136, 1);
-}
-.block-color-red {
-	color: rgba(201, 85, 73, 1);
-	fill: rgba(201, 85, 73, 1);
-}
-.block-color-default_background {
-	color: inherit;
-	fill: inherit;
-}
-.block-color-gray_background {
-	background: rgba(240, 239, 237, 1);
-}
-.block-color-brown_background {
-	background: rgba(245, 237, 233, 1);
-}
-.block-color-orange_background {
-	background: rgba(251, 235, 222, 1);
-}
-.block-color-yellow_background {
-	background: rgba(249, 243, 220, 1);
-}
-.block-color-teal_background {
-	background: rgba(232, 241, 236, 1);
-}
-.block-color-blue_background {
-	background: rgba(232, 242, 250, 1);
-}
-.block-color-purple_background {
-	background: rgba(243, 235, 249, 1);
-}
-.block-color-pink_background {
-	background: rgba(250, 233, 241, 1);
-}
-.block-color-red_background {
-	background: rgba(252, 233, 231, 1);
-}
-.select-value-color-default { background-color: rgba(42, 28, 0, 0.07); }
-.select-value-color-gray { background-color: rgba(28, 19, 1, 0.11); }
-.select-value-color-brown { background-color: rgba(127, 51, 0, 0.156); }
-.select-value-color-orange { background-color: rgba(196, 88, 0, 0.203); }
-.select-value-color-yellow { background-color: rgba(209, 156, 0, 0.282); }
-.select-value-color-green { background-color: rgba(0, 96, 38, 0.156); }
-.select-value-color-blue { background-color: rgba(0, 99, 174, 0.172); }
-.select-value-color-purple { background-color: rgba(92, 0, 163, 0.141); }
-.select-value-color-pink { background-color: rgba(183, 0, 78, 0.152); }
-.select-value-color-red { background-color: rgba(206, 24, 0, 0.164); }
-
-.checkbox {
-	display: inline-flex;
-	vertical-align: text-bottom;
-	width: 16;
-	height: 16;
-	background-size: 16px;
-	margin-left: 2px;
-	margin-right: 5px;
-}
-
-.checkbox-on {
-	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
-}
-
-.checkbox-off {
-	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
-}
-	
-
-
-/* Back-to-index button */
-.floating-button {
-	display: inline-flex;
-	align-items: center;
-	gap: 0.4em;
-	padding: 0.55em 1.15em;
-	border-radius: 999px;
-	background: rgba(255, 255, 255, 0.92);
-	color: #1f2933;
-	font-size: 0.9rem;
-	font-weight: 500;
-	text-decoration: none;
-	border: 1px solid rgba(15, 23, 42, 0.12);
-	box-shadow: 0 8px 24px rgba(15, 23, 42, 0.12);
-	backdrop-filter: blur(12px);
-	transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
-}
-.floating-button:hover {
-	background: #1f2933;
-	color: #ffffff;
-	box-shadow: 0 12px 32px rgba(15, 23, 42, 0.18);
-	transform: translateY(-1px);
-}
-.floating-button:active {
-	transform: translateY(0);
-	box-shadow: 0 6px 18px rgba(15, 23, 42, 0.14);
-}
-.back-to-index {
-	position: fixed;
-	top: 20px;
-	left: 20px;
-	z-index: 1000;
-}
-.nav-controls {
-	position: fixed;
-	top: 20px;
-	right: 20px;
-	z-index: 1000;
-	display: inline-flex;
-	gap: 0.6em;
-	flex-wrap: wrap;
-	justify-content: flex-end;
-}
-@media (max-width: 600px) {
-	.back-to-index {
-		top: 16px;
-		left: 16px;
-	}
-	.nav-controls {
-		top: 16px;
-		right: 16px;
-		gap: 0.5em;
-	}
-	.floating-button {
-		padding: 0.45em 1em;
-		font-size: 0.85rem;
-	}
-}
-@media print {
-	.back-to-index,
-	.nav-controls {
-		display: none;
-	}
-}
-
-</style></head><body>
-<a class="floating-button back-to-index" href="../index.html">回到目錄</a>
-<div class="nav-controls">
-	<a class="floating-button nav-button" href="../10-Explainable ML/10-Explainable ML.html" title="上一節：10-Explainable ML">上一節</a>
-	<a class="floating-button nav-button" href="../12-Reinforcement Learning（強化學習）/12-Reinforcement Learning（強化學習）.html" title="下一節：12-Reinforcement Learning（強化學習）">下一節</a>
-</div>
-<article id="3517a984-643f-4606-9ff8-38bb2f630523" class="page sans"><header><div class="page-header-icon undefined"><img class="icon notion-static-icon" src="https://www.notion.so/icons/document_blue.svg"/></div><h1 class="page-title">11-Domain Adaptation</h1><p class="page-description"></p><table class="properties"><tbody></tbody></table></header><div class="page-body"><nav id="cfdac6cc-1ba7-4327-ab9a-1b03b4bcbbb3" class="block-color-gray table_of_contents"><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#c8fa85b0-4de2-40d1-90d8-61e6c298cbc0">1. 什麼是 Domain Adaptation？</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#0e80e3c0-ab25-4608-bebe-29634ac792d5">2. Domain Shift</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#60b5aa2d-9c30-48f4-9902-4b9ab6c30621">2.1. 輸入分布不同</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#a5da5b6c-873f-44eb-9393-614dfb8260e8">2.2 輸出分布不同</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#498602cd-9b08-4cda-bb44-ca9a11a87e3d">2.3 輸入輸出的關係發生變化</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#ecae4737-7750-40cc-836e-c11ba176bf8f">3. <strong>Domain Adaptation</strong></a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#21c1c9b8-63df-47fa-9ea9-d761dd52731a">3.1 <strong>少量有</strong>標註的資料（Little but labeled）</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#1228e75b-9434-4a84-9887-f53fa2c35a94">3.2 大量無標註的資料（Large amount of unlabeled data）</a></div><div class="table_of_contents-item table_of_contents-indent-2"><a class="table_of_contents-link" href="#9ea91d5e-4fbd-41ab-a3f7-2d0a1938be4b">3.2.1 Feature Extractor</a></div><div class="table_of_contents-item table_of_contents-indent-2"><a class="table_of_contents-link" href="#de26eb0d-7dcf-4124-a38e-cc4c42561de6">3.2.2 <strong>Domain Adversarial Training</strong></a></div><div class="table_of_contents-item table_of_contents-indent-2"><a class="table_of_contents-link" href="#f9ad95ff-c8c5-4eaf-8f04-d024cd9df83c">3.2.3 Boundary</a></div><div class="table_of_contents-item table_of_contents-indent-2"><a class="table_of_contents-link" href="#c9c90493-712a-4905-bcd5-0af5978a0baf">3.2.4 Universal domain adaptation</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#fd7b8e07-6649-4ab0-9a6a-0d25d284e3af">3.3 少量無標註的資料（Little &amp; unlabeled）</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#06fc1913-386e-484c-a8f1-039de0cf4781">3.4 對 Target Domain 一無所知</a></div></nav><h1 id="c8fa85b0-4de2-40d1-90d8-61e6c298cbc0" class="">1. 什麼是 Domain Adaptation？</h1><p id="5f2cddff-cb72-4cb3-98ed-4fc79b4f9bfa" class="">Domain Adaptation 可以看做是 Transfer Learning 的一種</p><ul id="5b73254e-0b5a-4a1d-b4e6-db05a73bff41" class="bulleted-list"><li style="list-style-type:disc"><strong><a href="https://youtu.be/qD6iD4TFsdQ">Transfer Learning</a></strong><strong>：</strong>模型在 A 任務上學到的技能，可以被用在 B 任務上</li></ul><ul id="347e5b45-458b-4010-9476-ebcec768fb72" class="bulleted-list"><li style="list-style-type:disc"><strong><a href="https://www.notion.so/11-Domain-Adaptation-3517a984643f46069ff838bb2f630523?pvs=21">Domain Adaptation</a></strong><strong>：</strong>在訓練資料的 domain 上學到的資訊，用到另外一個測試資料的 domain 上面</li></ul><p id="b8aff0cc-5281-45af-b865-f4bd7f4c3c68" class="">
-</p><h1 id="0e80e3c0-ab25-4608-bebe-29634ac792d5" class="">2. Domain Shift</h1><p id="5c924a2a-5f93-4cd5-839a-5326cb4a3d3c" class="">domain shift 意思為訓練資料跟測試資料的分布不一樣，在訓練資料上訓練出來的模型，在測試資料上可能表現不好</p><figure id="daadb2e8-7cae-49eb-8192-1ab3e273c412" class="image"><a href="11-Domain%20Adaptation/0.png"><img style="width:528px" src="11-Domain%20Adaptation/0.png"/></a></figure><ul id="ed31e484-baaf-4b52-bd93-059ffb6cacf7" class="bulleted-list"><li style="list-style-type:disc"><strong>Source Domain：</strong>訓練資料</li></ul><ul id="d9f3416d-7f0e-406d-bad7-11fa9aebd545" class="bulleted-list"><li style="list-style-type:disc"><strong>Target Domain：</strong>測試資料</li></ul><figure id="29ba2d4c-b8cc-40f2-b735-17ab6cfd8f3e" class="image"><a href="11-Domain%20Adaptation/1.png"><img style="width:432px" src="11-Domain%20Adaptation/1.png"/></a></figure><h2 id="60b5aa2d-9c30-48f4-9902-4b9ab6c30621" class="">2.1. 輸入分布不同</h2><p id="5d8b752c-01a7-4843-93e1-0104714a4eb2" class="">訓練資料的數字是<strong>黑白的</strong>，但測試資料是<strong>彩色的</strong>，那麽正確率會下降</p><figure id="8320e582-dbd3-423c-9b15-3bcf9fe5a47d" class="image"><a href="11-Domain%20Adaptation/2.png"><img style="width:480px" src="11-Domain%20Adaptation/2.png"/></a></figure><h2 id="a5da5b6c-873f-44eb-9393-614dfb8260e8" class="">2.2 輸出分布不同</h2><p id="e7ec72f9-1282-4d83-ad0d-e98592d2f073" class="">訓練資料每一個數字它出現的機率都一樣；但在測試資料中，每一個輸出的機率是不一樣的，有可能某一個數字的輸出機率特別大</p><figure id="5ed982c4-2203-469d-9e8a-66dccc1a23ee" class="image"><a href="11-Domain%20Adaptation/3.png"><img style="width:528px" src="11-Domain%20Adaptation/3.png"/></a></figure><h2 id="498602cd-9b08-4cda-bb44-ca9a11a87e3d" class="">2.3 輸入輸出的關係發生變化</h2><p id="108f7888-ca5a-497a-9997-da97fa2d076c" class="">舉例而言，左圖的訓練資料代表 0，但有可能在測試資料中是代表 1。較罕見</p><figure id="3403477f-39e5-4927-84aa-a9da9a1b8111" class="image"><a href="11-Domain%20Adaptation/4.png"><img style="width:520.9722290039062px" src="11-Domain%20Adaptation/4.png"/></a></figure><p id="fa95af82-3a42-40fb-b2c6-e195d14c223d" class="">
-</p><h1 id="ecae4737-7750-40cc-836e-c11ba176bf8f" class="">3. <strong>Domain Adaptation</strong></h1><p id="7ecf64e5-c981-4ac9-b443-9fbadb791a6c" class="">根據 target domain 中資料的情況，由右至左可分為：</p><figure id="a23ea650-0285-4c5c-b002-5e208e2f0a4b" class="image"><a href="11-Domain%20Adaptation/5.png"><img style="width:432px" src="11-Domain%20Adaptation/5.png"/></a></figure><ul id="3ee15537-65e4-41eb-9c94-7fbe6ecdd6ea" class="bulleted-list"><li style="list-style-type:disc"><a href="https://www.notion.so/11-Domain-Adaptation-3517a984643f46069ff838bb2f630523?pvs=21">少量有標註的資料</a>（Little but labeled）</li></ul><ul id="e41188f7-513a-40de-b20a-f8594c71c81e" class="bulleted-list"><li style="list-style-type:disc"><a href="https://www.notion.so/11-Domain-Adaptation-3517a984643f46069ff838bb2f630523?pvs=21">大量無標註的資料</a>（Large amount of unlabeled data）</li></ul><ul id="9177b55d-c2d4-4409-beb4-db9584dc8802" class="bulleted-list"><li style="list-style-type:disc"><a href="https://www.notion.so/11-Domain-Adaptation-3517a984643f46069ff838bb2f630523?pvs=21">少量無標註的資料</a>（Little &amp; unlabeled）</li></ul><ul id="27d5cc2a-4642-4dc9-8ba6-a69c9c84c63f" class="bulleted-list"><li style="list-style-type:disc"><a href="https://www.notion.so/11-Domain-Adaptation-3517a984643f46069ff838bb2f630523?pvs=21">對 taget domain 一無所知</a></li></ul><h2 id="21c1c9b8-63df-47fa-9ea9-d761dd52731a" class="">3.1 <strong>少量有</strong>標註的資料（Little but labeled）</h2><p id="f3e952c5-461f-4c8e-883f-f57d11d06e76" class="">target domain 為<strong>少量有標註的資料</strong>，可以用 target domain 的資料 <strong>fine-tune </strong>用 source domain 訓練出來的模型</p><figure id="9b4cb4a4-9d8e-4fc2-9ce0-b7bffec58ab5" class="image"><a href="11-Domain%20Adaptation/6.png"><img style="width:432px" src="11-Domain%20Adaptation/6.png"/></a></figure><p id="3d655771-c71f-4599-874d-f3e75bf38cd5" class=""><strong>方法：</strong></p><p id="92977aff-71bf-4240-92e0-6e0ad554d279" class="">微調方式與 BERT 相似。已經有一個在 source domain 上訓練好的 model，拿 target domain 的資料丟進模型跑個二至三個 epoch 即可</p><p id="a6070320-57e2-4502-8b51-f47ac8af8ab9" class=""><strong>注意：</strong></p><p id="82c18f6d-2da3-4bdd-98e8-ab62bce8b4f4" class="">由於 target domain 的資料量很少，<strong>epoch 的大小不宜過多，以免有 overfitting 的狀況</strong></p><h2 id="1228e75b-9434-4a84-9887-f53fa2c35a94" class="">3.2 大量無標註的資料（Large amount of unlabeled data）</h2><p id="bd8b405a-0f93-4a0d-aa3b-fb1f7adbf629" class="">訓練一個 network：<strong>feature extractor</strong>，source domain 跟 target domain 的圖片看起來不一樣，可以藉由 feature extractor 把不一樣的部分拿掉，只抽取出共同的部分，讓輸出具有相同的分布</p><figure id="e05d0001-37e2-4a01-8084-6689ded19c98" class="image"><a href="11-Domain%20Adaptation/7.png"><img style="width:432px" src="11-Domain%20Adaptation/7.png"/></a></figure><h3 id="9ea91d5e-4fbd-41ab-a3f7-2d0a1938be4b" class="">3.2.1 Feature Extractor</h3><p id="a3a6a6b9-4c2d-4363-b689-5b3b2400aff2" class="">把一般的 classifier 分成 <strong>feature extractor</strong> 及 <strong>label predictor</strong> 兩個部分，例如將前 5 層算是 feature extractor，後 5 層算是 label predictor。層數為須自行調整的<strong>超參數</strong></p><figure id="204f105a-b64b-475d-a436-a320cc651f8c" class="image"><a href="11-Domain%20Adaptation/8.png"><img style="width:480px" src="11-Domain%20Adaptation/8.png"/></a></figure><p id="0bcb7d83-4be0-4fa7-9b7d-215e3fc4b66e" class="">將 source domain 和 target domain 的圖片輸入進 image classifier，希望 feature extractor 針對兩個 domain 的資料的輸出要看起來沒有差異</p><h3 id="de26eb0d-7dcf-4124-a38e-cc4c42561de6" class="">3.2.2 <strong>Domain Adversarial Training</strong></h3><p id="25678475-2bad-46ee-8a5f-9e5513ee62bf" class="">藉由 <strong>Domain Adversarial Training</strong> 來實現，類似於 <a href="https://www.notion.so/06-Generative-Adversarial-Network-GAN-3eef1d4d34384ea596d6be37eb429a25?pvs=21">GAN</a>，新增一個 <strong>domain classifier 作為 discriminator</strong>，判斷輸入來自哪個 domain，<strong>feature extractor 如同 generator</strong>，要想辦法騙過 domain classifier</p><figure id="6bf86835-ec2e-4050-820a-861ea5aa8a76" class="image"><a href="11-Domain%20Adaptation/9.png"><img style="width:528px" src="11-Domain%20Adaptation/9.png"/></a></figure><p id="bc008b5e-6b55-4ca7-9095-8138b80d461d" class=""><strong>符號：</strong></p><p id="afaa0df8-c5ca-4c9c-ad52-80cf965b4495" class=""><style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>θ</mi><mi>p</mi></msub></mrow><annotation encoding="application/x-tex">\theta_p</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.9805em;vertical-align:-0.2861em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02778em;">θ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:-0.0278em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">p</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span>：label predictor 的參數</p><p id="c5a562fb-e986-4517-9a91-cfc25ab56d8b" class=""><style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>θ</mi><mi>d</mi></msub></mrow><annotation encoding="application/x-tex">\theta_d</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8444em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02778em;">θ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.0278em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">d</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span>：domain classifier 的參數</p><p id="9b55b3a0-d6ce-496c-a86d-f29214115570" class=""><style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>θ</mi><mi>f</mi></msub></mrow><annotation encoding="application/x-tex">\theta_f</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.9805em;vertical-align:-0.2861em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02778em;">θ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.0278em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.10764em;">f</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span>：feature extractor 的參數</p><p id="58969e41-c367-45fe-979b-1e1812d19a36" class=""><style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>L</mi></mrow><annotation encoding="application/x-tex">L</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal">L</span></span></span></span></span><span>﻿</span></span>：label predictor 對實際的分類任務進行分類，分類結果與實際分類之間的 cross entropy</p><p id="94f01bea-a48f-4a0a-aac6-cc481390e019" class=""><style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>L</mi><mi>d</mi></msub></mrow><annotation encoding="application/x-tex">L_d</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">L</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">d</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span>：domain classifier 對 feature extractor 輸出的 feature 進行二元分類，判斷來自哪個 domain，分類結果與實際分類之間的 loss</p><p id="60f0621e-d986-4ff1-8515-d9b1c146da62" class=""><strong>目標：</strong></p><p id="b1b15ea7-71e1-40ff-9888-c13f4f4c7513" class="">找到一組 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>θ</mi><mi>p</mi></msub></mrow><annotation encoding="application/x-tex">\theta_p</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.9805em;vertical-align:-0.2861em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02778em;">θ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:-0.0278em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">p</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span> 讓 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>L</mi></mrow><annotation encoding="application/x-tex">L</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal">L</span></span></span></span></span><span>﻿</span></span> 越小越好</p><p id="bf5c5039-de8e-4b6a-b29d-5399a0273f98" class="">找到一組 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>θ</mi><mi>d</mi></msub></mrow><annotation encoding="application/x-tex">\theta_d</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8444em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02778em;">θ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.0278em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">d</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span> 讓 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>L</mi><mi>d</mi></msub></mrow><annotation encoding="application/x-tex">L_d</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">L</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">d</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span> 越小越好</p><p id="fa0f9bea-d4b9-4c9c-b563-7a335b57caf5" class="">找到一組 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>θ</mi><mi>f</mi></msub></mrow><annotation encoding="application/x-tex">\theta_f</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.9805em;vertical-align:-0.2861em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02778em;">θ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.0278em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.10764em;">f</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span> 既能使 label predictor 分類準確（最小化 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>L</mi></mrow><annotation encoding="application/x-tex">L</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal">L</span></span></span></span></span><span>﻿</span></span>），又能使 domain classifier 難以分辨（最大化 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>L</mi><mi>d</mi></msub></mrow><annotation encoding="application/x-tex">L_d</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">L</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">d</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span>）⇒ 定義 feature extractor 的 loss 為 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>L</mi><mo>−</mo><msub><mi>L</mi><mi>d</mi></msub></mrow><annotation encoding="application/x-tex">L-L_d</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7667em;vertical-align:-0.0833em;"></span><span class="mord mathnormal">L</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">L</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">d</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span>，找到一組 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>θ</mi><mi>f</mi></msub></mrow><annotation encoding="application/x-tex">\theta_f</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.9805em;vertical-align:-0.2861em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02778em;">θ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.0278em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.10764em;">f</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span> 讓 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>L</mi><mo>−</mo><msub><mi>L</mi><mi>d</mi></msub></mrow><annotation encoding="application/x-tex">L-L_d</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7667em;vertical-align:-0.0833em;"></span><span class="mord mathnormal">L</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">L</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">d</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span> 越小越好</p><h3 id="f9ad95ff-c8c5-4eaf-8f04-d024cd9df83c" class="">3.2.3 Boundary</h3><p id="a509eacb-0ce5-4f65-af7b-5243529811ac" class="">希望兩個 domain 的分布更加接近，也就是讓 target domain 的資料盡量避開 source domain 中得到的 boundary，離 boundary 越遠越好</p><figure id="901ace35-3c5f-4124-a767-006a2cce1575" class="image"><a href="11-Domain%20Adaptation/10.png"><img style="width:432px" src="11-Domain%20Adaptation/10.png"/></a></figure><p id="c522e85f-4228-4daa-8575-88d4fc3a2a16" class=""><strong>方法：</strong></p><ol type="1" id="4a0e8b93-1448-4df8-8798-3fccd281a779" class="numbered-list" start="1"><li>讓不同類別之間的輸出差異盡可能地大，盡可能地集中在某一類別上<figure id="a681f0f9-eb0a-40d0-a702-a80059aa35ce" class="image" style="text-align:left"><a href="11-Domain%20Adaptation/11.png"><img style="width:384px" src="11-Domain%20Adaptation/11.png"/></a></figure></li></ol><ol type="1" id="a6eb9b13-809f-41c9-9080-4160347b8a0c" class="numbered-list" start="2"><li><em><a href="https://arxiv.org/abs/1802.08735">A DIRT-T Approach to Unsupervised Domain Adaptation</a></em>（DIRT-T）</li></ol><ol type="1" id="8a76306a-9cbc-464c-98f1-da524835723e" class="numbered-list" start="3"><li><em><a href="https://arxiv.org/abs/1712.02560">Maximum Classifier Discrepancy for Unsupervised Domain Adaptation</a></em></li></ol><h3 id="c9c90493-712a-4905-bcd5-0af5978a0baf" class="">3.2.4 Universal domain adaptation</h3><p id="f2d62b28-eff7-46bd-af7e-31dc9f7c9c33" class="">實線圈代表 source domain 中有的類別，虛線圈代表 target domain 中的類別</p><figure id="14f12133-b3b9-49d3-a857-6ae12f719130" class="image"><a href="11-Domain%20Adaptation/12.png"><img style="width:432px" src="11-Domain%20Adaptation/12.png"/></a></figure><p id="fd565cf1-484b-4178-8529-729251854855" class="">兩個 domain 的類別不一定都完全相同，有<strong>另外三種可能</strong>：</p><ol type="1" id="db9b6bf1-b31b-4468-900b-ae869d5cadb1" class="numbered-list" start="1"><li>source domain 的類別比較多，而 target domain 的類別比較少</li></ol><ol type="1" id="18657be9-ec89-4d59-afd7-19e9ff975f4e" class="numbered-list" start="2"><li>source domain 的類別比較少，而 target domain 的類別比較多</li></ol><ol type="1" id="a629ea6f-1fd0-4108-8916-f6391500e736" class="numbered-list" start="3"><li>兩者有交集，但也都各有獨有的類別</li></ol><p id="81f2b3c1-9a57-4fae-b7b3-ad3414f40e18" class=""><strong>問題：</strong></p><p id="f8e455f4-8b3b-46c4-9c0d-c44fda4500ce" class="">對 2. 這種可能來說，若要讓 source domain 的資料跟 target domain 的資料的 feature 完全 match 在一起，意味著硬是要讓老虎去變得跟狗或是獅子像，到時候就分不出老虎這個類別</p><p id="789b7c1a-eeab-48ef-b273-75108d0575d7" class=""><strong>解決：</strong></p><p id="5bd1e982-50cb-4646-a6ba-cc722ff1edeb" class=""><em><a href="https://openaccess.thecvf.com/content_CVPR_2019/html/You_Universal_Domain_Adaptation_CVPR_2019_paper.html">Universal Domain Adaptation</a></em></p><h2 id="fd7b8e07-6649-4ab0-9a6a-0d25d284e3af" class="">3.3 少量無標註的資料（Little &amp; unlabeled）</h2><p id="00b53f7d-3bf8-4000-ae13-e2e78d28c5a3" class=""><strong>問題：</strong></p><p id="3f42d866-9cbb-4db1-8bb7-65496986b92b" class="">target domain 沒有標註資料並且數量還很少，或甚至只有一張</p><p id="012ba5e2-a8e0-409b-ba65-557205ec9102" class=""><strong>解決：</strong></p><p id="cf96b9df-3810-46f6-8f51-a8222f5f3b20" class=""><a href="https://arxiv.org/">Testing Time Training（TTT）</a></p><h2 id="06fc1913-386e-484c-a8f1-039de0cf4781" class="">3.4 對 Target Domain 一無所知</h2><p id="b016d55a-0574-4ad4-84db-9091e5a0ffc0" class="">期望模型有 <strong>Domain Generalization</strong> 能力</p><figure id="3037b0f6-65b3-4f76-afa4-5469ebd5365a" class="image"><a href="11-Domain%20Adaptation/13.png"><img style="width:432px" src="11-Domain%20Adaptation/13.png"/></a></figure><p id="b5e796df-6fab-4ce0-af84-53edeb129a45" class=""><strong>狀況：</strong></p><ol type="1" id="53f931f3-1d38-4bc5-8bf0-42cde37b7ae8" class="numbered-list" start="1"><li>訓練資料非常豐富，具有各式各樣不同的 domain<p id="c9d7a0f0-b72e-487f-a90a-26873329a057" class="">期待因為訓練資料有<strong>多個 domain，</strong>模型可以學到如何<strong>彌平 domain 間的差異，</strong>測試資料有沒看過的 domain 也可以處理。可參考文獻：<em><a href="https://ieeexplore.ieee.org/document/8578664">Domain Generalization with Adversarial Feature Learning</a></em></p></li></ol><ol type="1" id="a0c29849-09c9-4577-8563-6136bd7a5ff2" class="numbered-list" start="2"><li>訓練資料只有一個 domain，而測試資料有多種不同 domain<p id="891b620f-0a7c-43ba-bae4-1dd8fdf9ee30" class="">在概念上與 data augmentation 相似，從已知 domain 的資料產生多個 domain 的資料。可參考文獻：<em><a href="https://arxiv.org/abs/2003.13216">Learning to Learn Single Domain Generalization</a></em></p></li></ol></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>
+<html>
+
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>11-Domain Adaptation</title>
+	<style>
+		/* cspell:disable-file */
+		/* webkit printing magic: print all background colors */
+		html {
+			-webkit-print-color-adjust: exact;
+		}
+
+		* {
+			box-sizing: border-box;
+			-webkit-print-color-adjust: exact;
+		}
+
+		html,
+		body {
+			margin: 0;
+			padding: 0;
+		}
+
+		@media only screen {
+			body {
+				margin: 2em auto;
+				max-width: 900px;
+				color: rgb(55, 53, 47);
+			}
+		}
+
+		body {
+			line-height: 1.5;
+			white-space: pre-wrap;
+		}
+
+		a,
+		a.visited {
+			color: inherit;
+			text-decoration: underline;
+		}
+
+		.pdf-relative-link-path {
+			font-size: 80%;
+			color: #444;
+		}
+
+		h1,
+		h2,
+		h3 {
+			letter-spacing: -0.01em;
+			line-height: 1.2;
+			font-weight: 600;
+			margin-bottom: 0;
+		}
+
+		.page-title {
+			font-size: 2.5rem;
+			font-weight: 700;
+			margin-top: 0;
+			margin-bottom: 0.75em;
+		}
+
+		h1 {
+			font-size: 1.875rem;
+			margin-top: 1.875rem;
+		}
+
+		h2 {
+			font-size: 1.5rem;
+			margin-top: 1.5rem;
+		}
+
+		h3 {
+			font-size: 1.25rem;
+			margin-top: 1.25rem;
+		}
+
+		.source {
+			border: 1px solid #ddd;
+			border-radius: 3px;
+			padding: 1.5em;
+			word-break: break-all;
+		}
+
+		.callout {
+			border-radius: 10px;
+			padding: 1rem;
+		}
+
+		figure {
+			margin: 1.25em 0;
+			page-break-inside: avoid;
+		}
+
+		figcaption {
+			opacity: 0.5;
+			font-size: 85%;
+			margin-top: 0.5em;
+		}
+
+		mark {
+			background-color: transparent;
+		}
+
+		.indented {
+			padding-left: 1.5em;
+		}
+
+		hr {
+			background: transparent;
+			display: block;
+			width: 100%;
+			height: 1px;
+			visibility: visible;
+			border: none;
+			border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+		}
+
+		img {
+			max-width: 100%;
+		}
+
+		@media only print {
+			img {
+				max-height: 100vh;
+				object-fit: contain;
+			}
+		}
+
+		@page {
+			margin: 1in;
+		}
+
+		.collection-content {
+			font-size: 0.875rem;
+		}
+
+		.collection-content td {
+			white-space: pre-wrap;
+			word-break: break-word;
+		}
+
+		.column-list {
+			display: flex;
+			justify-content: space-between;
+		}
+
+		.column {
+			padding: 0 1em;
+		}
+
+		.column:first-child {
+			padding-left: 0;
+		}
+
+		.column:last-child {
+			padding-right: 0;
+		}
+
+		.table_of_contents-item {
+			display: block;
+			font-size: 0.875rem;
+			line-height: 1.3;
+			padding: 0.125rem;
+		}
+
+		.table_of_contents-indent-1 {
+			margin-left: 1.5rem;
+		}
+
+		.table_of_contents-indent-2 {
+			margin-left: 3rem;
+		}
+
+		.table_of_contents-indent-3 {
+			margin-left: 4.5rem;
+		}
+
+		.table_of_contents-link {
+			text-decoration: none;
+			opacity: 0.7;
+			border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+		}
+
+		table,
+		th,
+		td {
+			border: 1px solid rgba(55, 53, 47, 0.09);
+			border-collapse: collapse;
+		}
+
+		table {
+			border-left: none;
+			border-right: none;
+		}
+
+		th,
+		td {
+			font-weight: normal;
+			padding: 0.25em 0.5em;
+			line-height: 1.5;
+			min-height: 1.5em;
+			text-align: left;
+		}
+
+		th {
+			color: rgba(55, 53, 47, 0.6);
+		}
+
+		ol,
+		ul {
+			margin: 0;
+			margin-block-start: 0.6em;
+			margin-block-end: 0.6em;
+		}
+
+		li>ol:first-child,
+		li>ul:first-child {
+			margin-block-start: 0.6em;
+		}
+
+		ul>li {
+			list-style: disc;
+		}
+
+		ul.to-do-list {
+			padding-inline-start: 0;
+		}
+
+		ul.to-do-list>li {
+			list-style: none;
+		}
+
+		.to-do-children-checked {
+			text-decoration: line-through;
+			opacity: 0.375;
+		}
+
+		ul.toggle>li {
+			list-style: none;
+		}
+
+		ul {
+			padding-inline-start: 1.7em;
+		}
+
+		ul>li {
+			padding-left: 0.1em;
+		}
+
+		ol {
+			padding-inline-start: 1.6em;
+		}
+
+		ol>li {
+			padding-left: 0.2em;
+		}
+
+		.mono ol {
+			padding-inline-start: 2em;
+		}
+
+		.mono ol>li {
+			text-indent: -0.4em;
+		}
+
+		.toggle {
+			padding-inline-start: 0em;
+			list-style-type: none;
+		}
+
+		/* Indent toggle children */
+		.toggle>li>details {
+			padding-left: 1.7em;
+		}
+
+		.toggle>li>details>summary {
+			margin-left: -1.1em;
+		}
+
+		.selected-value {
+			display: inline-block;
+			padding: 0 0.5em;
+			background: rgba(206, 205, 202, 0.5);
+			border-radius: 3px;
+			margin-right: 0.5em;
+			margin-top: 0.3em;
+			margin-bottom: 0.3em;
+			white-space: nowrap;
+		}
+
+		.collection-title {
+			display: inline-block;
+			margin-right: 1em;
+		}
+
+		.page-description {
+			margin-bottom: 2em;
+		}
+
+		.simple-table {
+			margin-top: 1em;
+			font-size: 0.875rem;
+			empty-cells: show;
+		}
+
+		.simple-table td {
+			height: 29px;
+			min-width: 120px;
+		}
+
+		.simple-table th {
+			height: 29px;
+			min-width: 120px;
+		}
+
+		.simple-table-header-color {
+			background: rgb(247, 246, 243);
+			color: black;
+		}
+
+		.simple-table-header {
+			font-weight: 500;
+		}
+
+		time {
+			opacity: 0.5;
+		}
+
+		.icon {
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			max-width: 1.2em;
+			max-height: 1.2em;
+			text-decoration: none;
+			vertical-align: text-bottom;
+			margin-right: 0.5em;
+		}
+
+		img.icon {
+			border-radius: 3px;
+		}
+
+		.callout img.notion-static-icon {
+			width: 1em;
+			height: 1em;
+		}
+
+		.user-icon {
+			width: 1.5em;
+			height: 1.5em;
+			border-radius: 100%;
+			margin-right: 0.5rem;
+		}
+
+		.user-icon-inner {
+			font-size: 0.8em;
+		}
+
+		.text-icon {
+			border: 1px solid #000;
+			text-align: center;
+		}
+
+		.page-cover-image {
+			display: block;
+			object-fit: cover;
+			width: 100%;
+			max-height: 30vh;
+		}
+
+		.page-header-icon {
+			font-size: 3rem;
+			margin-bottom: 1rem;
+		}
+
+		.page-header-icon-with-cover {
+			margin-top: -0.72em;
+			margin-left: 0.07em;
+		}
+
+		.page-header-icon img {
+			border-radius: 3px;
+		}
+
+		.link-to-page {
+			margin: 1em 0;
+			padding: 0;
+			border: none;
+			font-weight: 500;
+		}
+
+		p>.user {
+			opacity: 0.5;
+		}
+
+		td>.user,
+		td>time {
+			white-space: nowrap;
+		}
+
+		input[type="checkbox"] {
+			transform: scale(1.5);
+			margin-right: 0.6em;
+			vertical-align: middle;
+		}
+
+		p {
+			margin-top: 0.5em;
+			margin-bottom: 0.5em;
+		}
+
+		.image {
+			border: none;
+			margin: 1.5em 0;
+			padding: 0;
+			border-radius: 0;
+			text-align: center;
+		}
+
+		.code,
+		code {
+			background: rgba(135, 131, 120, 0.15);
+			border-radius: 3px;
+			padding: 0.2em 0.4em;
+			border-radius: 3px;
+			font-size: 85%;
+			tab-size: 2;
+		}
+
+		code {
+			color: #eb5757;
+		}
+
+		.code {
+			padding: 1.5em 1em;
+		}
+
+		.code-wrap {
+			white-space: pre-wrap;
+			word-break: break-all;
+		}
+
+		.code>code {
+			background: none;
+			padding: 0;
+			font-size: 100%;
+			color: inherit;
+		}
+
+		blockquote {
+			font-size: 1em;
+			margin: 1em 0;
+			padding-left: 1em;
+			border-left: 3px solid rgb(55, 53, 47);
+		}
+
+		blockquote.quote-large {
+			font-size: 1.25em;
+		}
+
+		.bookmark {
+			text-decoration: none;
+			max-height: 8em;
+			padding: 0;
+			display: flex;
+			width: 100%;
+			align-items: stretch;
+		}
+
+		.bookmark-title {
+			font-size: 0.85em;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			height: 1.75em;
+			white-space: nowrap;
+		}
+
+		.bookmark-text {
+			display: flex;
+			flex-direction: column;
+		}
+
+		.bookmark-info {
+			flex: 4 1 180px;
+			padding: 12px 14px 14px;
+			display: flex;
+			flex-direction: column;
+			justify-content: space-between;
+		}
+
+		.bookmark-image {
+			width: 33%;
+			flex: 1 1 180px;
+			display: block;
+			position: relative;
+			object-fit: cover;
+			border-radius: 1px;
+		}
+
+		.bookmark-description {
+			color: rgba(55, 53, 47, 0.6);
+			font-size: 0.75em;
+			overflow: hidden;
+			max-height: 4.5em;
+			word-break: break-word;
+		}
+
+		.bookmark-href {
+			font-size: 0.75em;
+			margin-top: 0.25em;
+		}
+
+		.sans {
+			font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol";
+		}
+
+		.code {
+			font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace;
+		}
+
+		.serif {
+			font-family: Lyon-Text, Georgia, ui-serif, serif;
+		}
+
+		.mono {
+			font-family: iawriter-mono, Nitti, Menlo, Courier, monospace;
+		}
+
+		.pdf .sans {
+			font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP';
+		}
+
+		.pdf:lang(zh-CN) .sans {
+			font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC';
+		}
+
+		.pdf:lang(zh-TW) .sans {
+			font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC';
+		}
+
+		.pdf:lang(ko-KR) .sans {
+			font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR';
+		}
+
+		.pdf .code {
+			font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP';
+		}
+
+		.pdf:lang(zh-CN) .code {
+			font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC';
+		}
+
+		.pdf:lang(zh-TW) .code {
+			font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC';
+		}
+
+		.pdf:lang(ko-KR) .code {
+			font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR';
+		}
+
+		.pdf .serif {
+			font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP';
+		}
+
+		.pdf:lang(zh-CN) .serif {
+			font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC';
+		}
+
+		.pdf:lang(zh-TW) .serif {
+			font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC';
+		}
+
+		.pdf:lang(ko-KR) .serif {
+			font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR';
+		}
+
+		.pdf .mono {
+			font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP';
+		}
+
+		.pdf:lang(zh-CN) .mono {
+			font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC';
+		}
+
+		.pdf:lang(zh-TW) .mono {
+			font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC';
+		}
+
+		.pdf:lang(ko-KR) .mono {
+			font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR';
+		}
+
+		.highlight-default {
+			color: rgba(44, 44, 43, 1);
+		}
+
+		.highlight-gray {
+			color: rgba(128, 125, 120, 1);
+			fill: rgba(128, 125, 120, 1);
+		}
+
+		.highlight-brown {
+			color: rgba(159, 118, 90, 1);
+			fill: rgba(159, 118, 90, 1);
+		}
+
+		.highlight-orange {
+			color: rgba(204, 121, 47, 1);
+			fill: rgba(204, 121, 47, 1);
+		}
+
+		.highlight-yellow {
+			color: rgba(195, 148, 67, 1);
+			fill: rgba(195, 148, 67, 1);
+		}
+
+		.highlight-teal {
+			color: rgba(80, 148, 110, 1);
+			fill: rgba(80, 148, 110, 1);
+		}
+
+		.highlight-blue {
+			color: rgba(63, 126, 190, 1);
+			fill: rgba(63, 126, 190, 1);
+		}
+
+		.highlight-purple {
+			color: rgba(154, 107, 180, 1);
+			fill: rgba(154, 107, 180, 1);
+		}
+
+		.highlight-pink {
+			color: rgba(179, 84, 136, 1);
+			fill: rgba(179, 84, 136, 1);
+		}
+
+		.highlight-red {
+			color: rgba(201, 85, 73, 1);
+			fill: rgba(201, 85, 73, 1);
+		}
+
+		.highlight-default_background {
+			color: rgba(44, 44, 43, 1);
+		}
+
+		.highlight-gray_background {
+			background: rgba(42, 28, 0, 0.07);
+		}
+
+		.highlight-brown_background {
+			background: rgba(139, 46, 0, 0.086);
+		}
+
+		.highlight-orange_background {
+			background: rgba(224, 101, 1, 0.129);
+		}
+
+		.highlight-yellow_background {
+			background: rgba(211, 168, 0, 0.137);
+		}
+
+		.highlight-teal_background {
+			background: rgba(0, 100, 45, 0.09);
+		}
+
+		.highlight-blue_background {
+			background: rgba(0, 111, 200, 0.09);
+		}
+
+		.highlight-purple_background {
+			background: rgba(102, 0, 178, 0.078);
+		}
+
+		.highlight-pink_background {
+			background: rgba(197, 0, 93, 0.086);
+		}
+
+		.highlight-red_background {
+			background: rgba(223, 22, 0, 0.094);
+		}
+
+		.block-color-default {
+			color: inherit;
+			fill: inherit;
+		}
+
+		.block-color-gray {
+			color: rgba(128, 125, 120, 1);
+			fill: rgba(128, 125, 120, 1);
+		}
+
+		.block-color-brown {
+			color: rgba(159, 118, 90, 1);
+			fill: rgba(159, 118, 90, 1);
+		}
+
+		.block-color-orange {
+			color: rgba(204, 121, 47, 1);
+			fill: rgba(204, 121, 47, 1);
+		}
+
+		.block-color-yellow {
+			color: rgba(195, 148, 67, 1);
+			fill: rgba(195, 148, 67, 1);
+		}
+
+		.block-color-teal {
+			color: rgba(80, 148, 110, 1);
+			fill: rgba(80, 148, 110, 1);
+		}
+
+		.block-color-blue {
+			color: rgba(63, 126, 190, 1);
+			fill: rgba(63, 126, 190, 1);
+		}
+
+		.block-color-purple {
+			color: rgba(154, 107, 180, 1);
+			fill: rgba(154, 107, 180, 1);
+		}
+
+		.block-color-pink {
+			color: rgba(179, 84, 136, 1);
+			fill: rgba(179, 84, 136, 1);
+		}
+
+		.block-color-red {
+			color: rgba(201, 85, 73, 1);
+			fill: rgba(201, 85, 73, 1);
+		}
+
+		.block-color-default_background {
+			color: inherit;
+			fill: inherit;
+		}
+
+		.block-color-gray_background {
+			background: rgba(240, 239, 237, 1);
+		}
+
+		.block-color-brown_background {
+			background: rgba(245, 237, 233, 1);
+		}
+
+		.block-color-orange_background {
+			background: rgba(251, 235, 222, 1);
+		}
+
+		.block-color-yellow_background {
+			background: rgba(249, 243, 220, 1);
+		}
+
+		.block-color-teal_background {
+			background: rgba(232, 241, 236, 1);
+		}
+
+		.block-color-blue_background {
+			background: rgba(232, 242, 250, 1);
+		}
+
+		.block-color-purple_background {
+			background: rgba(243, 235, 249, 1);
+		}
+
+		.block-color-pink_background {
+			background: rgba(250, 233, 241, 1);
+		}
+
+		.block-color-red_background {
+			background: rgba(252, 233, 231, 1);
+		}
+
+		.select-value-color-default {
+			background-color: rgba(42, 28, 0, 0.07);
+		}
+
+		.select-value-color-gray {
+			background-color: rgba(28, 19, 1, 0.11);
+		}
+
+		.select-value-color-brown {
+			background-color: rgba(127, 51, 0, 0.156);
+		}
+
+		.select-value-color-orange {
+			background-color: rgba(196, 88, 0, 0.203);
+		}
+
+		.select-value-color-yellow {
+			background-color: rgba(209, 156, 0, 0.282);
+		}
+
+		.select-value-color-green {
+			background-color: rgba(0, 96, 38, 0.156);
+		}
+
+		.select-value-color-blue {
+			background-color: rgba(0, 99, 174, 0.172);
+		}
+
+		.select-value-color-purple {
+			background-color: rgba(92, 0, 163, 0.141);
+		}
+
+		.select-value-color-pink {
+			background-color: rgba(183, 0, 78, 0.152);
+		}
+
+		.select-value-color-red {
+			background-color: rgba(206, 24, 0, 0.164);
+		}
+
+		.checkbox {
+			display: inline-flex;
+			vertical-align: text-bottom;
+			width: 16;
+			height: 16;
+			background-size: 16px;
+			margin-left: 2px;
+			margin-right: 5px;
+		}
+
+		.checkbox-on {
+			background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+		}
+
+		.checkbox-off {
+			background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+		}
+
+
+
+		/* Back-to-index button */
+		.floating-button {
+			display: inline-flex;
+			align-items: center;
+			gap: 0.4em;
+			padding: 0.55em 1.15em;
+			border-radius: 999px;
+			background: rgba(255, 255, 255, 0.92);
+			color: #1f2933;
+			font-size: 0.9rem;
+			font-weight: 500;
+			text-decoration: none;
+			border: 1px solid rgba(15, 23, 42, 0.12);
+			box-shadow: 0 8px 24px rgba(15, 23, 42, 0.12);
+			backdrop-filter: blur(12px);
+			transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+		}
+
+		.floating-button:hover {
+			background: #1f2933;
+			color: #ffffff;
+			box-shadow: 0 12px 32px rgba(15, 23, 42, 0.18);
+			transform: translateY(-1px);
+		}
+
+		.floating-button:active {
+			transform: translateY(0);
+			box-shadow: 0 6px 18px rgba(15, 23, 42, 0.14);
+		}
+
+		.back-to-index {
+			position: fixed;
+			top: 20px;
+			left: 20px;
+			z-index: 1000;
+		}
+
+		.nav-controls {
+			position: fixed;
+			top: 20px;
+			right: 20px;
+			z-index: 1000;
+			display: inline-flex;
+			gap: 0.6em;
+			flex-wrap: wrap;
+			justify-content: flex-end;
+		}
+
+		@media (max-width: 600px) {
+			.back-to-index {
+				top: 16px;
+				left: 16px;
+			}
+
+			.nav-controls {
+				top: 16px;
+				right: 16px;
+				gap: 0.5em;
+			}
+
+			.floating-button {
+				padding: 0.45em 1em;
+				font-size: 0.85rem;
+			}
+		}
+
+		@media print {
+
+			.back-to-index,
+			.nav-controls {
+				display: none;
+			}
+		}
+	</style>
+</head>
+
+<body>
+	<a class="floating-button back-to-index" href="../index.html">回到目錄</a>
+	<div class="nav-controls">
+		<a class="floating-button nav-button" href="../10-Explainable ML/10-Explainable ML.html"
+			title="上一節：10-Explainable ML">上一節</a>
+		<a class="floating-button nav-button"
+			href="../12-Reinforcement Learning（強化學習）/12-Reinforcement Learning（強化學習）.html"
+			title="下一節：12-Reinforcement Learning（強化學習）">下一節</a>
+	</div>
+	<article id="3517a984-643f-4606-9ff8-38bb2f630523" class="page sans">
+		<header>
+			<div class="page-header-icon undefined"><img class="icon notion-static-icon"
+					src="https://www.notion.so/icons/document_blue.svg" /></div>
+			<h1 class="page-title">11-Domain Adaptation</h1>
+			<p class="page-description"></p>
+			<table class="properties">
+				<tbody></tbody>
+			</table>
+		</header>
+		<div class="page-body">
+			<nav id="cfdac6cc-1ba7-4327-ab9a-1b03b4bcbbb3" class="block-color-gray table_of_contents">
+				<div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link"
+						href="#c8fa85b0-4de2-40d1-90d8-61e6c298cbc0">1. 什麼是 Domain Adaptation？</a></div>
+				<div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link"
+						href="#0e80e3c0-ab25-4608-bebe-29634ac792d5">2. Domain Shift</a></div>
+				<div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link"
+						href="#60b5aa2d-9c30-48f4-9902-4b9ab6c30621">2.1. 輸入分布不同</a></div>
+				<div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link"
+						href="#a5da5b6c-873f-44eb-9393-614dfb8260e8">2.2 輸出分布不同</a></div>
+				<div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link"
+						href="#498602cd-9b08-4cda-bb44-ca9a11a87e3d">2.3 輸入輸出的關係發生變化</a></div>
+				<div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link"
+						href="#ecae4737-7750-40cc-836e-c11ba176bf8f">3. <strong>Domain Adaptation</strong></a></div>
+				<div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link"
+						href="#21c1c9b8-63df-47fa-9ea9-d761dd52731a">3.1 <strong>少量有</strong>標註的資料（Little but
+						labeled）</a></div>
+				<div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link"
+						href="#1228e75b-9434-4a84-9887-f53fa2c35a94">3.2 大量無標註的資料（Large amount of unlabeled data）</a>
+				</div>
+				<div class="table_of_contents-item table_of_contents-indent-2"><a class="table_of_contents-link"
+						href="#9ea91d5e-4fbd-41ab-a3f7-2d0a1938be4b">3.2.1 Feature Extractor</a></div>
+				<div class="table_of_contents-item table_of_contents-indent-2"><a class="table_of_contents-link"
+						href="#de26eb0d-7dcf-4124-a38e-cc4c42561de6">3.2.2 <strong>Domain Adversarial
+							Training</strong></a></div>
+				<div class="table_of_contents-item table_of_contents-indent-2"><a class="table_of_contents-link"
+						href="#f9ad95ff-c8c5-4eaf-8f04-d024cd9df83c">3.2.3 Boundary</a></div>
+				<div class="table_of_contents-item table_of_contents-indent-2"><a class="table_of_contents-link"
+						href="#c9c90493-712a-4905-bcd5-0af5978a0baf">3.2.4 Universal domain adaptation</a></div>
+				<div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link"
+						href="#fd7b8e07-6649-4ab0-9a6a-0d25d284e3af">3.3 少量無標註的資料（Little &amp; unlabeled）</a></div>
+				<div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link"
+						href="#06fc1913-386e-484c-a8f1-039de0cf4781">3.4 對 Target Domain 一無所知</a></div>
+			</nav>
+			<h1 id="c8fa85b0-4de2-40d1-90d8-61e6c298cbc0" class="">1. 什麼是 Domain Adaptation？</h1>
+			<p id="5f2cddff-cb72-4cb3-98ed-4fc79b4f9bfa" class="">Domain Adaptation 可以看做是 Transfer Learning 的一種</p>
+			<ul id="5b73254e-0b5a-4a1d-b4e6-db05a73bff41" class="bulleted-list">
+				<li style="list-style-type:disc"><strong><a href="https://youtu.be/qD6iD4TFsdQ">Transfer
+							Learning</a></strong><strong>：</strong>模型在 A 任務上學到的技能，可以被用在 B 任務上</li>
+			</ul>
+			<ul id="347e5b45-458b-4010-9476-ebcec768fb72" class="bulleted-list">
+				<li style="list-style-type:disc"><strong><a
+							href="https://www.notion.so/11-Domain-Adaptation-3517a984643f46069ff838bb2f630523?pvs=21">Domain
+							Adaptation</a></strong><strong>：</strong>在訓練資料的 domain 上學到的資訊，用到另外一個測試資料的 domain 上面</li>
+			</ul>
+			<p id="b8aff0cc-5281-45af-b865-f4bd7f4c3c68" class="">
+			</p>
+			<h1 id="0e80e3c0-ab25-4608-bebe-29634ac792d5" class="">2. Domain Shift</h1>
+			<p id="5c924a2a-5f93-4cd5-839a-5326cb4a3d3c" class="">domain shift
+				意思為訓練資料跟測試資料的分布不一樣，在訓練資料上訓練出來的模型，在測試資料上可能表現不好</p>
+			<figure id="daadb2e8-7cae-49eb-8192-1ab3e273c412" class="image"><a href="11-Domain%20Adaptation/0.png"><img
+						style="width:528px" src="11-Domain%20Adaptation/0.png" /></a></figure>
+			<ul id="ed31e484-baaf-4b52-bd93-059ffb6cacf7" class="bulleted-list">
+				<li style="list-style-type:disc"><strong>Source Domain：</strong>訓練資料</li>
+			</ul>
+			<ul id="d9f3416d-7f0e-406d-bad7-11fa9aebd545" class="bulleted-list">
+				<li style="list-style-type:disc"><strong>Target Domain：</strong>測試資料</li>
+			</ul>
+			<figure id="29ba2d4c-b8cc-40f2-b735-17ab6cfd8f3e" class="image"><a href="11-Domain%20Adaptation/1.png"><img
+						style="width:432px" src="11-Domain%20Adaptation/1.png" /></a></figure>
+			<h2 id="60b5aa2d-9c30-48f4-9902-4b9ab6c30621" class="">2.1. 輸入分布不同</h2>
+			<p id="5d8b752c-01a7-4843-93e1-0104714a4eb2" class="">
+				訓練資料的數字是<strong>黑白的</strong>，但測試資料是<strong>彩色的</strong>，那麽正確率會下降</p>
+			<figure id="8320e582-dbd3-423c-9b15-3bcf9fe5a47d" class="image"><a href="11-Domain%20Adaptation/2.png"><img
+						style="width:480px" src="11-Domain%20Adaptation/2.png" /></a></figure>
+			<h2 id="a5da5b6c-873f-44eb-9393-614dfb8260e8" class="">2.2 輸出分布不同</h2>
+			<p id="e7ec72f9-1282-4d83-ad0d-e98592d2f073" class="">
+				訓練資料每一個數字它出現的機率都一樣；但在測試資料中，每一個輸出的機率是不一樣的，有可能某一個數字的輸出機率特別大</p>
+			<figure id="5ed982c4-2203-469d-9e8a-66dccc1a23ee" class="image"><a href="11-Domain%20Adaptation/3.png"><img
+						style="width:528px" src="11-Domain%20Adaptation/3.png" /></a></figure>
+			<h2 id="498602cd-9b08-4cda-bb44-ca9a11a87e3d" class="">2.3 輸入輸出的關係發生變化</h2>
+			<p id="108f7888-ca5a-497a-9997-da97fa2d076c" class="">舉例而言，左圖的訓練資料代表 0，但有可能在測試資料中是代表 1。較罕見</p>
+			<figure id="3403477f-39e5-4927-84aa-a9da9a1b8111" class="image"><a href="11-Domain%20Adaptation/4.png"><img
+						style="width:520.9722290039062px" src="11-Domain%20Adaptation/4.png" /></a></figure>
+			<p id="fa95af82-3a42-40fb-b2c6-e195d14c223d" class="">
+			</p>
+			<h1 id="ecae4737-7750-40cc-836e-c11ba176bf8f" class="">3. <strong>Domain Adaptation</strong></h1>
+			<p id="7ecf64e5-c981-4ac9-b443-9fbadb791a6c" class="">根據 target domain 中資料的情況，由右至左可分為：</p>
+			<figure id="a23ea650-0285-4c5c-b002-5e208e2f0a4b" class="image"><a href="11-Domain%20Adaptation/5.png"><img
+						style="width:432px" src="11-Domain%20Adaptation/5.png" /></a></figure>
+			<ul id="3ee15537-65e4-41eb-9c94-7fbe6ecdd6ea" class="bulleted-list">
+				<li style="list-style-type:disc"><a
+						href="https://www.notion.so/11-Domain-Adaptation-3517a984643f46069ff838bb2f630523?pvs=21">少量有標註的資料</a>（Little
+					but labeled）</li>
+			</ul>
+			<ul id="e41188f7-513a-40de-b20a-f8594c71c81e" class="bulleted-list">
+				<li style="list-style-type:disc"><a
+						href="https://www.notion.so/11-Domain-Adaptation-3517a984643f46069ff838bb2f630523?pvs=21">大量無標註的資料</a>（Large
+					amount of unlabeled data）</li>
+			</ul>
+			<ul id="9177b55d-c2d4-4409-beb4-db9584dc8802" class="bulleted-list">
+				<li style="list-style-type:disc"><a
+						href="https://www.notion.so/11-Domain-Adaptation-3517a984643f46069ff838bb2f630523?pvs=21">少量無標註的資料</a>（Little
+					&amp; unlabeled）</li>
+			</ul>
+			<ul id="27d5cc2a-4642-4dc9-8ba6-a69c9c84c63f" class="bulleted-list">
+				<li style="list-style-type:disc"><a
+						href="https://www.notion.so/11-Domain-Adaptation-3517a984643f46069ff838bb2f630523?pvs=21">對
+						target domain 一無所知</a></li>
+			</ul>
+			<h2 id="21c1c9b8-63df-47fa-9ea9-d761dd52731a" class="">3.1 <strong>少量有</strong>標註的資料（Little but labeled）
+			</h2>
+			<p id="f3e952c5-461f-4c8e-883f-f57d11d06e76" class="">target domain 為<strong>少量有標註的資料</strong>，可以用 target
+				domain 的資料 <strong>fine-tune </strong>用 source domain 訓練出來的模型</p>
+			<figure id="9b4cb4a4-9d8e-4fc2-9ce0-b7bffec58ab5" class="image"><a href="11-Domain%20Adaptation/6.png"><img
+						style="width:432px" src="11-Domain%20Adaptation/6.png" /></a></figure>
+			<p id="3d655771-c71f-4599-874d-f3e75bf38cd5" class=""><strong>方法：</strong></p>
+			<p id="92977aff-71bf-4240-92e0-6e0ad554d279" class="">微調方式與 BERT 相似。已經有一個在 source domain 上訓練好的 model，拿
+				target domain 的資料丟進模型跑個二至三個 epoch 即可</p>
+			<p id="a6070320-57e2-4502-8b51-f47ac8af8ab9" class=""><strong>注意：</strong></p>
+			<p id="82c18f6d-2da3-4bdd-98e8-ab62bce8b4f4" class="">由於 target domain 的資料量很少，<strong>epoch 的大小不宜過多，以免有
+					overfitting 的狀況</strong></p>
+			<h2 id="1228e75b-9434-4a84-9887-f53fa2c35a94" class="">3.2 大量無標註的資料（Large amount of unlabeled data）</h2>
+			<p id="bd8b405a-0f93-4a0d-aa3b-fb1f7adbf629" class="">訓練一個 network：<strong>feature extractor</strong>，source
+				domain 跟 target domain 的圖片看起來不一樣，可以藉由 feature extractor 把不一樣的部分拿掉，只抽取出共同的部分，讓輸出具有相同的分布</p>
+			<figure id="e05d0001-37e2-4a01-8084-6689ded19c98" class="image"><a href="11-Domain%20Adaptation/7.png"><img
+						style="width:432px" src="11-Domain%20Adaptation/7.png" /></a></figure>
+			<h3 id="9ea91d5e-4fbd-41ab-a3f7-2d0a1938be4b" class="">3.2.1 Feature Extractor</h3>
+			<p id="a3a6a6b9-4c2d-4363-b689-5b3b2400aff2" class="">把一般的 classifier 分成 <strong>feature extractor</strong>
+				及 <strong>label predictor</strong> 兩個部分，例如將前 5 層算是 feature extractor，後 5 層算是 label
+				predictor。層數為須自行調整的<strong>超參數</strong></p>
+			<figure id="204f105a-b64b-475d-a436-a320cc651f8c" class="image"><a href="11-Domain%20Adaptation/8.png"><img
+						style="width:480px" src="11-Domain%20Adaptation/8.png" /></a></figure>
+			<p id="0bcb7d83-4be0-4fa7-9b7d-215e3fc4b66e" class="">將 source domain 和 target domain 的圖片輸入進 image
+				classifier，希望 feature extractor 針對兩個 domain 的資料的輸出要看起來沒有差異</p>
+			<h3 id="de26eb0d-7dcf-4124-a38e-cc4c42561de6" class="">3.2.2 <strong>Domain Adversarial Training</strong>
+			</h3>
+			<p id="25678475-2bad-46ee-8a5f-9e5513ee62bf" class="">藉由 <strong>Domain Adversarial Training</strong>
+				來實現，類似於 <a
+					href="https://www.notion.so/06-Generative-Adversarial-Network-GAN-3eef1d4d34384ea596d6be37eb429a25?pvs=21">GAN</a>，新增一個
+				<strong>domain classifier 作為 discriminator</strong>，判斷輸入來自哪個 domain，<strong>feature extractor 如同
+					generator</strong>，要想辦法騙過 domain classifier</p>
+			<figure id="6bf86835-ec2e-4050-820a-861ea5aa8a76" class="image"><a href="11-Domain%20Adaptation/9.png"><img
+						style="width:528px" src="11-Domain%20Adaptation/9.png" /></a></figure>
+			<p id="bc008b5e-6b55-4ca7-9095-8138b80d461d" class=""><strong>符號：</strong></p>
+			<p id="afaa0df8-c5ca-4c9c-ad52-80cf965b4495" class="">
+				<style>
+					@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')
+				</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token"
+					style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span
+							class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML">
+									<semantics>
+										<mrow>
+											<msub>
+												<mi>θ</mi>
+												<mi>p</mi>
+											</msub>
+										</mrow>
+										<annotation encoding="application/x-tex">\theta_p</annotation>
+									</semantics>
+								</math></span><span class="katex-html" aria-hidden="true"><span class="base"><span
+										class="strut" style="height:0.9805em;vertical-align:-0.2861em;"></span><span
+										class="mord"><span class="mord mathnormal"
+											style="margin-right:0.02778em;">θ</span><span class="msupsub"><span
+												class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist"
+														style="height:0.1514em;"><span
+															style="top:-2.55em;margin-left:-0.0278em;margin-right:0.05em;"><span
+																class="pstrut" style="height:2.7em;"></span><span
+																class="sizing reset-size6 size3 mtight"><span
+																	class="mord mathnormal mtight">p</span></span></span></span><span
+														class="vlist-s">​</span></span><span class="vlist-r"><span
+														class="vlist"
+														style="height:0.2861em;"><span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span>：label
+				predictor 的參數
+			</p>
+			<p id="c5a562fb-e986-4517-9a91-cfc25ab56d8b" class="">
+				<style>
+					@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')
+				</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token"
+					style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span
+							class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML">
+									<semantics>
+										<mrow>
+											<msub>
+												<mi>θ</mi>
+												<mi>d</mi>
+											</msub>
+										</mrow>
+										<annotation encoding="application/x-tex">\theta_d</annotation>
+									</semantics>
+								</math></span><span class="katex-html" aria-hidden="true"><span class="base"><span
+										class="strut" style="height:0.8444em;vertical-align:-0.15em;"></span><span
+										class="mord"><span class="mord mathnormal"
+											style="margin-right:0.02778em;">θ</span><span class="msupsub"><span
+												class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist"
+														style="height:0.3361em;"><span
+															style="top:-2.55em;margin-left:-0.0278em;margin-right:0.05em;"><span
+																class="pstrut" style="height:2.7em;"></span><span
+																class="sizing reset-size6 size3 mtight"><span
+																	class="mord mathnormal mtight">d</span></span></span></span><span
+														class="vlist-s">​</span></span><span class="vlist-r"><span
+														class="vlist"
+														style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span>：domain
+				classifier 的參數
+			</p>
+			<p id="9b55b3a0-d6ce-496c-a86d-f29214115570" class="">
+				<style>
+					@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')
+				</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token"
+					style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span
+							class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML">
+									<semantics>
+										<mrow>
+											<msub>
+												<mi>θ</mi>
+												<mi>f</mi>
+											</msub>
+										</mrow>
+										<annotation encoding="application/x-tex">\theta_f</annotation>
+									</semantics>
+								</math></span><span class="katex-html" aria-hidden="true"><span class="base"><span
+										class="strut" style="height:0.9805em;vertical-align:-0.2861em;"></span><span
+										class="mord"><span class="mord mathnormal"
+											style="margin-right:0.02778em;">θ</span><span class="msupsub"><span
+												class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist"
+														style="height:0.3361em;"><span
+															style="top:-2.55em;margin-left:-0.0278em;margin-right:0.05em;"><span
+																class="pstrut" style="height:2.7em;"></span><span
+																class="sizing reset-size6 size3 mtight"><span
+																	class="mord mathnormal mtight"
+																	style="margin-right:0.10764em;">f</span></span></span></span><span
+														class="vlist-s">​</span></span><span class="vlist-r"><span
+														class="vlist"
+														style="height:0.2861em;"><span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span>：feature
+				extractor 的參數
+			</p>
+			<p id="58969e41-c367-45fe-979b-1e1812d19a36" class="">
+				<style>
+					@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')
+				</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token"
+					style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span
+							class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML">
+									<semantics>
+										<mrow>
+											<mi>L</mi>
+										</mrow>
+										<annotation encoding="application/x-tex">L</annotation>
+									</semantics>
+								</math></span><span class="katex-html" aria-hidden="true"><span class="base"><span
+										class="strut" style="height:0.6833em;"></span><span
+										class="mord mathnormal">L</span></span></span></span></span><span>﻿</span></span>：label
+				predictor 對實際的分類任務進行分類，分類結果與實際分類之間的 cross entropy
+			</p>
+			<p id="94f01bea-a48f-4a0a-aac6-cc481390e019" class="">
+				<style>
+					@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')
+				</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token"
+					style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span
+							class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML">
+									<semantics>
+										<mrow>
+											<msub>
+												<mi>L</mi>
+												<mi>d</mi>
+											</msub>
+										</mrow>
+										<annotation encoding="application/x-tex">L_d</annotation>
+									</semantics>
+								</math></span><span class="katex-html" aria-hidden="true"><span class="base"><span
+										class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span
+										class="mord"><span class="mord mathnormal">L</span><span class="msupsub"><span
+												class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist"
+														style="height:0.3361em;"><span
+															style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span
+																class="pstrut" style="height:2.7em;"></span><span
+																class="sizing reset-size6 size3 mtight"><span
+																	class="mord mathnormal mtight">d</span></span></span></span><span
+														class="vlist-s">​</span></span><span class="vlist-r"><span
+														class="vlist"
+														style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span>：domain
+				classifier 對 feature extractor 輸出的 feature 進行二元分類，判斷來自哪個 domain，分類結果與實際分類之間的 loss
+			</p>
+			<p id="60f0621e-d986-4ff1-8515-d9b1c146da62" class=""><strong>目標：</strong></p>
+			<p id="b1b15ea7-71e1-40ff-9888-c13f4f4c7513" class="">找到一組 <style>
+					@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')
+				</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token"
+					style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span
+							class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML">
+									<semantics>
+										<mrow>
+											<msub>
+												<mi>θ</mi>
+												<mi>p</mi>
+											</msub>
+										</mrow>
+										<annotation encoding="application/x-tex">\theta_p</annotation>
+									</semantics>
+								</math></span><span class="katex-html" aria-hidden="true"><span class="base"><span
+										class="strut" style="height:0.9805em;vertical-align:-0.2861em;"></span><span
+										class="mord"><span class="mord mathnormal"
+											style="margin-right:0.02778em;">θ</span><span class="msupsub"><span
+												class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist"
+														style="height:0.1514em;"><span
+															style="top:-2.55em;margin-left:-0.0278em;margin-right:0.05em;"><span
+																class="pstrut" style="height:2.7em;"></span><span
+																class="sizing reset-size6 size3 mtight"><span
+																	class="mord mathnormal mtight">p</span></span></span></span><span
+														class="vlist-s">​</span></span><span class="vlist-r"><span
+														class="vlist"
+														style="height:0.2861em;"><span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span>
+				讓 <style>
+					@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')
+				</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token"
+					style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span
+							class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML">
+									<semantics>
+										<mrow>
+											<mi>L</mi>
+										</mrow>
+										<annotation encoding="application/x-tex">L</annotation>
+									</semantics>
+								</math></span><span class="katex-html" aria-hidden="true"><span class="base"><span
+										class="strut" style="height:0.6833em;"></span><span
+										class="mord mathnormal">L</span></span></span></span></span><span>﻿</span></span>
+				越小越好</p>
+			<p id="bf5c5039-de8e-4b6a-b29d-5399a0273f98" class="">找到一組 <style>
+					@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')
+				</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token"
+					style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span
+							class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML">
+									<semantics>
+										<mrow>
+											<msub>
+												<mi>θ</mi>
+												<mi>d</mi>
+											</msub>
+										</mrow>
+										<annotation encoding="application/x-tex">\theta_d</annotation>
+									</semantics>
+								</math></span><span class="katex-html" aria-hidden="true"><span class="base"><span
+										class="strut" style="height:0.8444em;vertical-align:-0.15em;"></span><span
+										class="mord"><span class="mord mathnormal"
+											style="margin-right:0.02778em;">θ</span><span class="msupsub"><span
+												class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist"
+														style="height:0.3361em;"><span
+															style="top:-2.55em;margin-left:-0.0278em;margin-right:0.05em;"><span
+																class="pstrut" style="height:2.7em;"></span><span
+																class="sizing reset-size6 size3 mtight"><span
+																	class="mord mathnormal mtight">d</span></span></span></span><span
+														class="vlist-s">​</span></span><span class="vlist-r"><span
+														class="vlist"
+														style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span>
+				讓 <style>
+					@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')
+				</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token"
+					style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span
+							class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML">
+									<semantics>
+										<mrow>
+											<msub>
+												<mi>L</mi>
+												<mi>d</mi>
+											</msub>
+										</mrow>
+										<annotation encoding="application/x-tex">L_d</annotation>
+									</semantics>
+								</math></span><span class="katex-html" aria-hidden="true"><span class="base"><span
+										class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span
+										class="mord"><span class="mord mathnormal">L</span><span class="msupsub"><span
+												class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist"
+														style="height:0.3361em;"><span
+															style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span
+																class="pstrut" style="height:2.7em;"></span><span
+																class="sizing reset-size6 size3 mtight"><span
+																	class="mord mathnormal mtight">d</span></span></span></span><span
+														class="vlist-s">​</span></span><span class="vlist-r"><span
+														class="vlist"
+														style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span>
+				越小越好</p>
+			<p id="fa0f9bea-d4b9-4c9c-b563-7a335b57caf5" class="">找到一組 <style>
+					@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')
+				</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token"
+					style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span
+							class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML">
+									<semantics>
+										<mrow>
+											<msub>
+												<mi>θ</mi>
+												<mi>f</mi>
+											</msub>
+										</mrow>
+										<annotation encoding="application/x-tex">\theta_f</annotation>
+									</semantics>
+								</math></span><span class="katex-html" aria-hidden="true"><span class="base"><span
+										class="strut" style="height:0.9805em;vertical-align:-0.2861em;"></span><span
+										class="mord"><span class="mord mathnormal"
+											style="margin-right:0.02778em;">θ</span><span class="msupsub"><span
+												class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist"
+														style="height:0.3361em;"><span
+															style="top:-2.55em;margin-left:-0.0278em;margin-right:0.05em;"><span
+																class="pstrut" style="height:2.7em;"></span><span
+																class="sizing reset-size6 size3 mtight"><span
+																	class="mord mathnormal mtight"
+																	style="margin-right:0.10764em;">f</span></span></span></span><span
+														class="vlist-s">​</span></span><span class="vlist-r"><span
+														class="vlist"
+														style="height:0.2861em;"><span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span>
+				既能使 label predictor 分類準確（最小化 <style>
+					@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')
+				</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token"
+					style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span
+							class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML">
+									<semantics>
+										<mrow>
+											<mi>L</mi>
+										</mrow>
+										<annotation encoding="application/x-tex">L</annotation>
+									</semantics>
+								</math></span><span class="katex-html" aria-hidden="true"><span class="base"><span
+										class="strut" style="height:0.6833em;"></span><span
+										class="mord mathnormal">L</span></span></span></span></span><span>﻿</span></span>），又能使
+				domain classifier 難以分辨（最大化 <style>
+					@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')
+				</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token"
+					style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span
+							class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML">
+									<semantics>
+										<mrow>
+											<msub>
+												<mi>L</mi>
+												<mi>d</mi>
+											</msub>
+										</mrow>
+										<annotation encoding="application/x-tex">L_d</annotation>
+									</semantics>
+								</math></span><span class="katex-html" aria-hidden="true"><span class="base"><span
+										class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span
+										class="mord"><span class="mord mathnormal">L</span><span class="msupsub"><span
+												class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist"
+														style="height:0.3361em;"><span
+															style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span
+																class="pstrut" style="height:2.7em;"></span><span
+																class="sizing reset-size6 size3 mtight"><span
+																	class="mord mathnormal mtight">d</span></span></span></span><span
+														class="vlist-s">​</span></span><span class="vlist-r"><span
+														class="vlist"
+														style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span>）⇒
+				定義 feature extractor 的 loss 為 <style>
+					@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')
+				</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token"
+					style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span
+							class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML">
+									<semantics>
+										<mrow>
+											<mi>L</mi>
+											<mo>−</mo>
+											<msub>
+												<mi>L</mi>
+												<mi>d</mi>
+											</msub>
+										</mrow>
+										<annotation encoding="application/x-tex">L-L_d</annotation>
+									</semantics>
+								</math></span><span class="katex-html" aria-hidden="true"><span class="base"><span
+										class="strut" style="height:0.7667em;vertical-align:-0.0833em;"></span><span
+										class="mord mathnormal">L</span><span class="mspace"
+										style="margin-right:0.2222em;"></span><span class="mbin">−</span><span
+										class="mspace" style="margin-right:0.2222em;"></span></span><span
+									class="base"><span class="strut"
+										style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span
+											class="mord mathnormal">L</span><span class="msupsub"><span
+												class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist"
+														style="height:0.3361em;"><span
+															style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span
+																class="pstrut" style="height:2.7em;"></span><span
+																class="sizing reset-size6 size3 mtight"><span
+																	class="mord mathnormal mtight">d</span></span></span></span><span
+														class="vlist-s">​</span></span><span class="vlist-r"><span
+														class="vlist"
+														style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span>，找到一組
+				<style>
+					@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')
+				</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token"
+					style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span
+							class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML">
+									<semantics>
+										<mrow>
+											<msub>
+												<mi>θ</mi>
+												<mi>f</mi>
+											</msub>
+										</mrow>
+										<annotation encoding="application/x-tex">\theta_f</annotation>
+									</semantics>
+								</math></span><span class="katex-html" aria-hidden="true"><span class="base"><span
+										class="strut" style="height:0.9805em;vertical-align:-0.2861em;"></span><span
+										class="mord"><span class="mord mathnormal"
+											style="margin-right:0.02778em;">θ</span><span class="msupsub"><span
+												class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist"
+														style="height:0.3361em;"><span
+															style="top:-2.55em;margin-left:-0.0278em;margin-right:0.05em;"><span
+																class="pstrut" style="height:2.7em;"></span><span
+																class="sizing reset-size6 size3 mtight"><span
+																	class="mord mathnormal mtight"
+																	style="margin-right:0.10764em;">f</span></span></span></span><span
+														class="vlist-s">​</span></span><span class="vlist-r"><span
+														class="vlist"
+														style="height:0.2861em;"><span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span>
+				讓 <style>
+					@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')
+				</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token"
+					style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span
+							class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML">
+									<semantics>
+										<mrow>
+											<mi>L</mi>
+											<mo>−</mo>
+											<msub>
+												<mi>L</mi>
+												<mi>d</mi>
+											</msub>
+										</mrow>
+										<annotation encoding="application/x-tex">L-L_d</annotation>
+									</semantics>
+								</math></span><span class="katex-html" aria-hidden="true"><span class="base"><span
+										class="strut" style="height:0.7667em;vertical-align:-0.0833em;"></span><span
+										class="mord mathnormal">L</span><span class="mspace"
+										style="margin-right:0.2222em;"></span><span class="mbin">−</span><span
+										class="mspace" style="margin-right:0.2222em;"></span></span><span
+									class="base"><span class="strut"
+										style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span
+											class="mord mathnormal">L</span><span class="msupsub"><span
+												class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist"
+														style="height:0.3361em;"><span
+															style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span
+																class="pstrut" style="height:2.7em;"></span><span
+																class="sizing reset-size6 size3 mtight"><span
+																	class="mord mathnormal mtight">d</span></span></span></span><span
+														class="vlist-s">​</span></span><span class="vlist-r"><span
+														class="vlist"
+														style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span>
+				越小越好</p>
+			<h3 id="f9ad95ff-c8c5-4eaf-8f04-d024cd9df83c" class="">3.2.3 Boundary</h3>
+			<p id="a509eacb-0ce5-4f65-af7b-5243529811ac" class="">希望兩個 domain 的分布更加接近，也就是讓 target domain 的資料盡量避開 source
+				domain 中得到的 boundary，離 boundary 越遠越好</p>
+			<figure id="901ace35-3c5f-4124-a767-006a2cce1575" class="image"><a href="11-Domain%20Adaptation/10.png"><img
+						style="width:432px" src="11-Domain%20Adaptation/10.png" /></a></figure>
+			<p id="c522e85f-4228-4daa-8575-88d4fc3a2a16" class=""><strong>方法：</strong></p>
+			<ol type="1" id="4a0e8b93-1448-4df8-8798-3fccd281a779" class="numbered-list" start="1">
+				<li>讓不同類別之間的輸出差異盡可能地大，盡可能地集中在某一類別上<figure id="a681f0f9-eb0a-40d0-a702-a80059aa35ce" class="image"
+						style="text-align:left"><a href="11-Domain%20Adaptation/11.png"><img style="width:384px"
+								src="11-Domain%20Adaptation/11.png" /></a></figure>
+				</li>
+			</ol>
+			<ol type="1" id="a6eb9b13-809f-41c9-9080-4160347b8a0c" class="numbered-list" start="2">
+				<li><em><a href="https://arxiv.org/abs/1802.08735">A DIRT-T Approach to Unsupervised Domain
+							Adaptation</a></em>（DIRT-T）</li>
+			</ol>
+			<ol type="1" id="8a76306a-9cbc-464c-98f1-da524835723e" class="numbered-list" start="3">
+				<li><em><a href="https://arxiv.org/abs/1712.02560">Maximum Classifier Discrepancy for Unsupervised
+							Domain Adaptation</a></em></li>
+			</ol>
+			<h3 id="c9c90493-712a-4905-bcd5-0af5978a0baf" class="">3.2.4 Universal domain adaptation</h3>
+			<p id="f2d62b28-eff7-46bd-af7e-31dc9f7c9c33" class="">實線圈代表 source domain 中有的類別，虛線圈代表 target domain 中的類別</p>
+			<figure id="14f12133-b3b9-49d3-a857-6ae12f719130" class="image"><a href="11-Domain%20Adaptation/12.png"><img
+						style="width:432px" src="11-Domain%20Adaptation/12.png" /></a></figure>
+			<p id="fd565cf1-484b-4178-8529-729251854855" class="">兩個 domain 的類別不一定都完全相同，有<strong>另外三種可能</strong>：</p>
+			<ol type="1" id="db9b6bf1-b31b-4468-900b-ae869d5cadb1" class="numbered-list" start="1">
+				<li>source domain 的類別比較多，而 target domain 的類別比較少</li>
+			</ol>
+			<ol type="1" id="18657be9-ec89-4d59-afd7-19e9ff975f4e" class="numbered-list" start="2">
+				<li>source domain 的類別比較少，而 target domain 的類別比較多</li>
+			</ol>
+			<ol type="1" id="a629ea6f-1fd0-4108-8916-f6391500e736" class="numbered-list" start="3">
+				<li>兩者有交集，但也都各有獨有的類別</li>
+			</ol>
+			<p id="81f2b3c1-9a57-4fae-b7b3-ad3414f40e18" class=""><strong>問題：</strong></p>
+			<p id="f8e455f4-8b3b-46c4-9c0d-c44fda4500ce" class="">對 2. 這種可能來說，若要讓 source domain 的資料跟 target domain 的資料的
+				feature 完全 match 在一起，意味著硬是要讓老虎去變得跟狗或是獅子像，到時候就分不出老虎這個類別</p>
+			<p id="789b7c1a-eeab-48ef-b273-75108d0575d7" class=""><strong>解決：</strong></p>
+			<p id="5bd1e982-50cb-4646-a6ba-cc722ff1edeb" class=""><em><a
+						href="https://openaccess.thecvf.com/content_CVPR_2019/html/You_Universal_Domain_Adaptation_CVPR_2019_paper.html">Universal
+						Domain Adaptation</a></em></p>
+			<h2 id="fd7b8e07-6649-4ab0-9a6a-0d25d284e3af" class="">3.3 少量無標註的資料（Little &amp; unlabeled）</h2>
+			<p id="00b53f7d-3bf8-4000-ae13-e2e78d28c5a3" class=""><strong>問題：</strong></p>
+			<p id="3f42d866-9cbb-4db1-8bb7-65496986b92b" class="">target domain 沒有標註資料並且數量還很少，或甚至只有一張</p>
+			<p id="012ba5e2-a8e0-409b-ba65-557205ec9102" class=""><strong>解決：</strong></p>
+			<p id="cf96b9df-3810-46f6-8f51-a8222f5f3b20" class=""><a href="https://arxiv.org/">Testing Time
+					Training（TTT）</a></p>
+			<h2 id="06fc1913-386e-484c-a8f1-039de0cf4781" class="">3.4 對 Target Domain 一無所知</h2>
+			<p id="b016d55a-0574-4ad4-84db-9091e5a0ffc0" class="">期望模型有 <strong>Domain Generalization</strong> 能力</p>
+			<figure id="3037b0f6-65b3-4f76-afa4-5469ebd5365a" class="image"><a href="11-Domain%20Adaptation/13.png"><img
+						style="width:432px" src="11-Domain%20Adaptation/13.png" /></a></figure>
+			<p id="b5e796df-6fab-4ce0-af84-53edeb129a45" class=""><strong>狀況：</strong></p>
+			<ol type="1" id="53f931f3-1d38-4bc5-8bf0-42cde37b7ae8" class="numbered-list" start="1">
+				<li>訓練資料非常豐富，具有各式各樣不同的 domain<p id="c9d7a0f0-b72e-487f-a90a-26873329a057" class="">期待因為訓練資料有<strong>多個
+							domain，</strong>模型可以學到如何<strong>彌平 domain 間的差異，</strong>測試資料有沒看過的 domain 也可以處理。可參考文獻：<em><a
+								href="https://ieeexplore.ieee.org/document/8578664">Domain Generalization with
+								Adversarial Feature Learning</a></em></p>
+				</li>
+			</ol>
+			<ol type="1" id="a0c29849-09c9-4577-8563-6136bd7a5ff2" class="numbered-list" start="2">
+				<li>訓練資料只有一個 domain，而測試資料有多種不同 domain<p id="891b620f-0a7c-43ba-bae4-1dd8fdf9ee30" class="">在概念上與 data
+						augmentation 相似，從已知 domain 的資料產生多個 domain 的資料。可參考文獻：<em><a
+								href="https://arxiv.org/abs/2003.13216">Learning to Learn Single Domain
+								Generalization</a></em></p>
+				</li>
+			</ol>
+		</div>
+	</article><span class="sans" style="font-size:14px;padding-top:2em"></span>
+</body>
+
+</html>
