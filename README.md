@@ -132,3 +132,13 @@
     </tr>
   </tbody>
 </table>
+
+## ⭐️ Star History
+
+<a href="https://www.star-history.com/?type=date&legend=top-left&repos=chsiang426%2FML-2021-notes">
+ <picture>
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/image?repos=chsiang426/ML-2021-notes&type=date&theme=dark&legend=top-left" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/image?repos=chsiang426/ML-2021-notes&type=date&legend=top-left" />
+   <img alt="Star History Chart" src="https://api.star-history.com/image?repos=chsiang426/ML-2021-notes&type=date&legend=top-left" />
+ </picture>
+</a>
